@@ -309,6 +309,22 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
   [data-menu="vertical"] .study-side{top:20px}
 }
 
+/* Quadros e detalhes da tarefa */
+.boards{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.q-edit{margin-left:4px;opacity:.7;font-size:12px;padding:0 2px}
+.q-edit:hover{opacity:1}
+.tags{display:flex;gap:4px;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:500;padding:1px 7px;border-radius:99px;color:var(--tg);background:color-mix(in srgb,var(--tg) 14%,transparent);border:1px solid color-mix(in srgb,var(--tg) 30%,transparent)}
+.card-ic{margin-left:auto;display:flex;gap:8px;align-items:center;font-size:11.5px}
+.card-ic .ok{color:var(--done)}
+.checklist{display:flex;flex-direction:column;gap:4px}
+.ck-item{display:flex;align-items:center;gap:8px;padding:2px 0}
+.ck-txt{flex:1;border:0;background:none;outline:none;padding:4px 2px;border-bottom:1px solid transparent}
+.ck-txt:focus{border-bottom-color:var(--line-2)}
+.ck-txt.feito{text-decoration:line-through;color:var(--muted)}
+.ck-del{border:0;background:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:0 4px}
+.ck-del:hover{color:var(--danger)}
+
 /* Modal */
 .overlay{position:fixed;inset:0;background:rgba(10,10,10,.4);display:flex;align-items:flex-start;justify-content:center;padding:8vh 16px 16px;z-index:20}
 .modal{width:100%;max-width:520px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;max-height:84vh}
@@ -413,6 +429,7 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
     </div>
     <div class="toolbar">
       <div class="people" id="people"></div>
+      <div class="boards" id="boards"></div>
       <div class="search">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input class="input" id="busca" placeholder="Buscar tarefa">
@@ -600,7 +617,7 @@ const COLS = [
 const PRIO = {baixa:'Baixa', media:'Média', alta:'Alta'};
 const AV_CORES = ['#c2410c','#0f766e','#4338ca','#be185d','#15803d','#a16207','#0369a1','#7c2d12','#6d28d9','#047857'];
 
-const S = { equipe:null, eu:null, perfis:[], tarefas:[], filtro:'todos', busca:'', aba:'quadro', canal:null };
+const S = { quadros:[], quadroAtual:null, equipe:null, eu:null, perfis:[], tarefas:[], filtro:'todos', busca:'', aba:'quadro', canal:null };
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const gerente = () => S.eu?.papel === 'gerente';
@@ -724,6 +741,7 @@ async function iniciar(user){
       try { localStorage.setItem('pref', JSON.stringify(PREF)); } catch(e){}
     }
     await carregarTarefas();
+    await carregarQuadros();
     $('#authView').classList.add('hidden'); $('#appView').classList.remove('hidden');
     assinar();
     renderTudo();
@@ -755,6 +773,57 @@ function assinar(){
     .subscribe();
   // Perfis mudam pouco: atualiza ao voltar para a aba
   document.addEventListener('visibilitychange', () => { if (!document.hidden && S.eu) recarregar(); });
+}
+
+async function carregarQuadros(){
+  let { data } = await sb.from('quadros').select('*').order('ordem').order('criado_em');
+  if (!data?.length) {
+    const r = await sb.from('quadros').insert({ nome:'Principal', ordem:0 }).select();
+    data = r.data || [];
+  }
+  S.quadros = data;
+  let sv = null; try { sv = localStorage.getItem('quadro'); } catch(e){}
+  S.quadroAtual = data.find(q => q.id === sv)?.id || data[0]?.id || null;
+  // Tarefas antigas sem quadro vão para o primeiro
+  const soltas = S.tarefas.filter(t => !t.quadro_id);
+  if (soltas.length && data[0]) {
+    await sb.from('tarefas').update({ quadro_id: data[0].id }).in('id', soltas.map(t => t.id));
+    soltas.forEach(t => t.quadro_id = data[0].id);
+  }
+}
+function escolherQuadro(id){ S.quadroAtual = id; try { localStorage.setItem('quadro', id); } catch(e){} renderQuadro(); }
+function renderQuadrosBar(){
+  $('#boards').innerHTML = S.quadros.map(q => {
+    const n = S.tarefas.filter(t => t.quadro_id === q.id && t.status !== 'concluido').length;
+    return `<button class="chip all ${q.id===S.quadroAtual?'on':''}" data-q="${q.id}">${esc(q.nome)} <span class="mono" style="opacity:.6">${n}</span>${q.id===S.quadroAtual ? '<span class="q-edit" data-qedit="'+q.id+'" title="Renomear ou excluir">&#9998;</span>' : ''}</button>`;
+  }).join('') + '<button class="chip all" id="qNovo" title="Novo quadro">+ Quadro</button>';
+}
+$('#boards').addEventListener('click', e => {
+  const ed = e.target.closest('[data-qedit]'); if (ed) { e.stopPropagation(); return editarQuadro(S.quadros.find(q => q.id === ed.dataset.qedit)); }
+  if (e.target.closest('#qNovo')) return editarQuadro(null);
+  const b = e.target.closest('[data-q]'); if (b) escolherQuadro(b.dataset.q);
+});
+function editarQuadro(q){
+  formModal({ titulo: q ? 'Editar quadro' : 'Novo quadro', textoSalvar: q ? 'Salvar' : 'Criar quadro',
+    campos: [{ id:'nome', label:'Nome do quadro', value:q?.nome || '', required:true, max:60 }],
+    salvar: async v => {
+      if (q) {
+        const { error } = await sb.from('quadros').update({ nome:v.nome }).eq('id', q.id);
+        if (error) { toast('Não foi possível salvar'); return false; }
+        q.nome = v.nome;
+      } else {
+        const { data, error } = await sb.from('quadros').insert({ nome:v.nome, ordem:S.quadros.length }).select().maybeSingle();
+        if (error || !data) { toast('Não foi possível criar'); return false; }
+        S.quadros.push(data); S.quadroAtual = data.id; try { localStorage.setItem('quadro', data.id); } catch(e){}
+      }
+      renderQuadro();
+    },
+    excluir: q && S.quadros.length > 1 ? async () => {
+      const { error } = await sb.from('quadros').delete().eq('id', q.id);
+      if (error) { toast('Não foi possível excluir'); return false; }
+      S.quadros = S.quadros.filter(x => x.id !== q.id); S.tarefas = S.tarefas.filter(t => t.quadro_id !== q.id);
+      S.quadroAtual = S.quadros[0].id; renderQuadro(); toast('Quadro excluído com as tarefas dele');
+    } : null });
 }
 
 async function salvarTarefa(id, campos){
@@ -804,9 +873,8 @@ $('#people').addEventListener('click', e => { const b = e.target.closest('[data-
 $('#busca').addEventListener('input', e => { S.busca = e.target.value.trim().toLowerCase(); renderQuadro(); });
 
 function visiveis(){
-  let l = S.tarefas;
-  if (gerente() && S.filtro !== 'todos') l = l.filter(t => t.responsavel_id === S.filtro);
-  if (S.busca) l = l.filter(t => (t.titulo + ' ' + (t.descricao||'')).toLowerCase().includes(S.busca));
+  let l = S.tarefas.filter(t => t.quadro_id === S.quadroAtual);
+  if (S.busca) l = l.filter(t => [t.titulo, t.descricao, t.notas, (t.etiquetas||[]).join(' ')].join(' ').toLowerCase().includes(S.busca));
   return l;
 }
 
@@ -814,7 +882,8 @@ function renderQuadro(){
   const hoje = hojeISO();
   const lista = visiveis();
   const filtroP = gerente() && S.filtro !== 'todos' ? perfil(S.filtro) : null;
-  $('#boardTitle').textContent = 'Minhas tarefas';
+  $('#boardTitle').textContent = S.quadros.find(q => q.id === S.quadroAtual)?.nome || 'Minhas tarefas';
+  renderQuadrosBar();
   const semana = Date.now() - 7*864e5;
   $('#sAbertas').textContent = lista.filter(t => t.status !== 'concluido').length;
   $('#sAtrasadas').textContent = lista.filter(t => t.status !== 'concluido' && t.prazo && t.prazo < hoje).length;
@@ -840,10 +909,11 @@ function cardHTML(t, hoje){
   return `<article class="card ${t.status==='concluido'?'done':''}" draggable="true" data-id="${t.id}">
     <div class="t">${esc(t.titulo)}</div>
     ${t.descricao ? `<div class="d">${esc(t.descricao)}</div>` : ''}
+    ${(t.etiquetas||[]).length ? `<div class="tags">${t.etiquetas.map(g => `<span class="tag" style="--tg:${corDe(g)}">${esc(g)}</span>`).join('')}</div>` : ''}
     <div class="card-f">
       <span class="prio ${t.prioridade}">${PRIO[t.prioridade]}</span>
       ${t.prazo ? `<span class="due mono ${late?'late':''}">${late ? 'Atrasada · ' : ehHoje ? 'Hoje · ' : ''}${fmtData(t.prazo)}</span>` : ''}
-
+      <span class="card-ic">${(t.checklist||[]).length ? `<span class="mono ${t.checklist.every(c=>c.feito)?'ok':''}" title="Checklist">&#10003; ${t.checklist.filter(c=>c.feito).length}/${t.checklist.length}</span>` : ''}${t.notas ? '<span title="Tem anotações">&#9998;</span>' : ''}${t.link ? '<span title="Tem link">&#128279;</span>' : ''}</span>
     </div>
   </article>`;
 }
@@ -863,46 +933,54 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharModal(
 
 function abrirTarefa(t){
   const nova = !t;
-  const g = gerente();
-  t = t || { titulo:'', descricao:'', prioridade:'media', status:'a_fazer', prazo:'', responsavel_id: S.filtro !== 'todos' ? S.filtro : S.eu.id };
-  const opcoesPessoas = [S.eu, ...S.perfis.filter(p => p.id !== S.eu.id)].map(p => `<option value="${p.id}" ${p.id===t.responsavel_id?'selected':''}>${esc(p.id===S.eu.id ? p.nome + ' (eu)' : p.nome)}</option>`).join('');
-  const opcoesStatus = COLS.map(c => `<option value="${c.id}" ${c.id===t.status?'selected':''}>${c.nome}</option>`).join('');
-  const resp = perfil(t.responsavel_id), criador = perfil(t.criado_por);
-
-  const corpo = g ? `
-    <div class="field"><label>Título</label><input class="input" id="mTitulo" maxlength="200" value="${esc(t.titulo)}" required></div>
-    <div class="field"><label>Descrição</label><textarea class="input" id="mDesc">${esc(t.descricao)}</textarea></div>
-    <div class="field"><label>Prazo</label><input class="input" type="date" id="mPrazo" value="${t.prazo||''}"></div>
-    <div class="row2">
-      <div class="field"><label>Prioridade</label><select class="input" id="mPrio">${Object.entries(PRIO).map(([k,v]) => `<option value="${k}" ${k===t.prioridade?'selected':''}>${v}</option>`).join('')}</select></div>
-      <div class="field"><label>Status</label><select class="input" id="mStatus">${opcoesStatus}</select></div>
-    </div>`
-  : `
-    <div class="field"><label>Título</label><div class="readonly">${esc(t.titulo)}</div></div>
-    ${t.descricao ? `<div class="field"><label>Descrição</label><div class="readonly">${esc(t.descricao)}</div></div>` : ''}
-    <div class="row2">
-      <div class="field"><label>Prioridade</label><div class="readonly">${PRIO[t.prioridade]}</div></div>
-      <div class="field"><label>Prazo</label><div class="readonly">${t.prazo ? fmtData(t.prazo) : 'Sem prazo'}</div></div>
-    </div>
-    <div class="field"><label>Status</label><select class="input" id="mStatus">${opcoesStatus}</select></div>`;
-
+  t = t ? JSON.parse(JSON.stringify(t)) : { titulo:'', descricao:'', prioridade:'media', status:'a_fazer', prazo:'', inicio:'', etiquetas:[], checklist:[], link:'', notas:'', quadro_id: S.quadroAtual };
+  const opt = (obj, v) => Object.entries(obj).map(([k, n]) => `<option value="${k}" ${k===v?'selected':''}>${n}</option>`).join('');
+  const quadrosOpt = S.quadros.map(q => `<option value="${q.id}" ${q.id===t.quadro_id?'selected':''}>${esc(q.nome)}</option>`).join('');
+  let check = (t.checklist || []).map(c => ({ ...c }));
   const meta = nova ? '' : `<div class="meta">Criada em ${new Date(t.criado_em).toLocaleDateString('pt-BR')}${t.concluido_em ? ' · concluída em ' + new Date(t.concluido_em).toLocaleDateString('pt-BR') : ''}</div>`;
-
-  $('#modalRoot').innerHTML = `<div class="overlay" id="ov"><form class="modal" id="mForm">
-    <div class="modal-h"><h3>${nova ? 'Nova tarefa' : g ? 'Editar tarefa' : 'Tarefa'}</h3></div>
-    <div class="modal-b">${corpo}${meta}</div>
+  $('#modalRoot').innerHTML = `<div class="overlay" id="ov"><form class="modal" id="mForm" style="max-width:620px">
+    <div class="modal-h"><h3>${nova ? 'Nova tarefa' : 'Tarefa'}</h3>${S.quadros.length > 1 ? `<select class="input" id="mQuadro" style="width:auto;height:32px">${quadrosOpt}</select>` : ''}</div>
+    <div class="modal-b">
+      <input class="input" id="mTitulo" maxlength="200" placeholder="Título da tarefa" value="${esc(t.titulo)}" required style="font-weight:600;font-size:15px">
+      <div class="field"><label>Descrição</label><textarea class="input" id="mDesc" placeholder="O que precisa ser feito" style="min-height:70px">${esc(t.descricao||'')}</textarea></div>
+      <div class="row2">
+        <div class="field"><label>Status</label><select class="input" id="mStatus">${COLS.map(c => `<option value="${c.id}" ${c.id===t.status?'selected':''}>${c.nome}</option>`).join('')}</select></div>
+        <div class="field"><label>Prioridade</label><select class="input" id="mPrio">${opt(PRIO, t.prioridade)}</select></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Início</label><input class="input" type="date" id="mInicio" value="${t.inicio||''}"></div>
+        <div class="field"><label>Prazo</label><input class="input" type="date" id="mPrazo" value="${t.prazo||''}"></div>
+      </div>
+      <div class="field"><label>Etiquetas (separe por vírgula)</label><input class="input" id="mTags" placeholder="faculdade, urgente, cliente X" value="${esc((t.etiquetas||[]).join(', '))}"></div>
+      <div class="field"><label>Checklist</label>
+        <div class="checklist" id="mCheck"></div>
+        <div style="display:flex;gap:6px"><input class="input" id="mCheckNovo" placeholder="Adicionar item e apertar Enter"><button type="button" class="btn" id="mCheckAdd">Adicionar</button></div>
+      </div>
+      <div class="field"><label>Link</label><input class="input" type="url" id="mLink" placeholder="https://" value="${esc(t.link||'')}"></div>
+      <div class="field"><label>Anotações</label><textarea class="input" id="mNotas" placeholder="Detalhes, contatos, ideias, o que for útil">${esc(t.notas||'')}</textarea></div>
+      ${meta}
+    </div>
     <div class="modal-f">
-      ${!nova && g ? '<button type="button" class="btn danger" id="mDel">Excluir</button>' : ''}
+      ${!nova ? '<button type="button" class="btn danger" id="mDel">Excluir</button>' : ''}
       ${!nova && gConectado() && t.prazo ? '<button type="button" class="btn" id="mAgenda">Pôr na agenda</button>' : ''}
       <span class="sp"></span>
       <button type="button" class="btn" id="mCancel">Cancelar</button>
       <button class="btn primary" id="mSalvar">${nova ? 'Criar tarefa' : 'Salvar'}</button>
     </div>
   </form></div>`;
-
+  const renderCheck = () => {
+    $('#mCheck').innerHTML = check.map((c, i) => `<div class="ck-item"><input type="checkbox" data-ck="${i}" ${c.feito?'checked':''}><input class="ck-txt ${c.feito?'feito':''}" data-ckt="${i}" value="${esc(c.texto)}"><button type="button" class="ck-del" data-ckd="${i}" aria-label="Remover">&times;</button></div>`).join('');
+  };
+  renderCheck();
+  const addCheck = () => { const v = $('#mCheckNovo').value.trim(); if (!v) return; check.push({ texto:v, feito:false }); $('#mCheckNovo').value = ''; renderCheck(); $('#mCheckNovo').focus(); };
+  $('#mCheckAdd').onclick = addCheck;
+  $('#mCheckNovo').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addCheck(); } });
+  $('#mCheck').addEventListener('change', e => { const i = e.target.dataset.ck; if (i != null) { check[i].feito = e.target.checked; renderCheck(); } });
+  $('#mCheck').addEventListener('input', e => { const i = e.target.dataset.ckt; if (i != null) check[i].texto = e.target.value; });
+  $('#mCheck').addEventListener('click', e => { const i = e.target.dataset.ckd; if (i != null) { check.splice(+i, 1); renderCheck(); } });
   $('#ov').addEventListener('mousedown', e => { if (e.target.id === 'ov') fecharModal(); });
   $('#mCancel').onclick = fecharModal;
-  if (g) setTimeout(() => $('#mTitulo').focus(), 30);
+  if (nova) setTimeout(() => $('#mTitulo').focus(), 30);
   const ag = $('#mAgenda');
   if (ag) ag.onclick = () => abrirEvento(null, { titulo: t.titulo, dia: t.prazo, descricao: t.descricao || '', diaTodo: true });
   const del = $('#mDel');
@@ -912,14 +990,16 @@ function abrirTarefa(t){
   };
   $('#mForm').addEventListener('submit', async e => {
     e.preventDefault();
-    let campos;
-    if (g) {
-      const titulo = $('#mTitulo').value.trim();
-      if (!titulo) return;
-      campos = { titulo, descricao: $('#mDesc').value.trim() || null, responsavel_id: S.eu.id, prazo: $('#mPrazo').value || null, prioridade: $('#mPrio').value, status: $('#mStatus').value };
-    } else {
-      campos = { status: $('#mStatus').value };
-    }
+    const titulo = $('#mTitulo').value.trim();
+    if (!titulo) return;
+    const campos = {
+      titulo, descricao: $('#mDesc').value.trim() || null, status: $('#mStatus').value, prioridade: $('#mPrio').value,
+      inicio: $('#mInicio').value || null, prazo: $('#mPrazo').value || null,
+      etiquetas: [...new Set($('#mTags').value.split(',').map(x => x.trim()).filter(Boolean))].slice(0, 12),
+      checklist: check.filter(c => c.texto.trim()).map(c => ({ texto: c.texto.trim(), feito: !!c.feito })),
+      link: $('#mLink').value.trim() || null, notas: $('#mNotas').value.trim() || null,
+      quadro_id: $('#mQuadro')?.value || t.quadro_id || S.quadroAtual, responsavel_id: S.eu.id
+    };
     $('#mSalvar').disabled = true;
     const ok = await salvarTarefa(nova ? null : t.id, campos);
     if (ok) { fecharModal(); toast(nova ? 'Tarefa criada' : 'Tarefa salva'); }
@@ -1045,7 +1125,7 @@ function abrirConfig(){
   $('#cRestaurar').onchange = e => { const f = e.target.files[0]; if (f) restaurarBackup(f); e.target.value = ''; };
 }
 
-const TABELAS_EXTRAS = ['clientes','produtos','investimentos','estudos','vagas'];
+const TABELAS_EXTRAS = ['quadros','clientes','produtos','investimentos','estudos','vagas'];
 async function backupExtras(){
   const r = await Promise.all(TABELAS_EXTRAS.map(t => sb.from(t).select('*')));
   return Object.fromEntries(TABELAS_EXTRAS.map((t, i) => [t, r[i].data || []]));

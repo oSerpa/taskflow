@@ -14,3 +14,12 @@ create table public.vagas (id uuid primary key default gen_random_uuid(), dono_i
 create or replace function public.manter_dono() returns trigger language plpgsql set search_path = public as $$
 begin new.dono_id := old.dono_id; if tg_table_name = 'estudos' then new.atualizado_em := now(); end if; return new; end $$;
 -- triggers manter_dono e políticas "so o dono" (dono_id = auth.uid()) em clientes, produtos, investimentos, estudos e vagas
+
+-- Vários quadros e mais detalhes nas tarefas
+create table public.quadros (id uuid primary key default gen_random_uuid(), dono_id uuid not null default auth.uid() references public.perfis(id) on delete cascade, nome text not null check (length(nome) between 1 and 60), ordem integer not null default 0, criado_em timestamptz not null default now());
+alter table public.tarefas add column quadro_id uuid references public.quadros(id) on delete cascade;
+alter table public.tarefas add column etiquetas text[] not null default '{}';
+alter table public.tarefas add column checklist jsonb not null default '[]'::jsonb;
+alter table public.tarefas add column link text;
+alter table public.tarefas add column inicio date;
+alter table public.tarefas add column notas text;
