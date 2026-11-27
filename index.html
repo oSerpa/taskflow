@@ -139,7 +139,13 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
 .team-row .p{display:flex;align-items:center;gap:10px;font-weight:500}
 .bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--done)}
-.hint{color:var(--muted);font-size:13px;margin:12px 2px 0}
+.invite{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.invite .sp{flex:1}
+.invite code{font-size:16px;letter-spacing:.12em;padding:6px 10px;border-radius:8px;background:var(--surface-2);border:1px solid var(--line)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)}
+.seg button{height:32px;border:0;border-radius:7px;background:none;cursor:pointer;color:var(--muted);font-weight:500}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.team-name{font-size:12px;color:var(--muted);padding-left:10px;border-left:1px solid var(--line-2)}
 
 /* Agenda */
 .ag-nav{display:flex;gap:6px}
@@ -216,7 +222,13 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
     <form id="authForm" class="auth-box">
       <h2 id="authTitle">Entrar</h2>
       <p class="sub" id="authSub">Use o e-mail cadastrado na equipe.</p>
-      <div class="field hidden" id="nomeField"><label for="aNome">Nome</label><input class="input" id="aNome" autocomplete="name"></div>
+      <div class="field hidden" id="nomeField"><label for="aNome">Seu nome</label><input class="input" id="aNome" autocomplete="name"></div>
+      <div class="seg hidden" id="eqModo" role="tablist">
+        <button type="button" class="on" data-m="criar">Criar equipe</button>
+        <button type="button" data-m="entrar">Tenho um código</button>
+      </div>
+      <div class="field hidden" id="eqNomeField"><label for="aEquipe">Nome da equipe</label><input class="input" id="aEquipe" maxlength="80" placeholder="Ex.: Loja Centro"></div>
+      <div class="field hidden" id="eqCodField"><label for="aCodigo">Código de convite</label><input class="input mono" id="aCodigo" maxlength="8" placeholder="Peça ao gerente" style="text-transform:uppercase"></div>
       <div class="field"><label for="aEmail">E-mail</label><input class="input" id="aEmail" type="email" required autocomplete="email"></div>
       <div class="field"><label for="aSenha">Senha</label><input class="input" id="aSenha" type="password" required minlength="6" autocomplete="current-password"></div>
       <div id="authMsg" class="msg hidden"></div>
@@ -229,7 +241,7 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
 <!-- App -->
 <section id="appView" class="hidden">
   <header class="top"><div class="top-in">
-    <div class="brand"><span class="logo"><i></i><i></i><i></i><i></i></span><span>Taskflow</span></div>
+    <div class="brand"><span class="logo"><i></i><i></i><i></i><i></i></span><span>Taskflow</span><span class="team-name" id="teamName"></span></div>
     <nav class="tabs">
       <button class="tab on" data-tab="quadro">Quadro</button>
       <button class="tab" data-tab="agenda">Agenda</button>
@@ -289,7 +301,7 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
   <main class="wrap hidden" id="viewEquipe">
     <div class="head"><div><h1>Equipe</h1><div class="date">Carga de trabalho e papéis de cada pessoa</div></div></div>
     <div class="team" id="team"></div>
-    <p class="hint">Para alguém entrar na equipe, envie o link do site e peça para criar a conta. A pessoa aparece aqui como funcionário.</p>
+    <div class="invite"><div><b id="eqNome"></b><div class="meta">Para alguém entrar, envie o link do site e este código. A pessoa entra como funcionário.</div></div><span class="sp"></span><code class="mono" id="eqCodigo"></code><button class="btn" id="copiarCod">Copiar convite</button></div>
   </main>
 </section>
 
@@ -312,7 +324,7 @@ const COLS = [
 const PRIO = {baixa:'Baixa', media:'Média', alta:'Alta'};
 const AV_CORES = ['#c2410c','#0f766e','#4338ca','#be185d','#15803d','#a16207','#0369a1','#7c2d12','#6d28d9','#047857'];
 
-const S = { eu:null, perfis:[], tarefas:[], filtro:'todos', busca:'', aba:'quadro', canal:null };
+const S = { equipe:null, eu:null, perfis:[], tarefas:[], filtro:'todos', busca:'', aba:'quadro', canal:null };
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const gerente = () => S.eu?.papel === 'gerente';
@@ -336,13 +348,24 @@ $('#themeBtn').onclick = () => {
 };
 
 // ===== Autenticação =====
-let modoAuth = 'login';
+let modoAuth = 'login', modoEquipe = 'criar';
+function setModoEquipe(m, visivel = modoAuth === 'signup'){
+  modoEquipe = m;
+  document.querySelectorAll('#eqModo button').forEach(b => b.classList.toggle('on', b.dataset.m === m));
+  $('#eqNomeField').classList.toggle('hidden', !visivel || m !== 'criar');
+  $('#eqCodField').classList.toggle('hidden', !visivel || m !== 'entrar');
+  $('#aEquipe').required = visivel && m === 'criar';
+  $('#aCodigo').required = visivel && m === 'entrar';
+}
+document.addEventListener('click', e => { const b = e.target.closest('#eqModo button'); if (b) setModoEquipe(b.dataset.m); });
 function setModoAuth(m){
   modoAuth = m;
   const cad = m === 'signup';
   $('#authTitle').textContent = cad ? 'Criar conta' : 'Entrar';
-  $('#authSub').textContent = cad ? 'O primeiro cadastro vira o gerente da equipe.' : 'Use o e-mail cadastrado na equipe.';
+  $('#authSub').textContent = cad ? 'Crie sua equipe ou entre numa já existente com o código do gerente.' : 'Use o e-mail da sua conta.';
   $('#nomeField').classList.toggle('hidden', !cad);
+  $('#eqModo').classList.toggle('hidden', !cad);
+  setModoEquipe(modoEquipe, cad);
   $('#aNome').required = cad;
   $('#authBtn').textContent = cad ? 'Criar conta' : 'Entrar';
   $('#aSenha').autocomplete = cad ? 'new-password' : 'current-password';
@@ -357,7 +380,7 @@ $('#authForm').addEventListener('submit', async e => {
   $('#authBtn').disabled = true;
   try {
     if (modoAuth === 'signup') {
-      const { data, error } = await sb.auth.signUp({ email, password, options:{ data:{ nome: $('#aNome').value.trim() }, emailRedirectTo: location.href.split('#')[0] } });
+      const { data, error } = await sb.auth.signUp({ email, password, options:{ data: Object.assign({ nome: $('#aNome').value.trim() }, modoEquipe === 'criar' ? { equipe: $('#aEquipe').value.trim() } : { codigo: $('#aCodigo').value.trim().toUpperCase() }), emailRedirectTo: location.href.split('#')[0] } });
       if (error) throw error;
       if (!data.session) { setModoAuth('login'); authMsg('Conta criada. Confirme pelo link enviado ao seu e-mail e depois entre.'); }
     } else {
@@ -366,7 +389,7 @@ $('#authForm').addEventListener('submit', async e => {
     }
   } catch(err) {
     const m = String(err.message||err);
-    authMsg(/Invalid login/i.test(m) ? 'E-mail ou senha incorretos.' : /confirm/i.test(m) ? 'Confirme seu e-mail antes de entrar.' : /registered/i.test(m) ? 'Esse e-mail já tem conta.' : m, true);
+    authMsg(/Invalid login/i.test(m) ? 'E-mail ou senha incorretos.' : /confirm/i.test(m) ? 'Confirme seu e-mail antes de entrar.' : /registered/i.test(m) ? 'Esse e-mail já tem conta.' : (/Database error/i.test(m) && modoAuth === 'signup' && modoEquipe === 'entrar') ? 'Código de convite inválido.' : m, true);
   } finally { $('#authBtn').disabled = false; }
 });
 $('#sairBtn').onclick = () => sb.auth.signOut();
@@ -384,7 +407,7 @@ async function iniciar(user){
   if (iniciando || S.eu?.id === user.id) return;
   iniciando = true;
   try {
-    await carregarPerfis();
+    await Promise.all([carregarPerfis(), carregarEquipe()]);
     S.eu = perfil(user.id);
     if (!S.eu) { authMsg('Seu perfil não foi encontrado. Fale com o gerente.', true); await sb.auth.signOut(); return; }
     await carregarTarefas();
@@ -395,6 +418,10 @@ async function iniciar(user){
 }
 
 // ===== Dados =====
+async function carregarEquipe(){
+  const { data } = await sb.from('equipes').select('*').maybeSingle();
+  S.equipe = data;
+}
 async function carregarPerfis(){
   const { data, error } = await sb.from('perfis').select('*').order('nome');
   if (error) { toast('Erro ao carregar equipe'); return; }
@@ -443,6 +470,7 @@ function renderTudo(){ renderTopo(); renderPessoas(); renderQuadro(); if (S.aba 
 function renderTopo(){
   $('#meAv').innerHTML = avatar(S.eu);
   $('#meName').textContent = S.eu.nome;
+  $('#teamName').textContent = S.equipe?.nome || '';
   const r = $('#meRole'); r.textContent = gerente() ? 'Gerente' : 'Funcionário'; r.className = 'role ' + S.eu.papel;
   $('#tabEquipe').classList.toggle('hidden', !gerente());
   $('#novaBtn').classList.toggle('hidden', !gerente());
@@ -607,6 +635,8 @@ document.querySelector('.tabs').addEventListener('click', e => { const b = e.tar
 
 function renderEquipe(){
   const hoje = hojeISO();
+  $('#eqNome').textContent = S.equipe?.nome || 'Sua equipe';
+  $('#eqCodigo').textContent = S.equipe?.codigo || '';
   const linhas = S.perfis.map(p => {
     const ts = S.tarefas.filter(t => t.responsavel_id === p.id);
     const abertas = ts.filter(t => t.status !== 'concluido');
@@ -629,6 +659,11 @@ $('#team').addEventListener('change', async e => {
   if (error) { toast('Não foi possível alterar o papel'); return; }
   await carregarPerfis(); renderEquipe(); toast('Papel atualizado');
 });
+
+$('#copiarCod').onclick = async () => {
+  const txt = `Entre na equipe ${S.equipe?.nome || ''} no Taskflow: ${location.href.split('#')[0]}\nNa tela de cadastro, escolha "Tenho um código" e use: ${S.equipe?.codigo || ''}`;
+  try { await navigator.clipboard.writeText(txt); toast('Convite copiado'); } catch(e){ toast('Código: ' + (S.equipe?.codigo || '')); }
+};
 
 // ===== Agenda (Google Calendar) =====
 // Cada pessoa conecta a própria conta Google. O token fica só na memória da página (vale 1 hora).
