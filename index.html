@@ -352,8 +352,8 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
   <div class="auth-side">
     <div class="brand"><span class="logo" style="background:var(--bg)"><i style="background:var(--ink)"></i><i></i><i style="background:var(--ink)"></i><i style="background:var(--ink)"></i></span>Taskflow</div>
     <div>
-      <h1>Quem faz o quê, e até quando.</h1>
-      <p>O gerente distribui as tarefas, cada pessoa acompanha as suas e move os cards conforme o trabalho anda.</p>
+      <h1>Sua vida organizada num lugar só.</h1>
+      <p>Tarefas, agenda, finanças, estudos, vagas e anotações. Tudo privado, só seu.</p>
     </div>
     <div class="mini-board">
       <div class="mini-col"><div class="mini-card"></div><div class="mini-card"></div><div class="mini-card"></div></div>
@@ -392,10 +392,9 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
       <button class="tab" data-tab="estudos">Estudos</button>
       <button class="tab" data-tab="vagas">Vagas</button>
       <button class="tab" data-tab="notas">Anotações</button>
-      <button class="tab" data-tab="equipe" id="tabEquipe">Equipe</button>
     </nav>
     <div class="top-right">
-      <div class="me"><span id="meAv"></span><span class="name" id="meName"></span><span class="role" id="meRole"></span></div>
+      <div class="me"><span id="meAv"></span><span class="name" id="meName"></span></div>
       <button class="btn ghost" id="configBtn" title="Configurações" aria-label="Configurações">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
       </button>
@@ -673,10 +672,9 @@ function setModoAuth(m){
   modoAuth = m;
   const cad = m === 'signup';
   $('#authTitle').textContent = cad ? 'Criar conta' : 'Entrar';
-  $('#authSub').textContent = cad ? 'Crie sua equipe ou entre numa já existente com o código do gerente.' : 'Use o e-mail da sua conta.';
+  $('#authSub').textContent = cad ? 'Sua conta é só sua. Ninguém mais vê o que você guarda aqui.' : 'Use o e-mail da sua conta.';
   $('#nomeField').classList.toggle('hidden', !cad);
-  $('#eqModo').classList.toggle('hidden', !cad);
-  setModoEquipe(modoEquipe, cad);
+  setModoEquipe('criar', false); // uso individual: cada conta é independente
   $('#aNome').required = cad;
   $('#authBtn').textContent = cad ? 'Criar conta' : 'Entrar';
   $('#aSenha').autocomplete = cad ? 'new-password' : 'current-password';
@@ -785,11 +783,8 @@ function renderTudo(){ renderTopo(); renderPessoas(); renderQuadro(); if (S.aba 
 function renderTopo(){
   $('#meAv').innerHTML = avatar(S.eu);
   $('#meName').textContent = S.eu.nome;
-  $('#teamName').textContent = S.equipe?.nome || '';
-  const r = $('#meRole'); r.textContent = gerente() ? 'Gerente' : 'Funcionário'; r.className = 'role ' + S.eu.papel;
-  $('#tabEquipe').classList.toggle('hidden', !gerente());
-  $('#novaBtn').classList.toggle('hidden', !gerente());
-  $('#people').classList.toggle('hidden', !gerente());
+
+  $('#people').classList.add('hidden');
   if (!gerente() && S.aba === 'equipe') trocarAba('quadro');
   const d = new Date().toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long' });
   $('#today').textContent = d.charAt(0).toUpperCase() + d.slice(1);
@@ -819,7 +814,7 @@ function renderQuadro(){
   const hoje = hojeISO();
   const lista = visiveis();
   const filtroP = gerente() && S.filtro !== 'todos' ? perfil(S.filtro) : null;
-  $('#boardTitle').textContent = !gerente() ? 'Minhas tarefas' : filtroP ? (filtroP.id === S.eu.id ? 'Minhas tarefas' : 'Tarefas de ' + filtroP.nome.split(' ')[0]) : 'Quadro da equipe';
+  $('#boardTitle').textContent = 'Minhas tarefas';
   const semana = Date.now() - 7*864e5;
   $('#sAbertas').textContent = lista.filter(t => t.status !== 'concluido').length;
   $('#sAtrasadas').textContent = lista.filter(t => t.status !== 'concluido' && t.prazo && t.prazo < hoje).length;
@@ -848,7 +843,7 @@ function cardHTML(t, hoje){
     <div class="card-f">
       <span class="prio ${t.prioridade}">${PRIO[t.prioridade]}</span>
       ${t.prazo ? `<span class="due mono ${late?'late':''}">${late ? 'Atrasada · ' : ehHoje ? 'Hoje · ' : ''}${fmtData(t.prazo)}</span>` : ''}
-      <span class="who">${p ? avatar(p) : ''}</span>
+
     </div>
   </article>`;
 }
@@ -877,10 +872,7 @@ function abrirTarefa(t){
   const corpo = g ? `
     <div class="field"><label>Título</label><input class="input" id="mTitulo" maxlength="200" value="${esc(t.titulo)}" required></div>
     <div class="field"><label>Descrição</label><textarea class="input" id="mDesc">${esc(t.descricao)}</textarea></div>
-    <div class="row2">
-      <div class="field"><label>Responsável</label><select class="input" id="mResp">${opcoesPessoas}</select></div>
-      <div class="field"><label>Prazo</label><input class="input" type="date" id="mPrazo" value="${t.prazo||''}"></div>
-    </div>
+    <div class="field"><label>Prazo</label><input class="input" type="date" id="mPrazo" value="${t.prazo||''}"></div>
     <div class="row2">
       <div class="field"><label>Prioridade</label><select class="input" id="mPrio">${Object.entries(PRIO).map(([k,v]) => `<option value="${k}" ${k===t.prioridade?'selected':''}>${v}</option>`).join('')}</select></div>
       <div class="field"><label>Status</label><select class="input" id="mStatus">${opcoesStatus}</select></div>
@@ -894,10 +886,10 @@ function abrirTarefa(t){
     </div>
     <div class="field"><label>Status</label><select class="input" id="mStatus">${opcoesStatus}</select></div>`;
 
-  const meta = nova ? '' : `<div class="meta">${criador ? 'Criada por ' + esc(criador.nome) + ' em ' : 'Criada em '}${new Date(t.criado_em).toLocaleDateString('pt-BR')}${t.concluido_em ? ' · concluída em ' + new Date(t.concluido_em).toLocaleDateString('pt-BR') : ''}</div>`;
+  const meta = nova ? '' : `<div class="meta">Criada em ${new Date(t.criado_em).toLocaleDateString('pt-BR')}${t.concluido_em ? ' · concluída em ' + new Date(t.concluido_em).toLocaleDateString('pt-BR') : ''}</div>`;
 
   $('#modalRoot').innerHTML = `<div class="overlay" id="ov"><form class="modal" id="mForm">
-    <div class="modal-h"><h3>${nova ? 'Nova tarefa' : g ? 'Editar tarefa' : 'Tarefa'}</h3>${!nova && resp ? `<span style="display:flex;align-items:center;gap:8px;font-size:13px">${avatar(resp)}${esc(resp.nome)}</span>` : ''}</div>
+    <div class="modal-h"><h3>${nova ? 'Nova tarefa' : g ? 'Editar tarefa' : 'Tarefa'}</h3></div>
     <div class="modal-b">${corpo}${meta}</div>
     <div class="modal-f">
       ${!nova && g ? '<button type="button" class="btn danger" id="mDel">Excluir</button>' : ''}
@@ -924,7 +916,7 @@ function abrirTarefa(t){
     if (g) {
       const titulo = $('#mTitulo').value.trim();
       if (!titulo) return;
-      campos = { titulo, descricao: $('#mDesc').value.trim() || null, responsavel_id: $('#mResp').value, prazo: $('#mPrazo').value || null, prioridade: $('#mPrio').value, status: $('#mStatus').value };
+      campos = { titulo, descricao: $('#mDesc').value.trim() || null, responsavel_id: S.eu.id, prazo: $('#mPrazo').value || null, prioridade: $('#mPrio').value, status: $('#mStatus').value };
     } else {
       campos = { status: $('#mStatus').value };
     }

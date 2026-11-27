@@ -1,20 +1,21 @@
 # Taskflow
 
-Kanban de tarefas para equipes. O gerente cria tarefas e designa para os funcionários ou para si mesmo, e cada pessoa move os cards entre A fazer, Em andamento, Pausado e Concluído.
+Organizador pessoal num site só: kanban de tarefas, agenda (Google Agenda), finanças (lançamentos, clientes, revenda e investimentos), caderno de estudos, vagas de emprego atualizadas todo dia e anotações. Cada conta é individual e privada.
 
-## Como funciona
+## Recursos
 
-- Login com e-mail e senha (Supabase Auth). O primeiro cadastro vira gerente; os seguintes entram como funcionário.
-- Gerente vê o quadro da equipe inteira, filtra por pessoa, cria, edita e exclui tarefas e muda o papel dos membros na aba Equipe.
-- Funcionário vê só as próprias tarefas e pode apenas mudar o status.
-- As regras ficam no banco (Row Level Security e triggers), não só na interface.
-- Atualização em tempo real quando alguém mexe numa tarefa.
+- Login com e-mail e senha (Supabase Auth). Cada pessoa só enxerga os próprios dados, garantido por Row Level Security no banco.
+- Kanban com A fazer, Em andamento, Pausado e Concluído, arrastar e soltar, prioridade e prazo.
+- Agenda semanal com eventos do Google Agenda (Google Identity Services) e os prazos das tarefas.
+- Finanças: entradas e saídas por mês, gastos por categoria, clientes, revenda com estoque e lucro, investimentos com rentabilidade.
+- Estudos: páginas por matéria com Markdown simples.
+- Vagas: lista diária de vagas com controle de envio de currículo.
+- Configurações: 8 temas, cor de destaque, cantos, tamanho do texto, densidade, menu horizontal ou vertical e backup em arquivo JSON.
 
 ## Tecnologias
 
-HTML, CSS e JavaScript puro, com [supabase-js](https://supabase.com/docs/reference/javascript) via CDN. Banco PostgreSQL no Supabase. Hospedado no GitHub Pages.
+HTML, CSS e JavaScript puro, supabase-js via CDN, PostgreSQL no Supabase, GitHub Pages.
 
-## Estrutura
+## Banco
 
-- `index.html`: o site inteiro (telas de login, quadro e equipe).
-- `schema.sql`: tabelas `perfis` e `tarefas`, funções, triggers e políticas de acesso.
+Os arquivos `.sql` guardam o esquema na ordem em que foi criado: `schema.sql`, `equipes.sql`, `notas.sql`, `financas.sql`, `extras.sql`.
