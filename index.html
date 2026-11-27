@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async></script>
 <style>
 :root{
   --bg:#f4f3ef; --surface:#ffffff; --surface-2:#faf9f6; --ink:#18181b; --ink-2:#3f3f46; --muted:#71717a;
@@ -140,6 +141,28 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
 .bar i{display:block;height:100%;background:var(--done)}
 .hint{color:var(--muted);font-size:13px;margin:12px 2px 0}
 
+/* Agenda */
+.ag-nav{display:flex;gap:6px}
+.ag-nav .btn{min-width:34px;justify-content:center}
+.gstatus{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.gstatus .dot{width:7px;height:7px}
+.week{display:grid;grid-template-columns:repeat(7,minmax(150px,1fr));gap:10px;overflow-x:auto;padding-bottom:8px}
+.day{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;min-height:260px;display:flex;flex-direction:column}
+.day.today{border-color:var(--accent)}
+.day-h{padding:10px 12px;display:flex;align-items:baseline;gap:6px;border-bottom:1px solid var(--line)}
+.day-h b{font-size:20px;font-weight:600;letter-spacing:-.02em;font-family:"Geist Mono",monospace}
+.day-h span{font-size:12px;color:var(--muted);text-transform:capitalize}
+.day.today .day-h b{color:var(--accent)}
+.day-b{padding:8px;display:flex;flex-direction:column;gap:6px}
+.ev{border-radius:8px;padding:7px 9px;font-size:12.5px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--doing);cursor:pointer;word-break:break-word}
+.ev .h{font-family:"Geist Mono",monospace;font-size:11px;color:var(--muted)}
+.ev.task{border-left-color:var(--accent)}
+.ev.task.concluido{border-left-color:var(--done);opacity:.65}
+.ev.task.concluido .tt{text-decoration:line-through}
+.ev .tag{font-size:10.5px;color:var(--muted)}
+.ag-empty{color:var(--muted);font-size:12px;padding:6px 4px}
+@media (max-width:900px){ .week{grid-template-columns:repeat(7,72vw);scroll-snap-type:x mandatory} .day{scroll-snap-align:start} }
+
 /* Modal */
 .overlay{position:fixed;inset:0;background:rgba(10,10,10,.4);display:flex;align-items:flex-start;justify-content:center;padding:8vh 16px 16px;z-index:20}
 .modal{width:100%;max-width:520px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;max-height:84vh}
@@ -209,6 +232,7 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
     <div class="brand"><span class="logo"><i></i><i></i><i></i><i></i></span><span>Taskflow</span></div>
     <nav class="tabs">
       <button class="tab on" data-tab="quadro">Quadro</button>
+      <button class="tab" data-tab="agenda">Agenda</button>
       <button class="tab" data-tab="equipe" id="tabEquipe">Equipe</button>
     </nav>
     <div class="top-right">
@@ -242,6 +266,26 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
     <div class="board" id="board"></div>
   </main>
 
+  <main class="wrap hidden" id="viewAgenda">
+    <div class="head">
+      <div><h1>Agenda</h1><div class="date" id="agRange">Seus compromissos do Google Agenda junto com os prazos das tarefas</div></div>
+      <div class="ag-nav">
+        <button class="btn" id="agPrev" aria-label="Semana anterior">&#8249;</button>
+        <button class="btn" id="agHoje">Hoje</button>
+        <button class="btn" id="agNext" aria-label="Próxima semana">&#8250;</button>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="gstatus" id="gStatus"></div>
+      <span style="flex:1"></span>
+      <button class="btn" id="gConnect">Conectar Google Agenda</button>
+      <button class="btn primary hidden" id="gNovo">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Novo evento
+      </button>
+    </div>
+    <div class="week" id="week"></div>
+  </main>
+
   <main class="wrap hidden" id="viewEquipe">
     <div class="head"><div><h1>Equipe</h1><div class="date">Carga de trabalho e papéis de cada pessoa</div></div></div>
     <div class="team" id="team"></div>
@@ -255,6 +299,7 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
 // ===== Configuração do Supabase =====
 const SUPABASE_URL = 'https://cdlfddlyvhurxkadpleo.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_gqdhH8H2ouF0JP-imC_q2g_qFeIlg4X';
+const GOOGLE_CLIENT_ID = 'COLE_AQUI_O_CLIENT_ID_DO_GOOGLE';
 // ====================================
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -513,6 +558,7 @@ function abrirTarefa(t){
     <div class="modal-b">${corpo}${meta}</div>
     <div class="modal-f">
       ${!nova && g ? '<button type="button" class="btn danger" id="mDel">Excluir</button>' : ''}
+      ${!nova && gConectado() && t.prazo ? '<button type="button" class="btn" id="mAgenda">Pôr na agenda</button>' : ''}
       <span class="sp"></span>
       <button type="button" class="btn" id="mCancel">Cancelar</button>
       <button class="btn primary" id="mSalvar">${nova ? 'Criar tarefa' : 'Salvar'}</button>
@@ -522,6 +568,8 @@ function abrirTarefa(t){
   $('#ov').addEventListener('mousedown', e => { if (e.target.id === 'ov') fecharModal(); });
   $('#mCancel').onclick = fecharModal;
   if (g) setTimeout(() => $('#mTitulo').focus(), 30);
+  const ag = $('#mAgenda');
+  if (ag) ag.onclick = () => abrirEvento(null, { titulo: t.titulo, dia: t.prazo, descricao: t.descricao || '', diaTodo: true });
   const del = $('#mDel');
   if (del) del.onclick = () => {
     if (del.dataset.ok) { fecharModal(); excluirTarefa(t.id); }
@@ -551,7 +599,9 @@ function trocarAba(a){
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.tab === a));
   $('#viewQuadro').classList.toggle('hidden', a !== 'quadro');
   $('#viewEquipe').classList.toggle('hidden', a !== 'equipe');
+  $('#viewAgenda').classList.toggle('hidden', a !== 'agenda');
   if (a === 'equipe') renderEquipe();
+  if (a === 'agenda') abrirAgenda();
 }
 document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) trocarAba(b.dataset.tab); });
 
@@ -579,6 +629,160 @@ $('#team').addEventListener('change', async e => {
   if (error) { toast('Não foi possível alterar o papel'); return; }
   await carregarPerfis(); renderEquipe(); toast('Papel atualizado');
 });
+
+// ===== Agenda (Google Calendar) =====
+// Cada pessoa conecta a própria conta Google. O token fica só na memória da página (vale 1 hora).
+const G = { token:null, expira:0, eventos:[], inicio:inicioSemana(new Date()), client:null, carregando:false, erro:'' };
+const GCAL = 'https://www.googleapis.com/calendar/v3/calendars/primary/events';
+const DIAS = ['dom','seg','ter','qua','qui','sex','sáb'];
+
+function inicioSemana(d){ const x = new Date(d); x.setHours(0,0,0,0); x.setDate(x.getDate() - ((x.getDay()+6)%7)); return x; }
+function isoLocal(d){ const x = new Date(d); x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); return x.toISOString().slice(0,10); }
+function gConectado(){ return G.token && Date.now() < G.expira; }
+function gLembrar(v){ try { v ? localStorage.setItem('gcal','1') : localStorage.removeItem('gcal'); } catch(e){} }
+function gLembrado(){ try { return localStorage.getItem('gcal') === '1'; } catch(e){ return false; } }
+
+function gCliente(){
+  if (G.client) return G.client;
+  if (!window.google?.accounts?.oauth2) { toast('Google ainda carregando, tente de novo'); return null; }
+  if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.startsWith('COLE')) { toast('Integração com o Google ainda não configurada'); return null; }
+  G.client = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: 'https://www.googleapis.com/auth/calendar.events',
+    callback: r => {
+      if (r.error) { G.erro = 'Não foi possível conectar'; renderAgenda(); return; }
+      G.token = r.access_token; G.expira = Date.now() + (r.expires_in - 60) * 1000; G.erro = '';
+      gLembrar(true); carregarEventos();
+    }
+  });
+  return G.client;
+}
+function gConectar(){ const c = gCliente(); if (c) c.requestAccessToken({ prompt: gLembrado() ? '' : 'consent', hint: S.eu?.email }); }
+function gDesconectar(){
+  if (G.token && window.google?.accounts?.oauth2) google.accounts.oauth2.revoke(G.token, () => {});
+  G.token = null; G.eventos = []; gLembrar(false); renderAgenda();
+}
+
+async function gFetch(url, opts = {}){
+  const r = await fetch(url, { ...opts, headers: { Authorization: 'Bearer ' + G.token, 'Content-Type': 'application/json', ...(opts.headers||{}) } });
+  if (r.status === 401) { G.token = null; renderAgenda(); throw new Error('Sessão do Google expirou, conecte de novo'); }
+  if (!r.ok) throw new Error('Erro no Google Agenda');
+  return r.status === 204 ? null : r.json();
+}
+
+async function carregarEventos(){
+  if (!gConectado()) { renderAgenda(); return; }
+  G.carregando = true; renderAgenda();
+  const fim = new Date(G.inicio); fim.setDate(fim.getDate() + 7);
+  const p = new URLSearchParams({ timeMin: G.inicio.toISOString(), timeMax: fim.toISOString(), singleEvents:'true', orderBy:'startTime', maxResults:'250' });
+  try { const d = await gFetch(GCAL + '?' + p); G.eventos = d.items || []; G.erro = ''; }
+  catch(e){ G.erro = e.message; }
+  G.carregando = false; renderAgenda();
+}
+
+function abrirAgenda(){ if (gConectado()) carregarEventos(); else renderAgenda(); }
+
+function renderAgenda(){
+  if (S.aba !== 'agenda') return;
+  const con = gConectado();
+  $('#gConnect').textContent = con ? 'Desconectar' : gLembrado() ? 'Reconectar Google Agenda' : 'Conectar Google Agenda';
+  $('#gConnect').classList.toggle('primary', !con);
+  $('#gNovo').classList.toggle('hidden', !con);
+  $('#gStatus').innerHTML = con
+    ? `<span class="dot" style="background:var(--done)"></span>Google Agenda conectado${G.carregando ? ' · atualizando' : ''}`
+    : `<span class="dot" style="background:var(--todo)"></span>${G.erro ? esc(G.erro) : 'Google Agenda desconectado. Os prazos das suas tarefas aparecem mesmo assim.'}`;
+
+  const fimSem = new Date(G.inicio); fimSem.setDate(fimSem.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('pt-BR', { day:'numeric', month:'short' });
+  $('#agRange').textContent = `${fmt(G.inicio)} a ${fmt(fimSem)}`;
+
+  // Tarefas com prazo: gerente vê as que designou a si mesmo; funcionário vê as dele
+  const minhas = S.tarefas.filter(t => t.prazo && t.responsavel_id === S.eu.id);
+  const hoje = hojeISO();
+  const cols = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(G.inicio); d.setDate(d.getDate() + i);
+    const dia = isoLocal(d);
+    const evs = G.eventos.filter(e => (e.start.date || isoLocal(new Date(e.start.dateTime))) === dia);
+    const ts = minhas.filter(t => t.prazo === dia);
+    const itens = [
+      ...evs.map(e => {
+        const h = e.start.dateTime ? new Date(e.start.dateTime).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }) : 'Dia todo';
+        return `<div class="ev" data-ev="${esc(e.id)}"><div class="h">${h}</div>${esc(e.summary || '(sem título)')}</div>`;
+      }),
+      ...ts.map(t => `<div class="ev task ${t.status}" data-task="${t.id}"><div class="tag">Prazo de tarefa · ${COLS.find(c=>c.id===t.status).nome}</div><span class="tt">${esc(t.titulo)}</span></div>`)
+    ];
+    cols.push(`<section class="day ${dia===hoje?'today':''}">
+      <div class="day-h"><b>${d.getDate()}</b><span>${DIAS[d.getDay()]}</span></div>
+      <div class="day-b">${itens.join('') || '<div class="ag-empty">Livre</div>'}</div>
+    </section>`);
+  }
+  $('#week').innerHTML = cols.join('');
+}
+
+$('#agPrev').onclick = () => { G.inicio.setDate(G.inicio.getDate() - 7); carregarEventos(); };
+$('#agNext').onclick = () => { G.inicio.setDate(G.inicio.getDate() + 7); carregarEventos(); };
+$('#agHoje').onclick = () => { G.inicio = inicioSemana(new Date()); carregarEventos(); };
+$('#gConnect').onclick = () => gConectado() ? gDesconectar() : gConectar();
+$('#gNovo').onclick = () => abrirEvento();
+$('#week').addEventListener('click', e => {
+  const ev = e.target.closest('[data-ev]'); if (ev) return abrirEvento(G.eventos.find(x => x.id === ev.dataset.ev));
+  const t = e.target.closest('[data-task]'); if (t) abrirTarefa(S.tarefas.find(x => x.id === t.dataset.task));
+});
+
+function abrirEvento(ev, padrao = {}){
+  const nova = !ev;
+  const dia = ev ? (ev.start.date || isoLocal(new Date(ev.start.dateTime))) : (padrao.dia || hojeISO());
+  const hora = d => d ? new Date(d).toTimeString().slice(0,5) : '';
+  const diaTodo = ev ? !!ev.start.date : !!padrao.diaTodo;
+  $('#modalRoot').innerHTML = `<div class="overlay" id="ov"><form class="modal" id="eForm">
+    <div class="modal-h"><h3>${nova ? 'Novo evento' : 'Evento'}</h3>${ev?.htmlLink ? `<a class="meta" href="${esc(ev.htmlLink)}" target="_blank" rel="noopener">Abrir no Google</a>` : ''}</div>
+    <div class="modal-b">
+      <div class="field"><label>Título</label><input class="input" id="eTitulo" required value="${esc(ev?.summary || padrao.titulo || '')}"></div>
+      <div class="field"><label>Data</label><input class="input" type="date" id="eDia" required value="${dia}"></div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px"><input type="checkbox" id="eTodo" ${diaTodo?'checked':''}> Dia todo</label>
+      <div class="row2" id="eHoras" ${diaTodo?'style="display:none"':''}>
+        <div class="field"><label>Início</label><input class="input" type="time" id="eIni" value="${ev ? hora(ev.start.dateTime) : '09:00'}"></div>
+        <div class="field"><label>Fim</label><input class="input" type="time" id="eFim" value="${ev ? hora(ev.end.dateTime) : '10:00'}"></div>
+      </div>
+      <div class="field"><label>Descrição</label><textarea class="input" id="eDesc">${esc(ev?.description || padrao.descricao || '')}</textarea></div>
+    </div>
+    <div class="modal-f">
+      ${!nova ? '<button type="button" class="btn danger" id="eDel">Excluir</button>' : ''}
+      <span class="sp"></span>
+      <button type="button" class="btn" id="eCancel">Cancelar</button>
+      <button class="btn primary" id="eSalvar">${nova ? 'Criar evento' : 'Salvar'}</button>
+    </div>
+  </form></div>`;
+  $('#ov').addEventListener('mousedown', e => { if (e.target.id === 'ov') fecharModal(); });
+  $('#eCancel').onclick = fecharModal;
+  $('#eTodo').onchange = e => { $('#eHoras').style.display = e.target.checked ? 'none' : ''; };
+  const del = $('#eDel');
+  if (del) del.onclick = async () => {
+    if (!del.dataset.ok) { del.dataset.ok = 1; del.textContent = 'Confirmar exclusão'; return; }
+    try { await gFetch(GCAL + '/' + encodeURIComponent(ev.id), { method:'DELETE' }); fecharModal(); toast('Evento excluído'); carregarEventos(); }
+    catch(e){ toast(e.message); }
+  };
+  $('#eForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const d = $('#eDia').value, tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const corpo = { summary: $('#eTitulo').value.trim(), description: $('#eDesc').value.trim() || undefined };
+    if ($('#eTodo').checked) {
+      const f = new Date(d + 'T12:00:00'); f.setDate(f.getDate() + 1);
+      corpo.start = { date: d }; corpo.end = { date: isoLocal(f) };
+    } else {
+      const ini = $('#eIni').value || '09:00', fim = $('#eFim').value || ini;
+      if (fim <= ini) { toast('O fim precisa ser depois do início'); return; }
+      corpo.start = { dateTime: `${d}T${ini}:00`, timeZone: tz }; corpo.end = { dateTime: `${d}T${fim}:00`, timeZone: tz };
+    }
+    $('#eSalvar').disabled = true;
+    try {
+      await gFetch(nova ? GCAL : GCAL + '/' + encodeURIComponent(ev.id), { method: nova ? 'POST' : 'PATCH', body: JSON.stringify(corpo) });
+      fecharModal(); toast(nova ? 'Evento criado no Google Agenda' : 'Evento salvo');
+      if (S.aba === 'agenda') carregarEventos();
+    } catch(err){ toast(err.message); $('#eSalvar').disabled = false; }
+  });
+}
 
 // Início
 sb.auth.getSession().then(({ data }) => { if (!data.session) mostrarLogin(); });
