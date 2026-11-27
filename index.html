@@ -79,7 +79,9 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
 .logo{width:22px;height:22px;border-radius:6px;background:var(--ink);display:grid;grid-template-columns:1fr 1fr;gap:2px;padding:4px}
 .logo i{background:var(--bg);border-radius:1px}
 .logo i:nth-child(2){background:var(--accent)}
-.tabs{display:flex;gap:2px}
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0}
+.tabs::-webkit-scrollbar{display:none}
+.tab{white-space:nowrap}
 .tab{padding:6px 12px;border-radius:7px;cursor:pointer;color:var(--muted);font-weight:500;border:0;background:none}
 .tab.on{color:var(--ink);background:var(--surface);box-shadow:var(--shadow)}
 .top-right{margin-left:auto;display:flex;align-items:center;gap:10px}
@@ -204,6 +206,95 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
 .cat-row .bar i{background:var(--accent)}
 @media (max-width:900px){ .fin-cards{grid-template-columns:1fr 1fr} .fin-grid{grid-template-columns:1fr} }
 
+/* Configurações */
+.cfg-sec{display:flex;flex-direction:column;gap:10px}
+.cfg-sec h4{margin:0;font-size:13px;font-weight:600}
+.cfg-sec .meta{margin-top:-6px}
+.presets{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.preset{border:1px solid var(--line-2);border-radius:10px;padding:6px;cursor:pointer;background:none;display:flex;flex-direction:column;gap:6px;text-align:left;font-size:12px}
+.preset.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.preset .sw{height:38px;border-radius:6px;display:grid;grid-template-columns:2fr 1fr;overflow:hidden;border:1px solid rgba(127,127,127,.2)}
+.preset .sw i:last-child{display:grid;place-items:center}
+.preset .sw b{width:12px;height:12px;border-radius:50%}
+.accents{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.accent-sw{width:28px;height:28px;border-radius:50%;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line-2);cursor:pointer;padding:0}
+.accent-sw.on{box-shadow:0 0 0 2px var(--ink)}
+.accent-custom{position:relative;width:28px;height:28px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px var(--line-2);background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)}
+.accent-custom input{position:absolute;inset:-8px;width:44px;height:44px;opacity:0;cursor:pointer}
+.cfg-hr{border:0;border-top:1px solid var(--line);margin:4px 0}
+.cfg-row{display:flex;gap:8px;flex-wrap:wrap}
+[data-cantos="retos"]{--r:3px}
+[data-cantos="retos"] :is(.col,.panel,.team,.fin-card,.note,.day,.invite,.modal,.notes-empty,.btn,.input,.chip,.prio,.ev,.seg,.seg button,.tab){border-radius:3px}
+[data-cantos="redondos"]{--r:16px}
+[data-cantos="redondos"] :is(.col,.panel,.team,.fin-card,.note,.day,.invite,.modal){border-radius:20px}
+[data-cantos="redondos"] :is(.btn,.input,.tab){border-radius:99px}
+[data-cantos="redondos"] textarea.input{border-radius:14px}
+[data-texto="grande"] body{font-size:15.5px}
+[data-texto="grande"] .card .t,[data-texto="grande"] .ev{font-size:15px}
+[data-densidade="compacta"] .card{padding:8px 10px;gap:5px}
+[data-densidade="compacta"] .col-b{gap:5px}
+[data-densidade="compacta"] .wrap{padding-top:16px}
+@media (max-width:600px){ .presets{grid-template-columns:repeat(2,1fr)} }
+
+.subnav{display:inline-grid;grid-template-columns:repeat(4,auto);margin-bottom:16px}
+.subnav button{padding:0 14px}
+.trow{display:grid;gap:12px;align-items:center;padding:11px 16px;border-top:1px solid var(--line)}
+.trow:first-child{border-top:0}
+.trow.h{font-size:12px;color:var(--muted);font-weight:500;background:var(--surface-2)}
+.trow.click{cursor:pointer}.trow.click:hover{background:var(--surface-2)}
+.trow .num{font-family:"Geist Mono",monospace;text-align:right}
+.trow .acts{display:flex;gap:6px;justify-content:flex-end}
+.trow .acts .btn{height:28px;padding:0 10px;font-size:12px}
+.t-cli{grid-template-columns:1.6fr 1fr 1fr 1fr}
+.t-prod{grid-template-columns:1.6fr .8fr .8fr .7fr .6fr 190px}
+.t-inv{grid-template-columns:1.6fr .9fr 1fr 1fr .8fr}
+@media (max-width:900px){ .subnav{display:grid;grid-template-columns:1fr 1fr;width:100%} .t-cli,.t-prod,.t-inv{grid-template-columns:1fr auto} .trow .hide-sm{display:none} }
+
+/* Estudos */
+.study{display:grid;grid-template-columns:280px 1fr;gap:16px;align-items:start;min-height:calc(100vh - 110px)}
+.study-side{background:var(--surface);border:1px solid var(--line);border-radius:12px;position:sticky;top:76px;max-height:calc(100vh - 100px);display:flex;flex-direction:column}
+.study-side-h{display:flex;align-items:center;justify-content:space-between;padding:14px 12px 10px}
+.study-side .search input{width:100%}
+.study-list{overflow:auto;padding:0 6px 10px}
+.study-mat{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:12px 8px 4px;display:flex;justify-content:space-between}
+.study-item{display:block;width:100%;text-align:left;border:0;background:none;padding:7px 8px;border-radius:7px;cursor:pointer;font-size:13.5px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.study-item:hover{background:var(--surface-2)}
+.study-item.on{background:var(--accent-soft);color:var(--ink);font-weight:500}
+.study-main{background:var(--surface);border:1px solid var(--line);border-radius:12px;min-height:70vh;display:flex;flex-direction:column}
+.study-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.study-bar .meta{margin-right:auto}
+.study-title{border:0;background:none;outline:none;font-size:28px;font-weight:600;letter-spacing:-.025em;padding:22px 28px 4px;width:100%}
+.study-mat-in{border:0;background:none;outline:none;padding:0 28px 10px;color:var(--accent);font-weight:500;font-size:13px;width:100%}
+.study-body{flex:1;border:0;background:none;outline:none;resize:none;padding:8px 28px 28px;font:15px/1.7 "Geist Mono",monospace;width:100%;min-height:50vh}
+.prose{padding:8px 28px 32px;font-size:15.5px;line-height:1.7;max-width:760px}
+.prose h1,.prose h2,.prose h3{letter-spacing:-.02em;line-height:1.25;margin:1.4em 0 .5em}
+.prose h1{font-size:24px}.prose h2{font-size:20px}.prose h3{font-size:17px}
+.prose p{margin:.6em 0}
+.prose code{font-family:"Geist Mono",monospace;font-size:.88em;background:var(--surface-2);border:1px solid var(--line);padding:1px 5px;border-radius:5px}
+.prose pre{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto}
+.prose pre code{border:0;padding:0;background:none}
+.prose blockquote{margin:.8em 0;padding:2px 16px;border-left:3px solid var(--accent);color:var(--ink-2)}
+.prose ul,.prose ol{padding-left:1.4em}
+.prose a{color:var(--accent)}
+.prose hr{border:0;border-top:1px solid var(--line);margin:1.6em 0}
+.study-empty{margin:auto;text-align:center;color:var(--muted);padding:40px 20px;max-width:420px}
+.study-hint{font-size:12px;color:var(--muted);padding:0 28px 14px}
+@media (max-width:900px){ .study{grid-template-columns:1fr} .study-side{position:static;max-height:none} .study-title{padding:18px 16px 4px;font-size:22px} .study-mat-in,.study-body,.prose,.study-hint{padding-left:16px;padding-right:16px} }
+
+/* Vagas */
+.jobs{display:flex;flex-direction:column;gap:8px}
+.job{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:6px 16px;align-items:start}
+.job.nova{border-left:3px solid var(--accent)}
+.job h4{margin:0;font-size:15px;font-weight:600}
+.job h4 a{color:inherit;text-decoration:none}.job h4 a:hover{text-decoration:underline}
+.job .info{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.job .resumo{grid-column:1/-1;font-size:13px;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.job .side{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.job select{height:30px;width:auto;font-size:12.5px}
+.src{font-size:11px;font-weight:500;padding:2px 8px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
+.st-enviado{color:var(--doing)}.st-entrevista{color:var(--done)}.st-recusado,.st-descartada{color:var(--muted)}
+@media (max-width:700px){ .job{grid-template-columns:1fr} .job .side{flex-direction:row;align-items:center;justify-content:space-between} #vagFiltro{grid-template-columns:repeat(3,1fr)!important;width:100%} }
+
 /* Modal */
 .overlay{position:fixed;inset:0;background:rgba(10,10,10,.4);display:flex;align-items:flex-start;justify-content:center;padding:8vh 16px 16px;z-index:20}
 .modal{width:100%;max-width:520px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;max-height:84vh}
@@ -281,13 +372,15 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
       <button class="tab on" data-tab="quadro">Quadro</button>
       <button class="tab" data-tab="agenda">Agenda</button>
       <button class="tab" data-tab="financas">Finanças</button>
+      <button class="tab" data-tab="estudos">Estudos</button>
+      <button class="tab" data-tab="vagas">Vagas</button>
       <button class="tab" data-tab="notas">Anotações</button>
       <button class="tab" data-tab="equipe" id="tabEquipe">Equipe</button>
     </nav>
     <div class="top-right">
       <div class="me"><span id="meAv"></span><span class="name" id="meName"></span><span class="role" id="meRole"></span></div>
-      <button class="btn ghost" id="themeBtn" title="Alternar tema" aria-label="Alternar tema">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <button class="btn ghost" id="configBtn" title="Configurações" aria-label="Configurações">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
       </button>
       <button class="btn ghost" id="sairBtn">Sair</button>
     </div>
@@ -344,6 +437,13 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
         <button class="btn" id="fNext" aria-label="Próximo mês">&#8250;</button>
       </div>
     </div>
+    <div class="seg subnav" id="finNav">
+      <button type="button" class="on" data-fv="geral">Visão geral</button>
+      <button type="button" data-fv="clientes">Clientes</button>
+      <button type="button" data-fv="revenda">Revenda</button>
+      <button type="button" data-fv="invest">Investimentos</button>
+    </div>
+    <div id="fvGeral">
     <div class="fin-cards">
       <div class="fin-card"><span>Entradas</span><b class="mono pos" id="fEnt">R$ 0,00</b></div>
       <div class="fin-card"><span>Saídas</span><b class="mono neg" id="fSai">R$ 0,00</b></div>
@@ -363,6 +463,84 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
         <div id="fCats" style="padding:4px 16px 16px"></div>
       </section>
     </div>
+    </div>
+
+    <div id="fvClientes" class="hidden">
+      <div class="fin-cards">
+        <div class="fin-card"><span>Clientes</span><b class="mono" id="cTotal">0</b></div>
+        <div class="fin-card"><span>Recebido no mês</span><b class="mono pos" id="cMes">R$ 0,00</b></div>
+        <div class="fin-card"><span>A receber</span><b class="mono" id="cReceber">R$ 0,00</b></div>
+        <div class="fin-card"><span>Recebido no total</span><b class="mono" id="cGeral">R$ 0,00</b></div>
+      </div>
+      <section class="panel">
+        <div class="panel-h"><h3>Clientes</h3><span class="sp"></span><button class="btn primary" id="cNovo">+ Cliente</button></div>
+        <div id="cLista"></div>
+      </section>
+    </div>
+
+    <div id="fvRevenda" class="hidden">
+      <div class="fin-cards">
+        <div class="fin-card"><span>Vendido no mês</span><b class="mono pos" id="rVend">R$ 0,00</b></div>
+        <div class="fin-card"><span>Lucro no mês</span><b class="mono" id="rLucro">R$ 0,00</b></div>
+        <div class="fin-card"><span>Itens em estoque</span><b class="mono" id="rItens">0</b></div>
+        <div class="fin-card"><span>Valor em estoque (custo)</span><b class="mono" id="rValor">R$ 0,00</b></div>
+      </div>
+      <section class="panel">
+        <div class="panel-h"><h3>Produtos</h3><span class="sp"></span><button class="btn primary" id="rNovo">+ Produto</button></div>
+        <div id="rLista"></div>
+      </section>
+    </div>
+
+    <div id="fvInvest" class="hidden">
+      <div class="fin-cards">
+        <div class="fin-card"><span>Total aplicado</span><b class="mono" id="iApl">R$ 0,00</b></div>
+        <div class="fin-card"><span>Valor atual</span><b class="mono" id="iAtual">R$ 0,00</b></div>
+        <div class="fin-card"><span>Rendimento</span><b class="mono" id="iRend">R$ 0,00</b></div>
+        <div class="fin-card"><span>Rentabilidade</span><b class="mono" id="iPct">0%</b></div>
+      </div>
+      <section class="panel">
+        <div class="panel-h"><h3>Investimentos</h3><span class="sp"></span><button class="btn primary" id="iNovo">+ Investimento</button></div>
+        <div id="iLista"></div>
+      </section>
+    </div>
+  </main>
+
+  <main class="wrap hidden" id="viewEstudos">
+    <div class="study">
+      <aside class="study-side">
+        <div class="study-side-h">
+          <h1 style="font-size:20px;margin:0">Estudos</h1>
+          <button class="btn primary" id="estNova" style="height:30px;padding:0 10px">+ Página</button>
+        </div>
+        <div class="search" style="margin:0 12px 8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input class="input" id="estBusca" placeholder="Buscar no caderno"></div>
+        <nav id="estLista" class="study-list"></nav>
+      </aside>
+      <section class="study-main" id="estMain"></section>
+    </div>
+  </main>
+
+  <main class="wrap hidden" id="viewVagas">
+    <div class="head">
+      <div><h1>Vagas</h1><div class="date" id="vagSub">Vagas novas todos os dias de Hora do Emprego DF, Vagas BSB, LinkedIn, Indeed, CIEE e InfoJobs</div></div>
+      <div class="stats">
+        <div class="stat"><b id="vNovas">0</b><span>Novas</span></div>
+        <div class="stat"><b id="vEnv">0</b><span>Currículos enviados</span></div>
+        <div class="stat"><b id="vEnt">0</b><span>Entrevistas</span></div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="seg" id="vagFiltro" style="grid-template-columns:repeat(5,auto)">
+        <button type="button" class="on" data-vf="abertas">Para ver</button>
+        <button type="button" data-vf="enviado">Enviadas</button>
+        <button type="button" data-vf="entrevista">Entrevistas</button>
+        <button type="button" data-vf="encerradas">Encerradas</button>
+        <button type="button" data-vf="todas">Todas</button>
+      </div>
+      <select class="input" id="vagFonte" style="width:auto;height:34px"><option value="">Todos os sites</option></select>
+      <div class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input class="input" id="vagBusca" placeholder="Buscar vaga ou empresa"></div>
+      <button class="btn" id="vagNova">+ Adicionar vaga</button>
+    </div>
+    <div id="vagLista" class="jobs"></div>
   </main>
 
   <main class="wrap hidden" id="viewNotas">
@@ -419,15 +597,49 @@ function avatar(p, lg){ if(!p) return ''; return `<span class="av${lg?' lg':''}"
 function fmtData(iso){ if(!iso) return ''; const [y,m,d] = iso.split('-'); const meses=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez']; return `${+d} ${meses[+m-1]}`; }
 function toast(t){ const el = document.createElement('div'); el.className='toast'; el.textContent=t; document.body.appendChild(el); setTimeout(()=>el.remove(), 2600); }
 
-// ===== Tema =====
-try { const t = localStorage.getItem('tema'); if (t) document.documentElement.dataset.theme = t; } catch(e){}
-$('#themeBtn').onclick = () => {
-  const escuro = matchMedia('(prefers-color-scheme: dark)').matches;
-  const atual = document.documentElement.dataset.theme || (escuro ? 'dark' : 'light');
-  const novo = atual === 'dark' ? 'light' : 'dark';
-  document.documentElement.dataset.theme = novo;
-  try { localStorage.setItem('tema', novo); } catch(e){}
+// ===== Temas =====
+// Cada tema define o modo base (claro/escuro) e, se quiser, sobrescreve as cores.
+const TEMAS = {
+  sistema:  { nome:'Sistema',  mode:null },
+  papel:    { nome:'Papel',    mode:'light' },
+  noite:    { nome:'Noite',    mode:'dark' },
+  areia:    { nome:'Areia',    mode:'light', v:{ bg:'#ece5d8', surface:'#fbf8f2', 'surface-2':'#f4efe5', line:'#ddd3c2', 'line-2':'#cfc3ae', ink:'#2b2118', 'ink-2':'#4d3f31', muted:'#857360', accent:'#9a3412' } },
+  oceano:   { nome:'Oceano',   mode:'light', v:{ bg:'#e9f0f3', surface:'#ffffff', 'surface-2':'#f3f7f9', line:'#d5e1e7', 'line-2':'#c2d3db', ink:'#0f2530', 'ink-2':'#2c4652', muted:'#62808d', accent:'#0e7490' } },
+  grafite:  { nome:'Grafite',  mode:'dark',  v:{ bg:'#0e1116', surface:'#161b22', 'surface-2':'#12161c', line:'#232a33', 'line-2':'#313a46', ink:'#e6edf3', 'ink-2':'#c4ced8', muted:'#8b98a5', accent:'#58a6ff' } },
+  floresta: { nome:'Floresta', mode:'dark',  v:{ bg:'#0d1411', surface:'#141f1a', 'surface-2':'#111a16', line:'#1f2d26', 'line-2':'#2c3d34', ink:'#e7f0ea', 'ink-2':'#c3d3c9', muted:'#87a091', accent:'#4ade80' } },
+  vinho:    { nome:'Vinho',    mode:'dark',  v:{ bg:'#140d10', surface:'#1e1418', 'surface-2':'#181014', line:'#2e2026', 'line-2':'#402c35', ink:'#f3e8ec', 'ink-2':'#d6c3ca', muted:'#a08890', accent:'#f472b6' } }
 };
+const ACENTOS = ['#c2410c','#dc2626','#db2777','#7c3aed','#2563eb','#0891b2','#059669','#65a30d','#ca8a04','#18181b'];
+const PREF_PADRAO = { tema:'sistema', acento:null, cantos:'suaves', texto:'normal', densidade:'normal' };
+let PREF = { ...PREF_PADRAO };
+
+function corTexto(hex){
+  const n = parseInt(hex.slice(1), 16), r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255;
+  return (0.299*r + 0.587*g + 0.114*b) > 160 ? '#111111' : '#ffffff';
+}
+function aplicarTema(p = PREF){
+  const root = document.documentElement, t = TEMAS[p.tema] || TEMAS.sistema;
+  root.removeAttribute('style');
+  if (t.mode) root.dataset.theme = t.mode; else delete root.dataset.theme;
+  for (const [k, v] of Object.entries(t.v || {})) root.style.setProperty('--' + k, v);
+  const ac = p.acento || t.v?.accent;
+  if (ac) {
+    root.style.setProperty('--accent', ac);
+    root.style.setProperty('--accent-ink', corTexto(ac));
+    root.style.setProperty('--accent-soft', `color-mix(in srgb, ${ac} 14%, var(--surface))`);
+  }
+  root.dataset.cantos = p.cantos; root.dataset.texto = p.texto; root.dataset.densidade = p.densidade;
+}
+try { const sv = JSON.parse(localStorage.getItem('pref') || 'null'); if (sv) PREF = { ...PREF_PADRAO, ...sv }; } catch(e){}
+aplicarTema();
+
+let tSalvarPref;
+function mudarPref(campos){
+  PREF = { ...PREF, ...campos }; aplicarTema();
+  try { localStorage.setItem('pref', JSON.stringify(PREF)); } catch(e){}
+  clearTimeout(tSalvarPref);
+  tSalvarPref = setTimeout(() => { if (S.eu) sb.from('perfis').update({ preferencias: PREF }).eq('id', S.eu.id).then(() => {}); }, 600);
+}
 
 // ===== Autenticação =====
 let modoAuth = 'login', modoEquipe = 'criar';
@@ -492,6 +704,10 @@ async function iniciar(user){
     await Promise.all([carregarPerfis(), carregarEquipe()]);
     S.eu = perfil(user.id);
     if (!S.eu) { authMsg('Seu perfil não foi encontrado. Fale com o gerente.', true); await sb.auth.signOut(); return; }
+    if (S.eu.preferencias && Object.keys(S.eu.preferencias).length) {
+      PREF = { ...PREF_PADRAO, ...S.eu.preferencias }; aplicarTema();
+      try { localStorage.setItem('pref', JSON.stringify(PREF)); } catch(e){}
+    }
     await carregarTarefas();
     $('#authView').classList.add('hidden'); $('#appView').classList.remove('hidden');
     assinar();
@@ -712,6 +928,10 @@ function trocarAba(a){
   $('#viewAgenda').classList.toggle('hidden', a !== 'agenda');
   $('#viewNotas').classList.toggle('hidden', a !== 'notas');
   $('#viewFinancas').classList.toggle('hidden', a !== 'financas');
+  $('#viewEstudos').classList.toggle('hidden', a !== 'estudos');
+  $('#viewVagas').classList.toggle('hidden', a !== 'vagas');
+  if (a === 'estudos') carregarEstudos();
+  if (a === 'vagas') carregarVagas();
   if (a === 'financas') carregarFin();
   if (a === 'notas') carregarNotas();
   if (a === 'equipe') renderEquipe();
@@ -751,11 +971,122 @@ $('#copiarCod').onclick = async () => {
   try { await navigator.clipboard.writeText(txt); toast('Convite copiado'); } catch(e){ toast('Código: ' + (S.equipe?.codigo || '')); }
 };
 
+// ===== Configurações: aparência e backup =====
+$('#configBtn').onclick = () => abrirConfig();
+function abrirConfig(){
+  const seg = (campo, ops) => `<div class="seg" style="grid-template-columns:repeat(${ops.length},1fr)" data-campo="${campo}">${ops.map(([v, n]) => `<button type="button" data-v="${v}" class="${PREF[campo]===v?'on':''}">${n}</button>`).join('')}</div>`;
+  const amostra = t => {
+    const bg = t.v?.bg || (t.mode === 'dark' ? '#111110' : t.mode === 'light' ? '#f4f3ef' : 'linear-gradient(135deg,#f4f3ef 50%,#111110 50%)');
+    const sf = t.v?.surface || (t.mode === 'dark' ? '#1a1a19' : '#ffffff');
+    const ac = t.v?.accent || (t.mode === 'dark' ? '#f97316' : '#c2410c');
+    return `<span class="sw"><i style="background:${bg}"></i><i style="background:${sf}"><b style="background:${ac}"></b></i></span>`;
+  };
+  $('#modalRoot').innerHTML = `<div class="overlay" id="ov"><div class="modal" style="max-width:560px">
+    <div class="modal-h"><h3>Configurações</h3><button class="btn ghost" id="cFechar">Fechar</button></div>
+    <div class="modal-b">
+      <div class="cfg-sec"><h4>Tema</h4>
+        <div class="presets">${Object.entries(TEMAS).map(([k, t]) => `<button type="button" class="preset ${PREF.tema===k?'on':''}" data-tema="${k}">${amostra(t)}${t.nome}</button>`).join('')}</div>
+      </div>
+      <div class="cfg-sec"><h4>Cor de destaque</h4>
+        <div class="accents" id="cAcentos">
+          <button type="button" class="btn" data-ac="" style="height:28px;padding:0 10px;font-size:12px">Do tema</button>
+          ${ACENTOS.map(c => `<button type="button" class="accent-sw ${PREF.acento===c?'on':''}" data-ac="${c}" style="background:${c}" aria-label="Cor ${c}"></button>`).join('')}
+          <label class="accent-custom" title="Escolher outra cor"><input type="color" id="cCor" value="${PREF.acento || '#c2410c'}"></label>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="cfg-sec"><h4>Cantos</h4>${seg('cantos', [['retos','Retos'],['suaves','Suaves'],['redondos','Redondos']])}</div>
+        <div class="cfg-sec"><h4>Texto</h4>${seg('texto', [['normal','Normal'],['grande','Grande']])}</div>
+      </div>
+      <div class="cfg-sec"><h4>Densidade do quadro</h4>${seg('densidade', [['normal','Confortável'],['compacta','Compacta']])}</div>
+      <hr class="cfg-hr">
+      <div class="cfg-sec"><h4>Backup</h4>
+        <div class="meta">Baixe um arquivo com suas tarefas, anotações e finanças. Guarde no Drive ou no computador e restaure quando precisar.</div>
+        <div class="cfg-row">
+          <button type="button" class="btn primary" id="cBaixar">Baixar backup</button>
+          <label class="btn" style="cursor:pointer">Restaurar de um arquivo<input type="file" id="cRestaurar" accept="application/json,.json" hidden></label>
+        </div>
+        <div class="meta" id="cUltimo"></div>
+      </div>
+      <div class="cfg-sec">
+        <button type="button" class="btn ghost" id="cPadrao" style="align-self:flex-start;color:var(--muted)">Voltar à aparência padrão</button>
+      </div>
+    </div>
+  </div></div>`;
+  const ult = (() => { try { return localStorage.getItem('ultimoBackup'); } catch(e){ return null; } })();
+  $('#cUltimo').textContent = ult ? 'Último backup baixado neste aparelho: ' + new Date(ult).toLocaleString('pt-BR') : '';
+  $('#ov').addEventListener('mousedown', e => { if (e.target.id === 'ov') fecharModal(); });
+  $('#cFechar').onclick = fecharModal;
+  const marcar = () => {
+    document.querySelectorAll('.preset').forEach(b => b.classList.toggle('on', b.dataset.tema === PREF.tema));
+    document.querySelectorAll('.accent-sw').forEach(b => b.classList.toggle('on', b.dataset.ac === PREF.acento));
+    document.querySelectorAll('[data-campo]').forEach(g => g.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === PREF[g.dataset.campo])));
+  };
+  $('#modalRoot').querySelector('.modal-b').addEventListener('click', e => {
+    const t = e.target.closest('[data-tema]'); if (t) { mudarPref({ tema: t.dataset.tema }); marcar(); return; }
+    const a = e.target.closest('[data-ac]'); if (a) { mudarPref({ acento: a.dataset.ac || null }); marcar(); return; }
+    const v = e.target.closest('[data-campo] [data-v]'); if (v) { mudarPref({ [v.parentElement.dataset.campo]: v.dataset.v }); marcar(); }
+  });
+  $('#cCor').addEventListener('input', e => { mudarPref({ acento: e.target.value }); marcar(); });
+  $('#cPadrao').onclick = () => { mudarPref({ ...PREF_PADRAO }); marcar(); };
+  $('#cBaixar').onclick = baixarBackup;
+  $('#cRestaurar').onchange = e => { const f = e.target.files[0]; if (f) restaurarBackup(f); e.target.value = ''; };
+}
+
+const TABELAS_EXTRAS = ['clientes','produtos','investimentos','estudos','vagas'];
+async function backupExtras(){
+  const r = await Promise.all(TABELAS_EXTRAS.map(t => sb.from(t).select('*')));
+  return Object.fromEntries(TABELAS_EXTRAS.map((t, i) => [t, r[i].data || []]));
+}
+async function restaurarExtras(d, tirar, subir){
+  for (const t of TABELAS_EXTRAS) await subir(t, tirar(d[t], ['dono_id']));
+}
+async function baixarBackup(){
+  const [t, n, l, eq] = await Promise.all([
+    sb.from('tarefas').select('*'), sb.from('notas').select('*'), sb.from('lancamentos').select('*'), sb.from('equipes').select('nome').maybeSingle()
+  ]);
+  if (t.error || n.error || l.error) return toast('Não foi possível gerar o backup');
+  const extras = await backupExtras();
+  const dados = { app:'taskflow', versao:1, gerado_em:new Date().toISOString(), usuario:{ nome:S.eu.nome, email:S.eu.email, papel:S.eu.papel },
+    equipe: eq.data?.nome || null, preferencias: PREF, tarefas:t.data, notas:n.data, lancamentos:l.data, ...extras };
+  const blob = new Blob([JSON.stringify(dados, null, 2)], { type:'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `taskflow-backup-${hojeISO()}.json`; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  try { localStorage.setItem('ultimoBackup', new Date().toISOString()); } catch(e){}
+  toast('Backup baixado');
+}
+
+// Restaura só o que é seu: anotações e finanças. Tarefas só para o gerente. Itens que já existem são atualizados.
+async function restaurarBackup(arquivo){
+  let d; try { d = JSON.parse(await arquivo.text()); } catch(e){ return toast('Arquivo inválido'); }
+  if (d.app !== 'taskflow') return toast('Esse arquivo não é um backup do Taskflow');
+  const tirar = (lista, campos) => (lista || []).map(x => { const y = { ...x }; campos.forEach(c => delete y[c]); return y; });
+  let ok = 0, falhas = 0;
+  const subir = async (tabela, linhas) => {
+    if (!linhas.length) return;
+    const { error } = await sb.from(tabela).upsert(linhas, { onConflict:'id' });
+    error ? falhas++ : ok += linhas.length;
+  };
+  await subir('notas', tirar(d.notas, ['dono_id']));
+  await restaurarExtras(d, tirar, subir);
+  await subir('lancamentos', tirar(d.lancamentos, ['dono_id']));
+  if (gerente()) {
+    const ids = new Set(S.perfis.map(p => p.id));
+    await subir('tarefas', tirar(d.tarefas, ['equipe_id']).filter(t => ids.has(t.responsavel_id)));
+  }
+  if (d.preferencias) mudarPref(d.preferencias);
+  toast(falhas ? `Restaurado em parte (${ok} itens). Alguns dados não puderam voltar.` : `Backup restaurado: ${ok} itens`);
+  await carregarTarefas(); renderTudo();
+}
+
 // ===== Finanças (privadas de cada pessoa) =====
 const CATS = {
-  saida: { moradia:'Moradia', alimentacao:'Alimentação', transporte:'Transporte', saude:'Saúde', educacao:'Educação', lazer:'Lazer', contas:'Contas e serviços', compras:'Compras', outros:'Outros' },
-  entrada: { salario:'Salário', freelance:'Freelance', vendas:'Vendas', investimentos:'Investimentos', outros:'Outros' }
+  saida: { moradia:'Moradia', alimentacao:'Alimentação', transporte:'Transporte', saude:'Saúde', educacao:'Educação', lazer:'Lazer', contas:'Contas e serviços', compras:'Compras', revenda:'Compra para revenda', aporte:'Aporte em investimento', outros:'Outros' },
+  entrada: { salario:'Salário', renda_extra:'Renda extra', freelance:'Freelance', clientes:'Serviço para cliente', revenda:'Revenda de produtos', rendimentos:'Rendimentos', vendas:'Vendas', outros:'Outros' }
 };
+const TIPOS_INV = { renda_fixa:'Renda fixa', tesouro:'Tesouro Direto', acoes:'Ações', fiis:'Fundos imobiliários', cripto:'Cripto', poupanca:'Poupança', outros:'Outros' };
+const FX = { aba:'geral', clientes:[], produtos:[], invest:[], todos:[] };
 const F = { mes: new Date(new Date().getFullYear(), new Date().getMonth(), 1), lista:[] };
 const brl = v => Number(v).toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
 async function carregarFin(){
@@ -765,6 +1096,7 @@ async function carregarFin(){
   const { data, error } = await sb.from('lancamentos').select('*').gte('data', ini).lte('data', fim).order('data', { ascending:false }).order('criado_em', { ascending:false });
   if (error) { $('#fLista').innerHTML = '<div class="ag-empty" style="padding:16px">Não foi possível carregar.</div>'; return; }
   F.lista = data; renderFin();
+  carregarFinExtras();
 }
 function renderFin(){
   const soma = f => F.lista.filter(f).reduce((a, l) => a + Number(l.valor), 0);
@@ -803,7 +1135,10 @@ function abrirLanc(l, tipo){
         <div class="field"><label>Valor (R$)</label><input class="input mono" id="lValor" inputmode="decimal" required placeholder="0,00" value="${l.valor ? String(l.valor).replace('.', ',') : ''}"></div>
         <div class="field"><label>Data</label><input class="input" type="date" id="lData" required value="${l.data}"></div>
       </div>
-      <div class="field"><label>Categoria</label><select class="input" id="lCat">${opts(l.tipo)}</select></div>
+      <div class="row2">
+        <div class="field"><label>Categoria</label><select class="input" id="lCat">${opts(l.tipo)}</select></div>
+        <div class="field" id="lCliWrap"><label>Cliente (opcional)</label><select class="input" id="lCli"><option value="">Nenhum</option>${FX.clientes.map(c => `<option value="${c.id}" ${c.id===l.cliente_id?'selected':''}>${esc(c.nome)}</option>`).join('')}</select></div>
+      </div>
       <label style="display:flex;align-items:center;gap:8px;font-size:13px" id="lPagoWrap"><input type="checkbox" id="lPago" ${l.pago?'checked':''}> <span id="lPagoTxt">${l.tipo === 'entrada' ? 'Já recebido' : 'Já pago'}</span></label>
     </div>
     <div class="modal-f">
@@ -832,13 +1167,354 @@ function abrirLanc(l, tipo){
     const bruto = $('#lValor').value.trim();
     const valor = Number(bruto.includes(',') ? bruto.replace(/\./g, '').replace(',', '.') : bruto);
     if (!(valor > 0)) return toast('Informe um valor válido');
-    const campos = { tipo: t, descricao: $('#lDesc').value.trim(), valor, categoria: $('#lCat').value, data: $('#lData').value, pago: $('#lPago').checked };
+    const campos = { tipo: t, descricao: $('#lDesc').value.trim(), valor, categoria: $('#lCat').value, data: $('#lData').value, pago: $('#lPago').checked, cliente_id: $('#lCli').value || null };
     $('#lSalvar').disabled = true;
     const { error } = nova ? await sb.from('lancamentos').insert(campos) : await sb.from('lancamentos').update(campos).eq('id', l.id);
     if (error) { $('#lSalvar').disabled = false; return toast('Não foi possível salvar'); }
     fecharModal(); toast('Lançamento salvo'); carregarFin();
   });
 }
+
+// ----- Finanças: clientes, revenda e investimentos -----
+async function carregarFinExtras(){
+  const [c, p, i, t] = await Promise.all([
+    sb.from('clientes').select('*').order('nome'),
+    sb.from('produtos').select('*').order('nome'),
+    sb.from('investimentos').select('*').order('nome'),
+    sb.from('lancamentos').select('id,tipo,valor,data,pago,cliente_id,produto_id,quantidade').or('cliente_id.not.is.null,produto_id.not.is.null')
+  ]);
+  FX.clientes = c.data || []; FX.produtos = p.data || []; FX.invest = i.data || []; FX.todos = t.data || [];
+  renderFinExtras();
+}
+document.getElementById('finNav').addEventListener('click', e => {
+  const b = e.target.closest('[data-fv]'); if (!b) return;
+  FX.aba = b.dataset.fv;
+  document.querySelectorAll('#finNav button').forEach(x => x.classList.toggle('on', x === b));
+  ['geral','clientes','revenda','invest'].forEach(k => $('#fv' + k.charAt(0).toUpperCase() + k.slice(1)).classList.toggle('hidden', k !== FX.aba));
+});
+function noMes(d){ return d && d.slice(0,7) === isoLocal(F.mes).slice(0,7); }
+function renderFinExtras(){
+  // Clientes
+  const ent = FX.todos.filter(l => l.tipo === 'entrada' && l.cliente_id);
+  const sum = arr => arr.reduce((a, l) => a + Number(l.valor), 0);
+  $('#cTotal').textContent = FX.clientes.length;
+  $('#cMes').textContent = brl(sum(ent.filter(l => l.pago && noMes(l.data))));
+  $('#cReceber').textContent = brl(sum(ent.filter(l => !l.pago)));
+  $('#cGeral').textContent = brl(sum(ent.filter(l => l.pago)));
+  $('#cLista').innerHTML = FX.clientes.length ? `<div class="trow h t-cli"><div>Cliente</div><div class="num hide-sm">Recebido</div><div class="num">A receber</div><div class="num hide-sm">Último pagamento</div></div>` + FX.clientes.map(c => {
+    const ls = ent.filter(l => l.cliente_id === c.id), pagos = ls.filter(l => l.pago);
+    const ult = pagos.map(l => l.data).sort().pop();
+    return `<div class="trow t-cli click" data-cli="${c.id}"><div><div style="font-weight:500">${esc(c.nome)}</div><div class="meta">${esc(c.contato || '')}</div></div>
+      <div class="num hide-sm pos">${brl(sum(pagos))}</div><div class="num">${brl(sum(ls.filter(l => !l.pago)))}</div><div class="num hide-sm meta">${ult ? fmtData(ult) : '-'}</div></div>`;
+  }).join('') : '<div class="ag-empty" style="padding:24px 16px;text-align:center">Cadastre seus clientes e vincule as entradas a eles para saber quanto cada um já pagou e quanto falta receber.</div>';
+
+  // Revenda
+  const vendas = FX.todos.filter(l => l.tipo === 'entrada' && l.produto_id && noMes(l.data));
+  const custoDe = id => Number(FX.produtos.find(p => p.id === id)?.custo || 0);
+  const vendido = sum(vendas), custoVend = vendas.reduce((a, l) => a + custoDe(l.produto_id) * (l.quantidade || 1), 0);
+  $('#rVend').textContent = brl(vendido);
+  const lu = $('#rLucro'); lu.textContent = brl(vendido - custoVend); lu.className = 'mono ' + (vendido - custoVend >= 0 ? 'pos' : 'neg');
+  $('#rItens').textContent = FX.produtos.reduce((a, p) => a + Math.max(p.estoque, 0), 0);
+  $('#rValor').textContent = brl(FX.produtos.reduce((a, p) => a + Math.max(p.estoque, 0) * Number(p.custo), 0));
+  $('#rLista').innerHTML = FX.produtos.length ? `<div class="trow h t-prod"><div>Produto</div><div class="num hide-sm">Custo</div><div class="num hide-sm">Preço</div><div class="num hide-sm">Margem</div><div class="num">Estoque</div><div class="hide-sm"></div></div>` + FX.produtos.map(p => {
+    const m = Number(p.preco) > 0 ? Math.round((p.preco - p.custo) / p.preco * 100) : 0;
+    return `<div class="trow t-prod click" data-prod="${p.id}"><div style="font-weight:500">${esc(p.nome)}</div>
+      <div class="num hide-sm">${brl(p.custo)}</div><div class="num hide-sm">${brl(p.preco)}</div>
+      <div class="num hide-sm ${m < 0 ? 'neg' : ''}">${m}%</div><div class="num ${p.estoque <= 0 ? 'neg' : ''}">${p.estoque}</div>
+      <div class="acts hide-sm"><button class="btn" data-repor="${p.id}">Repor</button><button class="btn primary" data-vender="${p.id}">Vender</button></div></div>`;
+  }).join('') : '<div class="ag-empty" style="padding:24px 16px;text-align:center">Cadastre os produtos que você revende. Cada venda vira uma entrada e baixa o estoque; cada reposição vira uma saída.</div>';
+
+  // Investimentos
+  const apl = FX.invest.reduce((a, i) => a + Number(i.aplicado), 0), atu = FX.invest.reduce((a, i) => a + Number(i.atual), 0);
+  $('#iApl').textContent = brl(apl); $('#iAtual').textContent = brl(atu);
+  const rd = $('#iRend'); rd.textContent = brl(atu - apl); rd.className = 'mono ' + (atu - apl >= 0 ? 'pos' : 'neg');
+  const pc = $('#iPct'); pc.textContent = apl ? ((atu - apl) / apl * 100).toFixed(2).replace('.', ',') + '%' : '0%'; pc.className = 'mono ' + (atu - apl >= 0 ? 'pos' : 'neg');
+  $('#iLista').innerHTML = FX.invest.length ? `<div class="trow h t-inv"><div>Investimento</div><div class="hide-sm">Tipo</div><div class="num hide-sm">Aplicado</div><div class="num">Atual</div><div class="num hide-sm">Resultado</div></div>` + FX.invest.map(i => {
+    const r = Number(i.aplicado) ? (i.atual - i.aplicado) / i.aplicado * 100 : 0;
+    return `<div class="trow t-inv click" data-inv="${i.id}"><div style="font-weight:500">${esc(i.nome)}</div><div class="hide-sm meta">${TIPOS_INV[i.tipo] || 'Outros'}</div>
+      <div class="num hide-sm">${brl(i.aplicado)}</div><div class="num">${brl(i.atual)}</div><div class="num hide-sm ${r >= 0 ? 'pos' : 'neg'}">${r.toFixed(1).replace('.', ',')}%</div></div>`;
+  }).join('') : '<div class="ag-empty" style="padding:24px 16px;text-align:center">Registre seus investimentos e atualize o valor atual de vez em quando para acompanhar o rendimento.</div>';
+}
+
+// Modal de formulário reaproveitável
+function formModal({ titulo, campos, salvar, excluir, textoSalvar = 'Salvar' }){
+  const campo = c => {
+    const v = c.value ?? '';
+    if (c.type === 'select') return `<div class="field"><label>${c.label}</label><select class="input" id="fm_${c.id}">${c.options.map(([k, n]) => `<option value="${esc(k)}" ${String(k)===String(v)?'selected':''}>${esc(n)}</option>`).join('')}</select></div>`;
+    if (c.type === 'textarea') return `<div class="field"><label>${c.label}</label><textarea class="input" id="fm_${c.id}">${esc(v)}</textarea></div>`;
+    if (c.type === 'check') return `<label style="display:flex;align-items:center;gap:8px;font-size:13px"><input type="checkbox" id="fm_${c.id}" ${v?'checked':''}> ${c.label}</label>`;
+    if (c.type === 'money') return `<div class="field"><label>${c.label}</label><input class="input mono" inputmode="decimal" id="fm_${c.id}" placeholder="0,00" value="${v === '' ? '' : String(v).replace('.', ',')}" ${c.required?'required':''}></div>`;
+    return `<div class="field"><label>${c.label}</label><input class="input" type="${c.type || 'text'}" id="fm_${c.id}" value="${esc(v)}" ${c.required?'required':''} ${c.min!=null?`min="${c.min}"`:''} ${c.max?`maxlength="${c.max}"`:''}></div>`;
+  };
+  const linhas = []; for (let i = 0; i < campos.length; i++) {
+    const c = campos[i];
+    if (c.half && campos[i+1]?.half) { linhas.push(`<div class="row2">${campo(c)}${campo(campos[i+1])}</div>`); i++; } else linhas.push(campo(c));
+  }
+  $('#modalRoot').innerHTML = `<div class="overlay" id="ov"><form class="modal" id="fmForm">
+    <div class="modal-h"><h3>${titulo}</h3></div>
+    <div class="modal-b">${linhas.join('')}</div>
+    <div class="modal-f">${excluir ? '<button type="button" class="btn danger" id="fmDel">Excluir</button>' : ''}<span class="sp"></span>
+      <button type="button" class="btn" id="fmCancel">Cancelar</button><button class="btn primary" id="fmOk">${textoSalvar}</button></div>
+  </form></div>`;
+  $('#ov').addEventListener('mousedown', e => { if (e.target.id === 'ov') fecharModal(); });
+  $('#fmCancel').onclick = fecharModal;
+  setTimeout(() => document.querySelector('#fmForm input, #fmForm select')?.focus(), 30);
+  const del = $('#fmDel');
+  if (del) del.onclick = async () => { if (!del.dataset.ok) { del.dataset.ok = 1; del.textContent = 'Confirmar exclusão'; return; } if (await excluir() !== false) fecharModal(); };
+  $('#fmForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const v = {};
+    for (const c of campos) {
+      const el = $('#fm_' + c.id);
+      if (c.type === 'check') v[c.id] = el.checked;
+      else if (c.type === 'money') { const b = el.value.trim(); v[c.id] = b === '' ? 0 : Number(b.includes(',') ? b.replace(/\./g, '').replace(',', '.') : b); if (isNaN(v[c.id]) || v[c.id] < 0) return toast('Valor inválido em ' + c.label); }
+      else if (c.type === 'number') v[c.id] = Number(el.value);
+      else v[c.id] = el.value.trim();
+    }
+    $('#fmOk').disabled = true;
+    const ok = await salvar(v);
+    if (ok === false) $('#fmOk').disabled = false; else fecharModal();
+  });
+}
+async function gravar(tabela, id, campos, msg){
+  const { error } = id ? await sb.from(tabela).update(campos).eq('id', id) : await sb.from(tabela).insert(campos);
+  if (error) { toast('Não foi possível salvar'); return false; }
+  if (msg) toast(msg); carregarFin(); return true;
+}
+async function apagar(tabela, id){
+  const { error } = await sb.from(tabela).delete().eq('id', id);
+  if (error) { toast('Não foi possível excluir'); return false; }
+  carregarFin(); return true;
+}
+
+function abrirCliente(c){
+  formModal({ titulo: c ? 'Cliente' : 'Novo cliente', campos: [
+      { id:'nome', label:'Nome', value:c?.nome, required:true, max:120 },
+      { id:'contato', label:'Contato (telefone, e-mail, Instagram)', value:c?.contato },
+      { id:'observacao', label:'Observações', type:'textarea', value:c?.observacao }],
+    salvar: v => gravar('clientes', c?.id, { nome:v.nome, contato:v.contato || null, observacao:v.observacao || null }, 'Cliente salvo'),
+    excluir: c ? () => apagar('clientes', c.id) : null });
+}
+function abrirProduto(p){
+  formModal({ titulo: p ? 'Produto' : 'Novo produto', campos: [
+      { id:'nome', label:'Nome', value:p?.nome, required:true, max:120 },
+      { id:'custo', label:'Custo por unidade (R$)', type:'money', value:p?.custo ?? '', half:true },
+      { id:'preco', label:'Preço de venda (R$)', type:'money', value:p?.preco ?? '', half:true },
+      { id:'estoque', label:'Estoque', type:'number', value:p?.estoque ?? 0 }],
+    salvar: v => gravar('produtos', p?.id, { nome:v.nome, custo:v.custo, preco:v.preco, estoque:Math.round(v.estoque) || 0 }, 'Produto salvo'),
+    excluir: p ? () => apagar('produtos', p.id) : null });
+}
+function abrirVenda(p){
+  formModal({ titulo: 'Vender ' + p.nome, textoSalvar:'Registrar venda', campos: [
+      { id:'qtd', label:'Quantidade', type:'number', value:1, min:1, half:true },
+      { id:'preco', label:'Preço por unidade (R$)', type:'money', value:p.preco, half:true },
+      { id:'cliente', label:'Cliente (opcional)', type:'select', value:'', options:[['', 'Nenhum'], ...FX.clientes.map(c => [c.id, c.nome])] },
+      { id:'data', label:'Data', type:'date', value:hojeISO(), required:true },
+      { id:'pago', label:'Já recebido', type:'check', value:true }],
+    salvar: async v => {
+      const q = Math.max(1, Math.round(v.qtd));
+      const { error } = await sb.from('lancamentos').insert({ tipo:'entrada', descricao:`Venda: ${p.nome}${q > 1 ? ' (' + q + ' un.)' : ''}`, valor: +(v.preco * q).toFixed(2), categoria:'revenda', data:v.data, pago:v.pago, produto_id:p.id, quantidade:q, cliente_id:v.cliente || null });
+      if (error) { toast('Não foi possível registrar'); return false; }
+      await sb.from('produtos').update({ estoque: p.estoque - q }).eq('id', p.id);
+      toast('Venda registrada'); carregarFin();
+    } });
+}
+function abrirReposicao(p){
+  formModal({ titulo: 'Repor ' + p.nome, textoSalvar:'Registrar compra', campos: [
+      { id:'qtd', label:'Quantidade', type:'number', value:1, min:1, half:true },
+      { id:'custo', label:'Custo por unidade (R$)', type:'money', value:p.custo, half:true },
+      { id:'data', label:'Data', type:'date', value:hojeISO(), required:true },
+      { id:'pago', label:'Já pago', type:'check', value:true }],
+    salvar: async v => {
+      const q = Math.max(1, Math.round(v.qtd));
+      const { error } = await sb.from('lancamentos').insert({ tipo:'saida', descricao:`Compra: ${p.nome} (${q} un.)`, valor: +(v.custo * q).toFixed(2) || 0.01, categoria:'revenda', data:v.data, pago:v.pago, produto_id:p.id, quantidade:q });
+      if (error) { toast('Não foi possível registrar'); return false; }
+      await sb.from('produtos').update({ estoque: p.estoque + q, custo: v.custo }).eq('id', p.id);
+      toast('Estoque atualizado'); carregarFin();
+    } });
+}
+function abrirInvest(i){
+  formModal({ titulo: i ? 'Investimento' : 'Novo investimento', campos: [
+      { id:'nome', label:'Nome', value:i?.nome, required:true, max:120 },
+      { id:'tipo', label:'Tipo', type:'select', value:i?.tipo || 'renda_fixa', options:Object.entries(TIPOS_INV) },
+      { id:'aplicado', label:'Total aplicado (R$)', type:'money', value:i?.aplicado ?? '', half:true },
+      { id:'atual', label:'Valor atual (R$)', type:'money', value:i?.atual ?? '', half:true },
+      { id:'data', label:'Data da aplicação', type:'date', value:i?.data || hojeISO() }],
+    salvar: v => gravar('investimentos', i?.id, { nome:v.nome, tipo:v.tipo, aplicado:v.aplicado, atual:v.atual || v.aplicado, data:v.data || hojeISO() }, 'Investimento salvo'),
+    excluir: i ? () => apagar('investimentos', i.id) : null });
+}
+$('#cNovo').onclick = () => abrirCliente();
+$('#rNovo').onclick = () => abrirProduto();
+$('#iNovo').onclick = () => abrirInvest();
+$('#cLista').addEventListener('click', e => { const r = e.target.closest('[data-cli]'); if (r) abrirCliente(FX.clientes.find(c => c.id === r.dataset.cli)); });
+$('#iLista').addEventListener('click', e => { const r = e.target.closest('[data-inv]'); if (r) abrirInvest(FX.invest.find(c => c.id === r.dataset.inv)); });
+$('#rLista').addEventListener('click', e => {
+  const prod = id => FX.produtos.find(p => p.id === id);
+  const v = e.target.closest('[data-vender]'); if (v) return abrirVenda(prod(v.dataset.vender));
+  const r = e.target.closest('[data-repor]'); if (r) return abrirReposicao(prod(r.dataset.repor));
+  const row = e.target.closest('[data-prod]'); if (row) abrirProduto(prod(row.dataset.prod));
+});
+
+// ===== Estudos (caderno digital) =====
+const E = { lista:[], atual:null, editando:false, busca:'', tSalvar:null, salvando:false };
+function markdown(txt){
+  const blocos = [];
+  let t = esc(txt).replace(/```(\w*)\n?([\s\S]*?)```/g, (_, l, c) => { blocos.push(`<pre><code>${c.replace(/\n$/, '')}</code></pre>`); return `\u0000${blocos.length - 1}\u0000`; });
+  const inline = x => x
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[^*])\*([^*\s][^*]*)\*/g, '$1<em>$2</em>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  const out = []; let lista = null, par = [];
+  const fecharPar = () => { if (par.length) { out.push(`<p>${inline(par.join('<br>'))}</p>`); par = []; } };
+  const fecharLista = () => { if (lista) { out.push(`<${lista.tag}>${lista.itens.map(i => `<li>${inline(i)}</li>`).join('')}</${lista.tag}>`); lista = null; } };
+  for (const linha of t.split('\n')) {
+    let m;
+    if (/^\u0000\d+\u0000$/.test(linha.trim())) { fecharPar(); fecharLista(); out.push(linha.trim()); }
+    else if ((m = linha.match(/^(#{1,3})\s+(.*)/))) { fecharPar(); fecharLista(); out.push(`<h${m[1].length}>${inline(m[2])}</h${m[1].length}>`); }
+    else if (/^\s*---+\s*$/.test(linha)) { fecharPar(); fecharLista(); out.push('<hr>'); }
+    else if ((m = linha.match(/^&gt;\s?(.*)/))) { fecharPar(); fecharLista(); out.push(`<blockquote>${inline(m[1])}</blockquote>`); }
+    else if ((m = linha.match(/^\s*[-*]\s+(.*)/))) { fecharPar(); if (lista?.tag !== 'ul') { fecharLista(); lista = { tag:'ul', itens:[] }; } lista.itens.push(m[1]); }
+    else if ((m = linha.match(/^\s*\d+[.)]\s+(.*)/))) { fecharPar(); if (lista?.tag !== 'ol') { fecharLista(); lista = { tag:'ol', itens:[] }; } lista.itens.push(m[1]); }
+    else if (!linha.trim()) { fecharPar(); fecharLista(); }
+    else { fecharLista(); par.push(linha); }
+  }
+  fecharPar(); fecharLista();
+  return out.join('\n').replace(/\u0000(\d+)\u0000/g, (_, i) => blocos[i]);
+}
+async function carregarEstudos(){
+  const { data, error } = await sb.from('estudos').select('*').order('materia').order('atualizado_em', { ascending:false });
+  if (error) { $('#estMain').innerHTML = '<div class="study-empty">Não foi possível carregar o caderno.</div>'; return; }
+  E.lista = data;
+  if (E.atual && !E.lista.find(p => p.id === E.atual)) E.atual = null;
+  if (!E.atual && E.lista.length) E.atual = E.lista[0].id;
+  renderEstLista(); renderEstPagina();
+}
+function renderEstLista(){
+  const l = E.busca ? E.lista.filter(p => (p.titulo + ' ' + p.materia + ' ' + p.conteudo).toLowerCase().includes(E.busca)) : E.lista;
+  const grupos = {};
+  l.forEach(p => (grupos[p.materia] = grupos[p.materia] || []).push(p));
+  $('#estLista').innerHTML = Object.keys(grupos).length ? Object.entries(grupos).map(([m, ps]) => `<div class="study-mat"><span>${esc(m)}</span><span>${ps.length}</span></div>` +
+    ps.map(p => `<button class="study-item ${p.id===E.atual?'on':''}" data-est="${p.id}">${esc(p.titulo || 'Sem título')}</button>`).join('')).join('')
+    : `<div class="ag-empty" style="padding:12px 8px">${E.busca ? 'Nada encontrado.' : 'Nenhuma página ainda.'}</div>`;
+}
+function renderEstPagina(){
+  const p = E.lista.find(x => x.id === E.atual);
+  if (!p) { $('#estMain').innerHTML = `<div class="study-empty"><h3 style="margin:0 0 6px;color:var(--ink)">Seu caderno está vazio</h3>Crie uma página para cada assunto que aprender. Organize por matéria, use títulos, listas e blocos de código.<br><br><button class="btn primary" onclick="novaPagina()">Criar primeira página</button></div>`; return; }
+  const quando = new Date(p.atualizado_em).toLocaleString('pt-BR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+  const materias = [...new Set(E.lista.map(x => x.materia))];
+  if (E.editando) {
+    $('#estMain').innerHTML = `<div class="study-bar"><span class="meta" id="estStatus">Editado em ${quando}</span>
+        <button class="btn" id="estExcluir">Excluir</button><button class="btn primary" id="estVer">Concluir</button></div>
+      <input class="study-title" id="estTitulo" placeholder="Título da página" value="${esc(p.titulo)}" maxlength="200">
+      <input class="study-mat-in" id="estMateria" list="estMaterias" placeholder="Matéria" value="${esc(p.materia)}" maxlength="80">
+      <datalist id="estMaterias">${materias.map(m => `<option value="${esc(m)}">`).join('')}</datalist>
+      <div class="study-hint"># Título · ## Subtítulo · **negrito** · *itálico* · - lista · \`código\` · \`\`\` bloco de código \`\`\` · &gt; citação · [link](https://...)</div>
+      <textarea class="study-body" id="estTexto" placeholder="Escreva o que você aprendeu...">${esc(p.conteudo)}</textarea>`;
+    const agendar = () => { $('#estStatus').textContent = 'Salvando...'; clearTimeout(E.tSalvar); E.tSalvar = setTimeout(salvarPagina, 700); };
+    ['#estTitulo','#estMateria','#estTexto'].forEach(id => $(id).addEventListener('input', agendar));
+    $('#estVer').onclick = async () => { clearTimeout(E.tSalvar); await salvarPagina(); E.editando = false; renderEstLista(); renderEstPagina(); };
+    const ex = $('#estExcluir');
+    ex.onclick = async () => {
+      if (!ex.dataset.ok) { ex.dataset.ok = 1; ex.textContent = 'Confirmar exclusão'; return; }
+      clearTimeout(E.tSalvar);
+      const { error } = await sb.from('estudos').delete().eq('id', p.id);
+      if (error) return toast('Não foi possível excluir');
+      E.atual = null; E.editando = false; carregarEstudos();
+    };
+    setTimeout(() => (p.titulo ? $('#estTexto') : $('#estTitulo')).focus(), 30);
+  } else {
+    $('#estMain').innerHTML = `<div class="study-bar"><span class="meta">${esc(p.materia)} · editado em ${quando}</span><button class="btn primary" id="estEditar">Editar</button></div>
+      <div class="study-title" style="padding-bottom:10px">${esc(p.titulo || 'Sem título')}</div>
+      <div class="prose">${p.conteudo.trim() ? markdown(p.conteudo) : '<p style="color:var(--muted)">Página em branco. Clique em Editar para escrever.</p>'}</div>`;
+    $('#estEditar').onclick = () => { E.editando = true; renderEstPagina(); };
+  }
+}
+async function salvarPagina(){
+  const p = E.lista.find(x => x.id === E.atual); if (!p || !$('#estTitulo')) return;
+  const campos = { titulo: $('#estTitulo').value.trim(), materia: $('#estMateria').value.trim() || 'Geral', conteudo: $('#estTexto').value };
+  Object.assign(p, campos);
+  const { data, error } = await sb.from('estudos').update(campos).eq('id', p.id).select('atualizado_em').maybeSingle();
+  const st = $('#estStatus');
+  if (error) { if (st) st.textContent = 'Erro ao salvar'; return; }
+  if (data) p.atualizado_em = data.atualizado_em;
+  if (st) st.textContent = 'Salvo';
+  renderEstLista();
+}
+async function novaPagina(){
+  const atual = E.lista.find(x => x.id === E.atual);
+  const { data, error } = await sb.from('estudos').insert({ materia: atual?.materia || 'Geral', titulo:'', conteudo:'' }).select().maybeSingle();
+  if (error || !data) return toast('Não foi possível criar a página');
+  E.lista.unshift(data); E.atual = data.id; E.editando = true; renderEstLista(); renderEstPagina();
+}
+$('#estNova').onclick = novaPagina;
+$('#estBusca').addEventListener('input', e => { E.busca = e.target.value.trim().toLowerCase(); renderEstLista(); });
+$('#estLista').addEventListener('click', async e => {
+  const b = e.target.closest('[data-est]'); if (!b) return;
+  if (E.editando) { clearTimeout(E.tSalvar); await salvarPagina(); }
+  E.atual = b.dataset.est; E.editando = false; renderEstLista(); renderEstPagina();
+});
+
+// ===== Vagas =====
+const STATUS_VAGA = { nova:'Nova', salva:'Salva', enviado:'Currículo enviado', entrevista:'Entrevista', recusado:'Não passei', descartada:'Descartada' };
+const V = { lista:[], filtro:'abertas', fonte:'', busca:'' };
+async function carregarVagas(){
+  const { data, error } = await sb.from('vagas').select('*').order('encontrada_em', { ascending:false }).limit(1000);
+  if (error) { $('#vagLista').innerHTML = '<div class="notes-empty">Não foi possível carregar as vagas.</div>'; return; }
+  V.lista = data;
+  const fontes = [...new Set(data.map(v => v.fonte).filter(Boolean))].sort();
+  $('#vagFonte').innerHTML = '<option value="">Todos os sites</option>' + fontes.map(f => `<option ${f===V.fonte?'selected':''}>${esc(f)}</option>`).join('');
+  renderVagas();
+}
+function renderVagas(){
+  const hoje = hojeISO();
+  $('#vNovas').textContent = V.lista.filter(v => v.status === 'nova').length;
+  $('#vEnv').textContent = V.lista.filter(v => ['enviado','entrevista','recusado'].includes(v.status)).length;
+  $('#vEnt').textContent = V.lista.filter(v => v.status === 'entrevista').length;
+  const ult = V.lista[0]?.encontrada_em;
+  $('#vagSub').textContent = ult ? `Última atualização: ${new Date(ult).toLocaleString('pt-BR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })}` : 'A busca diária ainda não rodou. As vagas aparecem aqui toda manhã.';
+  const grupos = { abertas:['nova','salva'], enviado:['enviado'], entrevista:['entrevista'], encerradas:['recusado','descartada'] };
+  let l = V.filtro === 'todas' ? V.lista : V.lista.filter(v => grupos[V.filtro].includes(v.status));
+  if (V.fonte) l = l.filter(v => v.fonte === V.fonte);
+  if (V.busca) l = l.filter(v => [v.titulo, v.empresa, v.local, v.resumo].join(' ').toLowerCase().includes(V.busca));
+  $('#vagLista').innerHTML = l.length ? l.map(v => {
+    const nova = v.status === 'nova' && v.encontrada_em.slice(0,10) >= isoLocal(new Date(Date.now() - 864e5));
+    return `<article class="job ${v.status==='nova'?'nova':''}">
+      <div><h4><a href="${esc(/^https?:/.test(v.link) ? v.link : '#')}" target="_blank" rel="noopener" data-abrir="${v.id}">${esc(v.titulo)}</a></h4>
+        <div class="info">${v.empresa ? `<span>${esc(v.empresa)}</span>` : ''}${v.local ? `<span>${esc(v.local)}</span>` : ''}${v.salario ? `<span>${esc(v.salario)}</span>` : ''}<span>${v.publicada_em ? 'Publicada ' + fmtData(v.publicada_em) : 'Encontrada ' + fmtData(isoLocal(v.encontrada_em))}</span>${nova ? '<span style="color:var(--accent);font-weight:500">Hoje</span>' : ''}${v.enviado_em ? `<span>Enviado em ${fmtData(v.enviado_em)}</span>` : ''}</div></div>
+      <div class="side">${v.fonte ? `<span class="src">${esc(v.fonte)}</span>` : ''}
+        <select class="input st-${v.status}" data-vst="${v.id}">${Object.entries(STATUS_VAGA).map(([k, n]) => `<option value="${k}" ${k===v.status?'selected':''}>${n}</option>`).join('')}</select></div>
+      ${v.resumo ? `<div class="resumo">${esc(v.resumo)}</div>` : ''}
+    </article>`;
+  }).join('') : `<div class="notes-empty">${V.lista.length ? 'Nenhuma vaga neste filtro.' : 'Nenhuma vaga ainda. A busca automática roda todo dia de manhã e só traz vagas que você ainda não viu.'}</div>`;
+}
+$('#vagFiltro').addEventListener('click', e => { const b = e.target.closest('[data-vf]'); if (!b) return; V.filtro = b.dataset.vf; document.querySelectorAll('#vagFiltro button').forEach(x => x.classList.toggle('on', x === b)); renderVagas(); });
+$('#vagFonte').onchange = e => { V.fonte = e.target.value; renderVagas(); };
+$('#vagBusca').addEventListener('input', e => { V.busca = e.target.value.trim().toLowerCase(); renderVagas(); });
+$('#vagLista').addEventListener('change', async e => {
+  const id = e.target.dataset.vst; if (!id) return;
+  const v = V.lista.find(x => x.id === id), status = e.target.value;
+  const campos = { status, enviado_em: status === 'enviado' && !v.enviado_em ? hojeISO() : v.enviado_em };
+  const { error } = await sb.from('vagas').update(campos).eq('id', id);
+  if (error) return toast('Não foi possível atualizar');
+  Object.assign(v, campos); renderVagas();
+  if (status === 'enviado') toast('Boa! Currículo marcado como enviado');
+});
+$('#vagLista').addEventListener('click', e => {
+  const a = e.target.closest('[data-abrir]'); if (!a) return;
+  const v = V.lista.find(x => x.id === a.dataset.abrir);
+  if (v?.status === 'nova') { sb.from('vagas').update({ status:'salva' }).eq('id', v.id).then(() => {}); v.status = 'salva'; setTimeout(renderVagas, 300); }
+});
+$('#vagNova').onclick = () => formModal({ titulo:'Adicionar vaga', campos:[
+    { id:'titulo', label:'Cargo', required:true, max:250 },
+    { id:'empresa', label:'Empresa', half:true }, { id:'local', label:'Local', value:'Brasília - DF', half:true },
+    { id:'link', label:'Link da vaga', type:'url', required:true },
+    { id:'fonte', label:'Site', value:'Outro' }],
+  salvar: async v => {
+    const { error } = await sb.from('vagas').insert({ titulo:v.titulo, empresa:v.empresa || null, local:v.local || null, link:v.link, fonte:v.fonte || null, status:'salva' });
+    if (error) { toast(/duplicate/i.test(error.message) ? 'Essa vaga já está na lista' : 'Não foi possível salvar'); return false; }
+    carregarVagas();
+  } });
 
 // ===== Anotações (privadas de cada pessoa) =====
 const N = { lista:[], busca:'' };
