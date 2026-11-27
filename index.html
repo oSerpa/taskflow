@@ -169,6 +169,17 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
 .ag-empty{color:var(--muted);font-size:12px;padding:6px 4px}
 @media (max-width:900px){ .week{grid-template-columns:repeat(7,72vw);scroll-snap-type:x mandatory} .day{scroll-snap-align:start} }
 
+/* Anotações */
+.notes{columns:4 260px;column-gap:12px}
+.note{break-inside:avoid;margin-bottom:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;box-shadow:var(--shadow);transition:border-color .12s}
+.note:hover{border-color:var(--line-2)}
+.note.pin{border-color:var(--accent)}
+.note h4{margin:0 0 6px;font-size:14.5px;font-weight:600;display:flex;gap:8px;align-items:flex-start}
+.note h4 .pinmark{margin-left:auto;color:var(--accent);font-size:11px;font-weight:500;white-space:nowrap}
+.note p{margin:0;color:var(--ink-2);font-size:13px;white-space:pre-wrap;word-break:break-word;display:-webkit-box;-webkit-line-clamp:9;-webkit-box-orient:vertical;overflow:hidden}
+.note .meta{margin-top:10px}
+.notes-empty{color:var(--muted);text-align:center;padding:48px 16px;border:1px dashed var(--line-2);border-radius:12px}
+
 /* Modal */
 .overlay{position:fixed;inset:0;background:rgba(10,10,10,.4);display:flex;align-items:flex-start;justify-content:center;padding:8vh 16px 16px;z-index:20}
 .modal{width:100%;max-width:520px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;max-height:84vh}
@@ -245,6 +256,7 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
     <nav class="tabs">
       <button class="tab on" data-tab="quadro">Quadro</button>
       <button class="tab" data-tab="agenda">Agenda</button>
+      <button class="tab" data-tab="notas">Anotações</button>
       <button class="tab" data-tab="equipe" id="tabEquipe">Equipe</button>
     </nav>
     <div class="top-right">
@@ -296,6 +308,21 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
       </button>
     </div>
     <div class="week" id="week"></div>
+  </main>
+
+  <main class="wrap hidden" id="viewNotas">
+    <div class="head"><div><h1>Anotações</h1><div class="date">Só você vê suas anotações</div></div></div>
+    <div class="toolbar">
+      <div class="search" style="margin-left:0">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input class="input" id="notaBusca" placeholder="Buscar nas anotações">
+      </div>
+      <span style="flex:1"></span>
+      <button class="btn primary" id="notaNova">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Nova anotação
+      </button>
+    </div>
+    <div class="notes" id="notes"></div>
   </main>
 
   <main class="wrap hidden" id="viewEquipe">
@@ -628,6 +655,8 @@ function trocarAba(a){
   $('#viewQuadro').classList.toggle('hidden', a !== 'quadro');
   $('#viewEquipe').classList.toggle('hidden', a !== 'equipe');
   $('#viewAgenda').classList.toggle('hidden', a !== 'agenda');
+  $('#viewNotas').classList.toggle('hidden', a !== 'notas');
+  if (a === 'notas') carregarNotas();
   if (a === 'equipe') renderEquipe();
   if (a === 'agenda') abrirAgenda();
 }
@@ -664,6 +693,63 @@ $('#copiarCod').onclick = async () => {
   const txt = `Entre na equipe ${S.equipe?.nome || ''} no Taskflow: ${location.href.split('#')[0]}\nNa tela de cadastro, escolha "Tenho um código" e use: ${S.equipe?.codigo || ''}`;
   try { await navigator.clipboard.writeText(txt); toast('Convite copiado'); } catch(e){ toast('Código: ' + (S.equipe?.codigo || '')); }
 };
+
+// ===== Anotações (privadas de cada pessoa) =====
+const N = { lista:[], busca:'' };
+async function carregarNotas(){
+  const { data, error } = await sb.from('notas').select('*').order('fixada', { ascending:false }).order('atualizado_em', { ascending:false });
+  if (error) { $('#notes').innerHTML = '<div class="notes-empty">Não foi possível carregar as anotações.</div>'; return; }
+  N.lista = data; renderNotas();
+}
+function renderNotas(){
+  const l = N.busca ? N.lista.filter(n => (n.titulo + ' ' + n.conteudo).toLowerCase().includes(N.busca)) : N.lista;
+  $('#notes').innerHTML = l.length ? l.map(n => `<article class="note ${n.fixada?'pin':''}" data-nota="${n.id}">
+      <h4>${esc(n.titulo || 'Sem título')}${n.fixada ? '<span class="pinmark">Fixada</span>' : ''}</h4>
+      ${n.conteudo ? `<p>${esc(n.conteudo)}</p>` : ''}
+      <div class="meta">${new Date(n.atualizado_em).toLocaleDateString('pt-BR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })}</div>
+    </article>`).join('')
+    : `<div class="notes-empty">${N.busca ? 'Nada encontrado.' : 'Nenhuma anotação ainda. Guarde aqui senhas de wi-fi, contatos, ideias, o que for importante.'}</div>`;
+}
+$('#notaBusca').addEventListener('input', e => { N.busca = e.target.value.trim().toLowerCase(); renderNotas(); });
+$('#notaNova').onclick = () => abrirNota();
+$('#notes').addEventListener('click', e => { const c = e.target.closest('[data-nota]'); if (c) abrirNota(N.lista.find(n => n.id === c.dataset.nota)); });
+
+function abrirNota(n){
+  const nova = !n; n = n || { titulo:'', conteudo:'', fixada:false };
+  $('#modalRoot').innerHTML = `<div class="overlay" id="ov"><form class="modal" id="nForm" style="max-width:640px">
+    <div class="modal-h"><h3>${nova ? 'Nova anotação' : 'Anotação'}</h3>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px"><input type="checkbox" id="nFix" ${n.fixada?'checked':''}> Fixar no topo</label></div>
+    <div class="modal-b">
+      <input class="input" id="nTitulo" maxlength="200" placeholder="Título" value="${esc(n.titulo)}" style="font-weight:600;font-size:15px">
+      <textarea class="input" id="nTexto" placeholder="Escreva aqui" style="min-height:260px">${esc(n.conteudo)}</textarea>
+    </div>
+    <div class="modal-f">
+      ${!nova ? '<button type="button" class="btn danger" id="nDel">Excluir</button>' : ''}
+      <span class="sp"></span>
+      <button type="button" class="btn" id="nCancel">Cancelar</button>
+      <button class="btn primary" id="nSalvar">Salvar</button>
+    </div>
+  </form></div>`;
+  $('#ov').addEventListener('mousedown', e => { if (e.target.id === 'ov') fecharModal(); });
+  $('#nCancel').onclick = fecharModal;
+  setTimeout(() => (nova ? $('#nTitulo') : $('#nTexto')).focus(), 30);
+  const del = $('#nDel');
+  if (del) del.onclick = async () => {
+    if (!del.dataset.ok) { del.dataset.ok = 1; del.textContent = 'Confirmar exclusão'; return; }
+    const { error } = await sb.from('notas').delete().eq('id', n.id);
+    if (error) return toast('Não foi possível excluir');
+    fecharModal(); toast('Anotação excluída'); carregarNotas();
+  };
+  $('#nForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const campos = { titulo: $('#nTitulo').value.trim(), conteudo: $('#nTexto').value, fixada: $('#nFix').checked };
+    if (!campos.titulo && !campos.conteudo.trim()) return fecharModal();
+    $('#nSalvar').disabled = true;
+    const { error } = nova ? await sb.from('notas').insert(campos) : await sb.from('notas').update(campos).eq('id', n.id);
+    if (error) { $('#nSalvar').disabled = false; return toast('Não foi possível salvar'); }
+    fecharModal(); carregarNotas();
+  });
+}
 
 // ===== Agenda (Google Calendar) =====
 // Cada pessoa conecta a própria conta Google. O token fica só na memória da página (vale 1 hora).
