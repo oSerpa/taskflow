@@ -480,6 +480,16 @@ body{font-feature-settings:"ss01","cv11";letter-spacing:-.005em;
   [data-menu="vertical"] .top{background:color-mix(in srgb,var(--surface-2) 85%,transparent)}
   [data-menu="vertical"] .tab{padding:9px 10px;border-radius:9px}
 }
+.col-h .n{margin-left:0}
+.col-h .sp{flex:1}
+.col-nome{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;cursor:pointer;border-radius:5px;padding:1px 3px;margin:-1px -3px}
+.col-nome:hover{background:var(--line)}
+.col-btn{width:24px;height:24px;border:0;border-radius:6px;background:none;color:var(--muted);cursor:pointer;font-size:15px;line-height:1;display:grid;place-items:center;opacity:.55;padding:0}
+.col:hover .col-btn{opacity:1}
+.col-btn:hover{background:var(--line);color:var(--ink)}
+.col-nova{min-height:120px;border:1.5px dashed var(--line-2);border-radius:14px;background:none;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-size:13.5px;font-weight:500}
+.col-nova:hover{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 6%,transparent)}
+@media (max-width:700px){ .board{grid-template-columns:none !important;grid-auto-flow:column;grid-auto-columns:82vw} }
 </style>
 </head>
 <body>
@@ -759,6 +769,9 @@ const COLS = [
   {id:'concluido', nome:'Concluído', cor:'var(--done)'}
 ];
 const PRIO = {baixa:'Baixa', media:'Média', alta:'Alta'};
+const CORES_COL = [['var(--todo)','Cinza'],['var(--doing)','Azul'],['var(--paused)','Laranja'],['var(--done)','Verde'],['#7c6cff','Roxo'],['#ec4899','Rosa'],['#ef4444','Vermelho'],['#14b8a6','Turquesa'],['#eab308','Amarelo']];
+function colsDo(qid){ const q = S.quadros.find(x => x.id === (qid || S.quadroAtual)); return (q && Array.isArray(q.colunas) && q.colunas.length) ? q.colunas : COLS; }
+function nomeStatus(t){ const c = colsDo(t.quadro_id).find(c => c.id === t.status) || COLS.find(c => c.id === t.status); return c ? c.nome : t.status; }
 const AV_CORES = ['#c2410c','#0f766e','#4338ca','#be185d','#15803d','#a16207','#0369a1','#7c2d12','#6d28d9','#047857'];
 
 const S = { quadros:[], quadroAtual:null, equipe:null, eu:null, perfis:[], tarefas:[], filtro:'todos', busca:'', aba:'inicio', canal:null };
@@ -1034,17 +1047,57 @@ function renderQuadro(){
   $('#sSemana').textContent = lista.filter(t => t.status === 'concluido' && t.concluido_em && new Date(t.concluido_em) >= semana).length;
 
   const pesoP = { alta:0, media:1, baixa:2 };
-  $('#board').innerHTML = COLS.map(c => {
-    let ts = lista.filter(t => t.status === c.id);
+  const cols = colsDo();
+  const ids = new Set(cols.map(c => c.id));
+  $('#board').style.gridTemplateColumns = `repeat(${cols.length}, minmax(250px, 1fr)) 150px`;
+  $('#board').innerHTML = cols.map((c, i) => {
+    let ts = lista.filter(t => t.status === c.id || (i === 0 && !ids.has(t.status)));
     ts = c.id === 'concluido'
       ? ts.sort((a,b) => (b.concluido_em||'').localeCompare(a.concluido_em||''))
       : ts.sort((a,b) => (pesoP[a.prioridade]-pesoP[b.prioridade]) || (a.prazo||'9999').localeCompare(b.prazo||'9999'));
     return `<section class="col">
-      <div class="col-h"><span class="dot" style="background:${c.cor}"></span>${c.nome}<span class="n">${ts.length}</span></div>
+      <div class="col-h"><span class="dot" style="background:${c.cor}"></span><span class="col-nome" data-coled="${c.id}" title="Clique para editar">${esc(c.nome)}</span><span class="n">${ts.length}</span><span class="sp"></span><button class="col-btn" data-coled="${c.id}" title="Editar coluna">&#8943;</button></div>
       <div class="col-b" data-col="${c.id}">${ts.length ? ts.map(t => cardHTML(t, hoje)).join('') : `<div class="empty"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="3" stroke-dasharray="3 3"/></svg>${c.id==='concluido'?'Nada concluído ainda':'Sem tarefas'}</div>`}</div>
     </section>`;
-  }).join('');
+  }).join('') + '<button class="col-nova" id="colNova"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Adicionar coluna</button>';
 }
+async function salvarColunas(cols){
+  const q = S.quadros.find(x => x.id === S.quadroAtual); if (!q) return false;
+  const { error } = await sb.from('quadros').update({ colunas: cols }).eq('id', q.id);
+  if (error) { toast('Não foi possível salvar a coluna'); return false; }
+  q.colunas = cols; renderQuadro(); return true;
+}
+function editarColuna(id){
+  const cols = colsDo().map(c => ({ ...c }));
+  const i = id ? cols.findIndex(c => c.id === id) : -1, c = cols[i];
+  const campos = [{ id:'nome', label:'Nome da coluna', value: c?.nome || '', required:true, max:40 },
+    { id:'cor', label:'Cor', type:'select', value: c?.cor || '#7c6cff', options: CORES_COL, half:true }];
+  if (c) campos.push({ id:'pos', label:'Posição', type:'select', value: i, options: cols.map((x, k) => [k, (k + 1) + 'ª' + (k === i ? ' (atual)' : '')]), half:true });
+  const n = c ? S.tarefas.filter(t => t.quadro_id === S.quadroAtual && t.status === c.id).length : 0;
+  formModal({ titulo: c ? 'Editar coluna' : 'Nova coluna', textoSalvar: c ? 'Salvar' : 'Criar coluna', campos,
+    salvar: async v => {
+      if (c) { c.nome = v.nome; c.cor = v.cor; cols.splice(i, 1); cols.splice(Number(v.pos), 0, c); }
+      else cols.push({ id: 'c_' + Date.now().toString(36), nome: v.nome, cor: v.cor });
+      return await salvarColunas(cols);
+    },
+    excluir: c && c.id !== 'concluido' && cols.length > 2 ? async () => {
+      const resto = cols.filter(x => x.id !== c.id), destino = resto[0].id;
+      if (n) {
+        const { error } = await sb.from('tarefas').update({ status: destino }).eq('quadro_id', S.quadroAtual).eq('status', c.id);
+        if (error) { toast('Não foi possível mover as tarefas'); return false; }
+        S.tarefas.forEach(t => { if (t.quadro_id === S.quadroAtual && t.status === c.id) t.status = destino; });
+      }
+      if (await salvarColunas(resto) === false) return false;
+      toast(n ? `Coluna excluída. ${n} tarefa(s) foram para "${resto[0].nome}"` : 'Coluna excluída');
+    } : null });
+  if (c && c.id === 'concluido') $('#fmForm .modal-b').insertAdjacentHTML('beforeend', '<div class="hsub">Esta é a coluna de concluídas: pode renomear e mudar a cor, mas não excluir.</div>');
+  else if (c && n) $('#fmForm .modal-b').insertAdjacentHTML('beforeend', `<div class="hsub">Se excluir, as ${n} tarefa(s) desta coluna vão para a primeira coluna.</div>`);
+}
+$('#board').addEventListener('click', e => {
+  const ed = e.target.closest('[data-coled]'); if (ed) return editarColuna(ed.dataset.coled);
+  const ad = e.target.closest('[data-coladd]'); if (ad) { abrirTarefa(null); const sel = $('#mStatus'); if (sel) sel.value = ad.dataset.coladd; return; }
+  if (e.target.closest('#colNova')) editarColuna(null);
+});
 
 function cardHTML(t, hoje){
   const p = perfil(t.responsavel_id);
@@ -1088,7 +1141,7 @@ function abrirTarefa(t){
       <input class="input" id="mTitulo" maxlength="200" placeholder="Título da tarefa" value="${esc(t.titulo)}" required style="font-weight:600;font-size:15px">
       <div class="field"><label>Descrição</label><textarea class="input" id="mDesc" placeholder="O que precisa ser feito" style="min-height:70px">${esc(t.descricao||'')}</textarea></div>
       <div class="row2">
-        <div class="field"><label>Status</label><select class="input" id="mStatus">${COLS.map(c => `<option value="${c.id}" ${c.id===t.status?'selected':''}>${c.nome}</option>`).join('')}</select></div>
+        <div class="field"><label>Status</label><select class="input" id="mStatus">${colsDo(t.quadro_id).map(c => `<option value="${c.id}" ${c.id===t.status?'selected':''}>${c.nome}</option>`).join('')}</select></div>
         <div class="field"><label>Prioridade</label><select class="input" id="mPrio">${opt(PRIO, t.prioridade)}</select></div>
       </div>
       <div class="row2">
@@ -2135,7 +2188,7 @@ function renderAgenda(){
         const h = e.start.dateTime ? new Date(e.start.dateTime).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }) : 'Dia todo';
         return `<div class="ev" data-ev="${esc(e.id)}"><div class="h">${h}</div>${esc(e.summary || '(sem título)')}</div>`;
       }),
-      ...ts.map(t => `<div class="ev task ${t.status}" data-task="${t.id}"><div class="tag">Prazo de tarefa · ${COLS.find(c=>c.id===t.status).nome}</div><span class="tt">${esc(t.titulo)}</span></div>`)
+      ...ts.map(t => `<div class="ev task ${t.status}" data-task="${t.id}"><div class="tag">Prazo de tarefa · ${esc(nomeStatus(t))}</div><span class="tt">${esc(t.titulo)}</span></div>`)
     ];
     cols.push(`<section class="day ${dia===hoje?'today':''}">
       <div class="day-h"><b>${d.getDate()}</b><span>${DIAS[d.getDay()]}</span></div>
