@@ -180,6 +180,30 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
 .note .meta{margin-top:10px}
 .notes-empty{color:var(--muted);text-align:center;padding:48px 16px;border:1px dashed var(--line-2);border-radius:12px}
 
+/* Finanças */
+.fin-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.fin-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.fin-card span{font-size:12px;color:var(--muted)}
+.fin-card b{font-size:21px;font-weight:600;letter-spacing:-.02em}
+.pos{color:var(--done)} .neg{color:var(--danger)}
+.fin-grid{display:grid;grid-template-columns:1.7fr 1fr;gap:14px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.panel-h{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.panel-h h3{margin:0;font-size:14px}
+.panel-h .sp{flex:1}
+.lanc{display:grid;grid-template-columns:54px 1fr auto;gap:12px;align-items:center;padding:10px 16px;border-top:1px solid var(--line);cursor:pointer}
+.lanc:first-child{border-top:0}
+.lanc:hover{background:var(--surface-2)}
+.lanc .dia{font-family:"Geist Mono",monospace;font-size:12px;color:var(--muted)}
+.lanc .desc{font-weight:500}
+.lanc .cat{font-size:12px;color:var(--muted)}
+.lanc .val{font-family:"Geist Mono",monospace;font-weight:500;text-align:right}
+.lanc .pend{font-size:11px;color:var(--paused);display:block;text-align:right}
+.cat-row{margin-top:12px}
+.cat-row .l{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+.cat-row .bar i{background:var(--accent)}
+@media (max-width:900px){ .fin-cards{grid-template-columns:1fr 1fr} .fin-grid{grid-template-columns:1fr} }
+
 /* Modal */
 .overlay{position:fixed;inset:0;background:rgba(10,10,10,.4);display:flex;align-items:flex-start;justify-content:center;padding:8vh 16px 16px;z-index:20}
 .modal{width:100%;max-width:520px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;max-height:84vh}
@@ -256,6 +280,7 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
     <nav class="tabs">
       <button class="tab on" data-tab="quadro">Quadro</button>
       <button class="tab" data-tab="agenda">Agenda</button>
+      <button class="tab" data-tab="financas">Finanças</button>
       <button class="tab" data-tab="notas">Anotações</button>
       <button class="tab" data-tab="equipe" id="tabEquipe">Equipe</button>
     </nav>
@@ -308,6 +333,36 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
       </button>
     </div>
     <div class="week" id="week"></div>
+  </main>
+
+  <main class="wrap hidden" id="viewFinancas">
+    <div class="head">
+      <div><h1>Finanças</h1><div class="date">Só você vê suas finanças</div></div>
+      <div class="ag-nav">
+        <button class="btn" id="fPrev" aria-label="Mês anterior">&#8249;</button>
+        <button class="btn" id="fMes" style="min-width:150px;justify-content:center"></button>
+        <button class="btn" id="fNext" aria-label="Próximo mês">&#8250;</button>
+      </div>
+    </div>
+    <div class="fin-cards">
+      <div class="fin-card"><span>Entradas</span><b class="mono pos" id="fEnt">R$ 0,00</b></div>
+      <div class="fin-card"><span>Saídas</span><b class="mono neg" id="fSai">R$ 0,00</b></div>
+      <div class="fin-card"><span>Saldo do mês</span><b class="mono" id="fSaldo">R$ 0,00</b></div>
+      <div class="fin-card"><span>A pagar</span><b class="mono" id="fPend">R$ 0,00</b></div>
+    </div>
+    <div class="fin-grid">
+      <section class="panel">
+        <div class="panel-h"><h3>Lançamentos</h3><span class="sp"></span>
+          <button class="btn" id="fNovaEnt">+ Entrada</button>
+          <button class="btn primary" id="fNovaSai">+ Saída</button>
+        </div>
+        <div id="fLista"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-h"><h3>Gastos por categoria</h3></div>
+        <div id="fCats" style="padding:4px 16px 16px"></div>
+      </section>
+    </div>
   </main>
 
   <main class="wrap hidden" id="viewNotas">
@@ -656,6 +711,8 @@ function trocarAba(a){
   $('#viewEquipe').classList.toggle('hidden', a !== 'equipe');
   $('#viewAgenda').classList.toggle('hidden', a !== 'agenda');
   $('#viewNotas').classList.toggle('hidden', a !== 'notas');
+  $('#viewFinancas').classList.toggle('hidden', a !== 'financas');
+  if (a === 'financas') carregarFin();
   if (a === 'notas') carregarNotas();
   if (a === 'equipe') renderEquipe();
   if (a === 'agenda') abrirAgenda();
@@ -693,6 +750,95 @@ $('#copiarCod').onclick = async () => {
   const txt = `Entre na equipe ${S.equipe?.nome || ''} no Taskflow: ${location.href.split('#')[0]}\nNa tela de cadastro, escolha "Tenho um código" e use: ${S.equipe?.codigo || ''}`;
   try { await navigator.clipboard.writeText(txt); toast('Convite copiado'); } catch(e){ toast('Código: ' + (S.equipe?.codigo || '')); }
 };
+
+// ===== Finanças (privadas de cada pessoa) =====
+const CATS = {
+  saida: { moradia:'Moradia', alimentacao:'Alimentação', transporte:'Transporte', saude:'Saúde', educacao:'Educação', lazer:'Lazer', contas:'Contas e serviços', compras:'Compras', outros:'Outros' },
+  entrada: { salario:'Salário', freelance:'Freelance', vendas:'Vendas', investimentos:'Investimentos', outros:'Outros' }
+};
+const F = { mes: new Date(new Date().getFullYear(), new Date().getMonth(), 1), lista:[] };
+const brl = v => Number(v).toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+async function carregarFin(){
+  const ini = isoLocal(F.mes), fim = isoLocal(new Date(F.mes.getFullYear(), F.mes.getMonth()+1, 0));
+  const ml = F.mes.toLocaleDateString('pt-BR', { month:'long', year:'numeric' });
+  $('#fMes').textContent = ml.charAt(0).toUpperCase() + ml.slice(1);
+  const { data, error } = await sb.from('lancamentos').select('*').gte('data', ini).lte('data', fim).order('data', { ascending:false }).order('criado_em', { ascending:false });
+  if (error) { $('#fLista').innerHTML = '<div class="ag-empty" style="padding:16px">Não foi possível carregar.</div>'; return; }
+  F.lista = data; renderFin();
+}
+function renderFin(){
+  const soma = f => F.lista.filter(f).reduce((a, l) => a + Number(l.valor), 0);
+  const ent = soma(l => l.tipo === 'entrada'), sai = soma(l => l.tipo === 'saida');
+  $('#fEnt').textContent = brl(ent); $('#fSai').textContent = brl(sai);
+  const sd = $('#fSaldo'); sd.textContent = brl(ent - sai); sd.className = 'mono ' + (ent - sai >= 0 ? 'pos' : 'neg');
+  $('#fPend').textContent = brl(soma(l => l.tipo === 'saida' && !l.pago));
+  $('#fLista').innerHTML = F.lista.length ? F.lista.map(l => `<div class="lanc" data-lanc="${l.id}">
+      <span class="dia">${fmtData(l.data)}</span>
+      <div><div class="desc">${esc(l.descricao)}</div><div class="cat">${esc(CATS[l.tipo][l.categoria] || 'Outros')}</div></div>
+      <div><span class="val ${l.tipo === 'entrada' ? 'pos' : ''}">${l.tipo === 'entrada' ? '+ ' : '- '}${brl(l.valor)}</span>${!l.pago ? '<span class="pend">a pagar</span>' : ''}</div>
+    </div>`).join('') : '<div class="ag-empty" style="padding:24px 16px;text-align:center">Nenhum lançamento neste mês.</div>';
+  const porCat = {};
+  F.lista.filter(l => l.tipo === 'saida').forEach(l => porCat[l.categoria] = (porCat[l.categoria] || 0) + Number(l.valor));
+  const ordem = Object.entries(porCat).sort((a, b) => b[1] - a[1]);
+  $('#fCats').innerHTML = ordem.length ? ordem.map(([c, v]) => `<div class="cat-row"><div class="l"><span>${esc(CATS.saida[c] || 'Outros')}</span><span class="mono">${brl(v)}</span></div><div class="bar"><i style="width:${Math.round(v / sai * 100)}%"></i></div></div>`).join('') : '<div class="ag-empty" style="padding-top:12px">Sem gastos neste mês.</div>';
+}
+$('#fPrev').onclick = () => { F.mes = new Date(F.mes.getFullYear(), F.mes.getMonth()-1, 1); carregarFin(); };
+$('#fNext').onclick = () => { F.mes = new Date(F.mes.getFullYear(), F.mes.getMonth()+1, 1); carregarFin(); };
+$('#fMes').onclick = () => { F.mes = new Date(new Date().getFullYear(), new Date().getMonth(), 1); carregarFin(); };
+$('#fNovaEnt').onclick = () => abrirLanc(null, 'entrada');
+$('#fNovaSai').onclick = () => abrirLanc(null, 'saida');
+$('#fLista').addEventListener('click', e => { const r = e.target.closest('[data-lanc]'); if (r) abrirLanc(F.lista.find(l => l.id === r.dataset.lanc)); });
+
+function abrirLanc(l, tipo){
+  const nova = !l;
+  const mesAtual = isoLocal(F.mes).slice(0,7) === hojeISO().slice(0,7);
+  l = l || { tipo, descricao:'', valor:'', categoria:'outros', data: mesAtual ? hojeISO() : isoLocal(F.mes), pago:true };
+  const opts = t => Object.entries(CATS[t]).map(([k, v]) => `<option value="${k}" ${k === l.categoria ? 'selected' : ''}>${v}</option>`).join('');
+  $('#modalRoot').innerHTML = `<div class="overlay" id="ov"><form class="modal" id="lForm">
+    <div class="modal-h"><h3>${nova ? (l.tipo === 'entrada' ? 'Nova entrada' : 'Nova saída') : 'Lançamento'}</h3></div>
+    <div class="modal-b">
+      <div class="seg" id="lTipo"><button type="button" data-t="entrada" class="${l.tipo==='entrada'?'on':''}">Entrada</button><button type="button" data-t="saida" class="${l.tipo==='saida'?'on':''}">Saída</button></div>
+      <div class="field"><label>Descrição</label><input class="input" id="lDesc" maxlength="200" required value="${esc(l.descricao)}"></div>
+      <div class="row2">
+        <div class="field"><label>Valor (R$)</label><input class="input mono" id="lValor" inputmode="decimal" required placeholder="0,00" value="${l.valor ? String(l.valor).replace('.', ',') : ''}"></div>
+        <div class="field"><label>Data</label><input class="input" type="date" id="lData" required value="${l.data}"></div>
+      </div>
+      <div class="field"><label>Categoria</label><select class="input" id="lCat">${opts(l.tipo)}</select></div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px" id="lPagoWrap"><input type="checkbox" id="lPago" ${l.pago?'checked':''}> <span id="lPagoTxt">${l.tipo === 'entrada' ? 'Já recebido' : 'Já pago'}</span></label>
+    </div>
+    <div class="modal-f">
+      ${!nova ? '<button type="button" class="btn danger" id="lDel">Excluir</button>' : ''}
+      <span class="sp"></span>
+      <button type="button" class="btn" id="lCancel">Cancelar</button>
+      <button class="btn primary" id="lSalvar">Salvar</button>
+    </div>
+  </form></div>`;
+  let t = l.tipo;
+  $('#lTipo').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (!b) return; t = b.dataset.t;
+    document.querySelectorAll('#lTipo button').forEach(x => x.classList.toggle('on', x === b));
+    $('#lCat').innerHTML = opts(t); $('#lPagoTxt').textContent = t === 'entrada' ? 'Já recebido' : 'Já pago'; });
+  $('#ov').addEventListener('mousedown', e => { if (e.target.id === 'ov') fecharModal(); });
+  $('#lCancel').onclick = fecharModal;
+  setTimeout(() => $('#lDesc').focus(), 30);
+  const del = $('#lDel');
+  if (del) del.onclick = async () => {
+    if (!del.dataset.ok) { del.dataset.ok = 1; del.textContent = 'Confirmar exclusão'; return; }
+    const { error } = await sb.from('lancamentos').delete().eq('id', l.id);
+    if (error) return toast('Não foi possível excluir');
+    fecharModal(); carregarFin();
+  };
+  $('#lForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const bruto = $('#lValor').value.trim();
+    const valor = Number(bruto.includes(',') ? bruto.replace(/\./g, '').replace(',', '.') : bruto);
+    if (!(valor > 0)) return toast('Informe um valor válido');
+    const campos = { tipo: t, descricao: $('#lDesc').value.trim(), valor, categoria: $('#lCat').value, data: $('#lData').value, pago: $('#lPago').checked };
+    $('#lSalvar').disabled = true;
+    const { error } = nova ? await sb.from('lancamentos').insert(campos) : await sb.from('lancamentos').update(campos).eq('id', l.id);
+    if (error) { $('#lSalvar').disabled = false; return toast('Não foi possível salvar'); }
+    fecharModal(); toast('Lançamento salvo'); carregarFin();
+  });
+}
 
 // ===== Anotações (privadas de cada pessoa) =====
 const N = { lista:[], busca:'' };
