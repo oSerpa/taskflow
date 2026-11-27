@@ -489,7 +489,8 @@ body{font-feature-settings:"ss01","cv11";letter-spacing:-.005em;
 .col-btn:hover{background:var(--line);color:var(--ink)}
 .col-nova{min-height:120px;border:1.5px dashed var(--line-2);border-radius:14px;background:none;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-size:13.5px;font-weight:500}
 .col-nova:hover{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 6%,transparent)}
-@media (max-width:700px){ .board{grid-template-columns:none !important;grid-auto-flow:column;grid-auto-columns:82vw} }
+.so-cel{display:none}
+@media (max-width:700px){ .stats{display:grid;grid-template-columns:repeat(3,1fr);width:100%} .stat{min-width:0;padding:10px 12px} .board{grid-template-columns:none !important;grid-auto-flow:column;grid-auto-columns:82vw;scroll-snap-type:x proximity} .col-nova{display:none} .so-cel{display:inline-flex} .col-btn{opacity:1;width:32px;height:32px} }
 </style>
 </head>
 <body>
@@ -953,11 +954,12 @@ function renderQuadrosBar(){
   $('#boards').innerHTML = S.quadros.map(q => {
     const n = S.tarefas.filter(t => t.quadro_id === q.id && t.status !== 'concluido').length;
     return `<button class="chip all ${q.id===S.quadroAtual?'on':''}" data-q="${q.id}">${esc(q.nome)} <span class="mono" style="opacity:.6">${n}</span>${q.id===S.quadroAtual ? '<span class="q-edit" data-qedit="'+q.id+'" title="Renomear ou excluir">&#9998;</span>' : ''}</button>`;
-  }).join('') + '<button class="chip all" id="qNovo" title="Novo quadro">+ Quadro</button>';
+  }).join('') + '<button class="chip all" id="qNovo" title="Novo quadro">+ Quadro</button><button class="chip all so-cel" id="colNovaCel" title="Nova coluna">+ Coluna</button>';
 }
 $('#boards').addEventListener('click', e => {
   const ed = e.target.closest('[data-qedit]'); if (ed) { e.stopPropagation(); return editarQuadro(S.quadros.find(q => q.id === ed.dataset.qedit)); }
   if (e.target.closest('#qNovo')) return editarQuadro(null);
+  if (e.target.closest('#colNovaCel')) return editarColuna(null);
   const b = e.target.closest('[data-q]'); if (b) escolherQuadro(b.dataset.q);
 });
 function editarQuadro(q){
