@@ -23,3 +23,8 @@ alter table public.tarefas add column checklist jsonb not null default '[]'::jso
 alter table public.tarefas add column link text;
 alter table public.tarefas add column inicio date;
 alter table public.tarefas add column notas text;
+
+-- Hábitos (dias feitos em array) e orçamento mensal por categoria
+create table public.habitos (id uuid primary key default gen_random_uuid(), dono_id uuid not null default auth.uid() references public.perfis(id) on delete cascade, nome text not null check (length(nome) between 1 and 80), meta_semana integer not null default 7 check (meta_semana between 1 and 7), cor text, feitos date[] not null default '{}', ordem integer not null default 0, criado_em timestamptz not null default now());
+create table public.orcamentos (id uuid primary key default gen_random_uuid(), dono_id uuid not null default auth.uid() references public.perfis(id) on delete cascade, categoria text not null check (length(categoria) between 1 and 60), limite numeric(12,2) not null check (limite > 0), criado_em timestamptz not null default now(), unique (dono_id, categoria));
+-- RLS, trigger manter_dono e política "so o dono" nas duas

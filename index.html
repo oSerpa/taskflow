@@ -202,6 +202,35 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
 .lanc .val{font-family:"Geist Mono",monospace;font-weight:500;text-align:right}
 .lanc .pend{font-size:11px;color:var(--paused);display:block;text-align:right}
 .cat-row{margin-top:12px}
+.orc-txt{font-size:11.5px;margin-top:4px}
+/* Hábitos */
+.habs{display:flex;flex-direction:column;gap:10px}
+.hab{display:grid;grid-template-columns:minmax(160px,1fr) auto auto;align-items:center;gap:18px;background:color-mix(in srgb,var(--surface) 82%,transparent);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.hab-n{font-weight:600;font-size:14.5px;cursor:pointer}
+.hab-n small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:2px}
+.hab-dias{display:flex;gap:6px}
+.hd{width:34px;height:42px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10.5px;gap:2px;padding:0;font-family:inherit}
+.hd b{font-size:13px;color:var(--ink-2);font-weight:600}
+.hd.on{background:var(--hc,var(--accent));border-color:var(--hc,var(--accent));color:#fff}
+.hd.on b{color:#fff}
+.hd.hoje{outline:1.5px solid var(--hc,var(--accent));outline-offset:2px}
+.hab-seq{text-align:right;min-width:90px}
+.hab-seq b{font-family:"Geist Mono",monospace;font-size:20px;display:block}
+.hab-seq span{font-size:11.5px;color:var(--muted)}
+.hab-mini{display:flex;align-items:center;gap:10px;padding:7px 2px;border-top:1px solid var(--line);font-size:13.5px}
+.hab-mini:first-child{border-top:0}
+@media (max-width:700px){ .hab{grid-template-columns:1fr auto} .hab-dias{grid-column:1/-1;order:3} .hd{width:auto;flex:1} }
+/* Paleta de comandos */
+.cmd-ov{position:fixed;inset:0;z-index:60;background:rgba(5,5,8,.55);backdrop-filter:blur(6px);display:flex;justify-content:center;align-items:flex-start;padding:12vh 16px 16px}
+.cmd{width:min(620px,100%);background:var(--surface);border:1px solid var(--line-2);border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden}
+.cmd input{width:100%;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:inherit;font-size:15.5px;padding:16px 18px;outline:none}
+.cmd-l{max-height:min(420px,60vh);overflow:auto;padding:6px}
+.cmd-g{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:10px 12px 4px}
+.cmd-i{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;font-size:14px}
+.cmd-i .grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmd-i .hsub{flex:none}
+.cmd-i.sel{background:color-mix(in srgb,var(--accent) 16%,transparent)}
+.cmd-f{display:flex;gap:14px;padding:8px 14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}
 .cat-row .l{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
 .cat-row .bar i{background:var(--accent)}
 @media (max-width:900px){ .fin-cards{grid-template-columns:1fr 1fr} .fin-grid{grid-template-columns:1fr} }
@@ -324,6 +353,27 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
 .ck-txt.feito{text-decoration:line-through;color:var(--muted)}
 .ck-del{border:0;background:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:0 4px}
 .ck-del:hover{color:var(--danger)}
+
+/* Início */
+.home{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.hcard{background:color-mix(in srgb,var(--surface) 82%,transparent);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-height:150px}
+.hcard.span2{grid-column:span 2;grid-row:span 2}
+.hcard-h{display:flex;align-items:center;justify-content:space-between}
+.hcard-h h3{margin:0;font-size:13px;font-weight:600;color:var(--ink-2);letter-spacing:.01em}
+.lnk{border:0;background:none;color:var(--accent);cursor:pointer;font-size:12.5px;font-weight:500;padding:0}
+.hrow{display:flex;align-items:center;gap:10px;padding:8px 2px;border-top:1px solid var(--line);font-size:13.5px}
+.hrow:first-child{border-top:0}
+.hrow .grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hrow .mono{font-size:12px;color:var(--muted)}
+.hcheck{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line-2);background:none;cursor:pointer;flex:none;display:grid;place-items:center;padding:0;color:transparent}
+.hcheck:hover{border-color:var(--done);color:var(--done)}
+.hbig{font-size:26px;font-weight:650;letter-spacing:-.03em;font-family:"Geist Mono",monospace}
+.hsub{font-size:12.5px;color:var(--muted)}
+.hempty{color:var(--muted);font-size:13px;padding:6px 0}
+.quick{margin-top:auto}
+kbd{font-family:"Geist Mono",monospace;font-size:10.5px;padding:1px 6px;border-radius:5px;border:1px solid var(--line-2);background:var(--surface-2);color:var(--muted);margin-left:6px}
+@media (max-width:1100px){ .home{grid-template-columns:1fr 1fr} .hcard.span2{grid-row:auto} }
+@media (max-width:700px){ .home{grid-template-columns:1fr} .hcard.span2{grid-column:auto} #hCmd kbd{display:none} }
 
 /* Modal */
 .overlay{position:fixed;inset:0;background:rgba(10,10,10,.4);display:flex;align-items:flex-start;justify-content:center;padding:8vh 16px 16px;z-index:20}
@@ -463,10 +513,12 @@ body{font-feature-settings:"ss01","cv11";letter-spacing:-.005em;
   <header class="top"><div class="top-in">
     <div class="brand"><span class="logo"><i></i><i></i><i></i><i></i></span><span>Taskflow</span><span class="team-name" id="teamName"></span></div>
     <nav class="tabs">
-      <button class="tab on" data-tab="quadro"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1.5"/><rect x="14" y="3" width="7" height="11" rx="1.5"/></svg><span>Quadro</span></button>
+      <button class="tab on" data-tab="inicio"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></button>
+      <button class="tab" data-tab="quadro"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1.5"/><rect x="14" y="3" width="7" height="11" rx="1.5"/></svg><span>Quadro</span></button>
       <button class="tab" data-tab="agenda"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>Agenda</span></button>
       <button class="tab" data-tab="financas"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1 0-4h12v4"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg><span>Finanças</span></button>
       <button class="tab" data-tab="estudos"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg><span>Estudos</span></button>
+      <button class="tab" data-tab="habitos"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3 4 5 4 9a4 4 0 0 1-8 0c0-2 1-3 1-3s.5 2 2 2c0-3 1-5 1-8z"/><path d="M6 15a6 6 0 0 0 12 0"/></svg><span>Hábitos</span></button>
       <button class="tab" data-tab="vagas"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg><span>Vagas</span></button>
       <button class="tab" data-tab="notas"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-9z"/><path d="M14 3v7h7"/></svg><span>Anotações</span></button>
     </nav>
@@ -479,7 +531,21 @@ body{font-feature-settings:"ss01","cv11";letter-spacing:-.005em;
     </div>
   </div></header>
 
-  <main class="wrap" id="viewQuadro">
+  <main class="wrap" id="viewInicio">
+    <div class="head"><div><h1 id="hSaud">Olá</h1><div class="date" id="hData"></div></div>
+      <button class="btn" id="hCmd" title="Paleta de comandos"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Buscar ou criar <kbd>Ctrl K</kbd></button></div>
+    <div class="home">
+      <section class="hcard span2"><div class="hcard-h"><h3>Tarefas de hoje</h3><button class="lnk" data-ir="quadro">Ver quadro</button></div><div id="hTarefas"></div>
+        <form id="hQuick" class="quick"><input class="input" id="hQuickIn" placeholder="Adicionar tarefa rápida e apertar Enter (ex.: Estudar SQL amanhã !alta)"></form></section>
+      <section class="hcard"><div class="hcard-h"><h3>Agenda</h3><button class="lnk" data-ir="agenda">Abrir</button></div><div id="hAgenda"></div></section>
+      <section class="hcard"><div class="hcard-h"><h3>Finanças do mês</h3><button class="lnk" data-ir="financas">Abrir</button></div><div id="hFin"></div></section>
+      <section class="hcard"><div class="hcard-h"><h3>Hábitos de hoje</h3><button class="lnk" data-ir="habitos">Abrir</button></div><div id="hHab"></div></section>
+      <section class="hcard"><div class="hcard-h"><h3>Vagas</h3><button class="lnk" data-ir="vagas">Abrir</button></div><div id="hVagas"></div></section>
+      <section class="hcard"><div class="hcard-h"><h3>Estudos recentes</h3><button class="lnk" data-ir="estudos">Abrir</button></div><div id="hEst"></div></section>
+    </div>
+  </main>
+
+  <main class="wrap hidden" id="viewQuadro">
     <div class="head">
       <div><h1 id="boardTitle">Quadro</h1><div class="date" id="today"></div></div>
       <div class="stats">
@@ -553,7 +619,7 @@ body{font-feature-settings:"ss01","cv11";letter-spacing:-.005em;
         <div id="fLista"></div>
       </section>
       <section class="panel">
-        <div class="panel-h"><h3>Gastos por categoria</h3></div>
+        <div class="panel-h"><h3>Gastos e orçamento</h3><span class="sp"></span><button class="btn" id="fOrc" style="height:28px">Orçamentos</button></div>
         <div id="fCats" style="padding:4px 16px 16px"></div>
       </section>
     </div>
@@ -611,6 +677,12 @@ body{font-feature-settings:"ss01","cv11";letter-spacing:-.005em;
       </aside>
       <section class="study-main" id="estMain"></section>
     </div>
+  </main>
+
+  <main class="wrap hidden" id="viewHabitos">
+    <div class="head"><div><h1>Hábitos</h1><div class="date">Marque o que fez no dia e mantenha a sequência</div></div>
+      <button class="btn primary" id="habNovo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Novo hábito</button></div>
+    <div id="habLista" class="habs"></div>
   </main>
 
   <main class="wrap hidden" id="viewVagas">
@@ -678,7 +750,7 @@ const COLS = [
 const PRIO = {baixa:'Baixa', media:'Média', alta:'Alta'};
 const AV_CORES = ['#c2410c','#0f766e','#4338ca','#be185d','#15803d','#a16207','#0369a1','#7c2d12','#6d28d9','#047857'];
 
-const S = { quadros:[], quadroAtual:null, equipe:null, eu:null, perfis:[], tarefas:[], filtro:'todos', busca:'', aba:'quadro', canal:null };
+const S = { quadros:[], quadroAtual:null, equipe:null, eu:null, perfis:[], tarefas:[], filtro:'todos', busca:'', aba:'inicio', canal:null };
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const gerente = () => S.eu?.papel === 'gerente';
@@ -908,7 +980,7 @@ async function excluirTarefa(id){
 }
 
 // ===== Render =====
-function renderTudo(){ renderTopo(); renderPessoas(); renderQuadro(); if (S.aba === 'equipe') renderEquipe(); }
+function renderTudo(){ renderTopo(); renderPessoas(); renderQuadro(); if (S.aba === 'inicio') renderInicio(); }
 
 function renderTopo(){
   $('#meAv').innerHTML = avatar(S.eu);
@@ -1074,6 +1146,11 @@ function trocarAba(a){
   S.aba = a;
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.tab === a));
   $('#viewQuadro').classList.toggle('hidden', a !== 'quadro');
+  $('#viewInicio').classList.toggle('hidden', a !== 'inicio');
+  $('#viewHabitos')?.classList.toggle('hidden', a !== 'habitos');
+  if (a === 'inicio') renderInicio();
+  if (a === 'habitos') carregarHabitos();
+  try { localStorage.setItem('aba', a); } catch(e){}
   $('#viewEquipe').classList.toggle('hidden', a !== 'equipe');
   $('#viewAgenda').classList.toggle('hidden', a !== 'agenda');
   $('#viewNotas').classList.toggle('hidden', a !== 'notas');
@@ -1120,6 +1197,210 @@ $('#copiarCod').onclick = async () => {
   const txt = `Entre na equipe ${S.equipe?.nome || ''} no Taskflow: ${location.href.split('#')[0]}\nNa tela de cadastro, escolha "Tenho um código" e use: ${S.equipe?.codigo || ''}`;
   try { await navigator.clipboard.writeText(txt); toast('Convite copiado'); } catch(e){ toast('Código: ' + (S.equipe?.codigo || '')); }
 };
+
+// ===== Início =====
+async function renderInicio(){
+  const h = new Date().getHours();
+  $('#hSaud').textContent = `${h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'}, ${S.eu.nome.split(' ')[0]}`;
+  const d = new Date().toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long' });
+  $('#hData').textContent = d.charAt(0).toUpperCase() + d.slice(1);
+  const hoje = hojeISO();
+  const abertas = S.tarefas.filter(t => t.status !== 'concluido');
+  const doDia = abertas.filter(t => t.prazo && t.prazo <= hoje).sort((a, b) => a.prazo.localeCompare(b.prazo));
+  const andamento = abertas.filter(t => t.status === 'em_andamento' && !doDia.includes(t));
+  const lista = [...doDia, ...andamento].slice(0, 8);
+  const qn = id => S.quadros.length > 1 ? (S.quadros.find(q => q.id === id)?.nome || '') : '';
+  $('#hTarefas').innerHTML = lista.length ? lista.map(t => `<div class="hrow"><button class="hcheck" data-feito="${t.id}" title="Concluir">&#10003;</button>
+      <span class="grow" data-abrir-t="${t.id}" style="cursor:pointer">${esc(t.titulo)}</span>
+      ${qn(t.quadro_id) ? `<span class="hsub">${esc(qn(t.quadro_id))}</span>` : ''}
+      <span class="mono" style="${t.prazo && t.prazo < hoje ? 'color:var(--danger)' : ''}">${t.prazo ? (t.prazo < hoje ? 'atrasada' : 'hoje') : 'em andamento'}</span></div>`).join('')
+    : '<div class="hempty">Nada vencendo hoje. Aproveite para adiantar algo ou descansar.</div>';
+  // Agenda
+  if (gConectado()) {
+    const fim = new Date(); fim.setHours(23,59,59);
+    const ini = new Date(); ini.setHours(0,0,0,0);
+    try {
+      const r = await gFetch(GCAL + '?' + new URLSearchParams({ timeMin: ini.toISOString(), timeMax: fim.toISOString(), singleEvents:'true', orderBy:'startTime' }));
+      const evs = r.items || [];
+      $('#hAgenda').innerHTML = evs.length ? evs.map(e => `<div class="hrow"><span class="mono">${e.start.dateTime ? new Date(e.start.dateTime).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }) : 'Dia todo'}</span><span class="grow">${esc(e.summary || '(sem título)')}</span></div>`).join('') : '<div class="hempty">Nenhum compromisso hoje.</div>';
+    } catch(e){ $('#hAgenda').innerHTML = '<div class="hempty">Reconecte o Google Agenda na aba Agenda.</div>'; }
+  } else $('#hAgenda').innerHTML = '<div class="hempty">Conecte o Google Agenda na aba Agenda para ver seus compromissos aqui.</div>';
+  // Finanças, vagas, estudos, hábitos
+  const mesIni = hoje.slice(0,7) + '-01';
+  const [fin, vag, est] = await Promise.all([
+    sb.from('lancamentos').select('tipo,valor,pago').gte('data', mesIni).lte('data', isoLocal(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0))),
+    sb.from('vagas').select('id,status,encontrada_em').in('status', ['nova','salva','enviado','entrevista']),
+    sb.from('estudos').select('id,titulo,materia,atualizado_em').order('atualizado_em', { ascending:false }).limit(4)
+  ]);
+  const L = fin.data || [], soma = f => L.filter(f).reduce((a, l) => a + Number(l.valor), 0);
+  const ent = soma(l => l.tipo === 'entrada'), sai = soma(l => l.tipo === 'saida');
+  $('#hFin').innerHTML = `<div class="hbig ${ent - sai >= 0 ? 'pos' : 'neg'}">${brl(ent - sai)}</div><div class="hsub">Saldo do mês · entrou ${brl(ent)} · saiu ${brl(sai)}</div>${soma(l => l.tipo === 'saida' && !l.pago) ? `<div class="hsub" style="color:var(--paused)">${brl(soma(l => l.tipo === 'saida' && !l.pago))} a pagar</div>` : ''}`;
+  const V = vag.data || [];
+  const novasHoje = V.filter(v => v.status === 'nova').length;
+  $('#hVagas').innerHTML = `<div class="hbig">${novasHoje}</div><div class="hsub">vagas novas para ver · ${V.filter(v => v.status === 'enviado').length} currículos enviados · ${V.filter(v => v.status === 'entrevista').length} entrevistas</div>`;
+  const E = est.data || [];
+  $('#hEst').innerHTML = E.length ? E.map(p => `<div class="hrow" data-abrir-est="${p.id}" style="cursor:pointer"><span class="grow">${esc(p.titulo || 'Sem título')}</span><span class="hsub">${esc(p.materia)}</span></div>`).join('') : '<div class="hempty">Nenhuma página ainda.</div>';
+  renderHabHome();
+}
+document.getElementById('viewInicio').addEventListener('click', async e => {
+  const ir = e.target.closest('[data-ir]'); if (ir) return trocarAba(ir.dataset.ir);
+  const f = e.target.closest('[data-feito]'); if (f) { await moverTarefa(f.dataset.feito, 'concluido'); toast('Tarefa concluída'); return renderInicio(); }
+  const t = e.target.closest('[data-abrir-t]'); if (t) return abrirTarefa(S.tarefas.find(x => x.id === t.dataset.abrirT));
+  const es = e.target.closest('[data-abrir-est]'); if (es) { E.atual = es.dataset.abrirEst; E.editando = false; return trocarAba('estudos'); }
+  if (e.target.closest('#hCmd')) abrirComandos();
+});
+// Tarefa rápida: "texto hoje|amanhã|dd/mm !alta|!baixa #etiqueta"
+function interpretarRapida(txt){
+  let t = ' ' + txt + ' ', prazo = null, prioridade = 'media', etiquetas = [];
+  const hoje = new Date(); hoje.setHours(12);
+  const dia = n => { const d = new Date(hoje); d.setDate(d.getDate() + n); return isoLocal(d); };
+  if (/\shoje\s/i.test(t)) { prazo = dia(0); t = t.replace(/\shoje\s/i, ' '); }
+  else if (/\samanh[ãa]\s/i.test(t)) { prazo = dia(1); t = t.replace(/\samanh[ãa]\s/i, ' '); }
+  const m = t.match(/\s(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\s/);
+  if (m) { const y = m[3] ? (m[3].length === 2 ? '20' + m[3] : m[3]) : hoje.getFullYear(); prazo = `${y}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`; t = t.replace(m[0], ' '); }
+  const p = t.match(/\s!(alta|m[ée]dia|baixa)\s/i); if (p) { prioridade = p[1].toLowerCase().startsWith('m') ? 'media' : p[1].toLowerCase(); t = t.replace(p[0], ' '); }
+  t = t.replace(/\s#([\wÀ-ú-]+)/g, (_, g) => { etiquetas.push(g); return ' '; });
+  return { titulo: t.trim().replace(/\s+/g, ' '), prazo, prioridade, etiquetas };
+}
+$('#hQuick').addEventListener('submit', async e => {
+  e.preventDefault();
+  const v = $('#hQuickIn').value.trim(); if (!v) return;
+  const r = interpretarRapida(v); if (!r.titulo) return;
+  const ok = await salvarTarefa(null, { ...r, status:'a_fazer', quadro_id:S.quadroAtual, responsavel_id:S.eu.id });
+  if (ok) { $('#hQuickIn').value = ''; toast('Tarefa criada' + (r.prazo ? ' para ' + fmtData(r.prazo) : '')); renderInicio(); }
+});
+
+// ===== Hábitos =====
+const H = { lista:[] };
+const DIAS_SEM = ['dom','seg','ter','qua','qui','sex','sáb'];
+function ultimosDias(n){ const r = []; for (let i = n - 1; i >= 0; i--) { const d = new Date(); d.setHours(12); d.setDate(d.getDate() - i); r.push(d); } return r; }
+function sequencia(h){
+  const f = new Set(h.feitos || []); let n = 0; const d = new Date(); d.setHours(12);
+  if (!f.has(isoLocal(d))) d.setDate(d.getDate() - 1);
+  while (f.has(isoLocal(d))) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+function naSemana(h){ const f = new Set(h.feitos || []); return ultimosDias(7).filter(d => f.has(isoLocal(d))).length; }
+async function carregarHabitos(){
+  const { data, error } = await sb.from('habitos').select('*').order('ordem').order('criado_em');
+  if (error) { $('#habLista').innerHTML = '<div class="empty">Não foi possível carregar.</div>'; return; }
+  H.lista = data; renderHabitos(); if (S.aba === 'inicio') renderHabHome();
+}
+function renderHabitos(){
+  const hoje = hojeISO();
+  $('#habLista').innerHTML = H.lista.length ? H.lista.map(h => { const f = new Set(h.feitos || []); const seq = sequencia(h);
+    return `<div class="hab" style="--hc:${h.cor || 'var(--accent)'}">
+      <div class="hab-n" data-hab-ed="${h.id}">${esc(h.nome)}<small>${naSemana(h)} de ${h.meta_semana} na semana</small></div>
+      <div class="hab-dias">${ultimosDias(7).map(d => { const iso = isoLocal(d); return `<button class="hd ${f.has(iso) ? 'on' : ''} ${iso === hoje ? 'hoje' : ''}" data-hab="${h.id}" data-dia="${iso}" title="${d.toLocaleDateString('pt-BR')}">${DIAS_SEM[d.getDay()]}<b>${d.getDate()}</b></button>`; }).join('')}</div>
+      <div class="hab-seq"><b>${seq}</b><span>${seq === 1 ? 'dia seguido' : 'dias seguidos'}</span></div>
+    </div>`; }).join('')
+    : '<div class="empty"><b>Nenhum hábito ainda</b><span>Crie hábitos como "Estudar 1 hora", "Treinar" ou "Beber 2 L de água" e marque todo dia.</span></div>';
+}
+async function marcarHabito(id, dia){
+  const h = H.lista.find(x => x.id === id); if (!h) return;
+  const f = new Set(h.feitos || []); f.has(dia) ? f.delete(dia) : f.add(dia);
+  const antes = h.feitos; h.feitos = [...f].sort().slice(-400);
+  renderHabitos(); renderHabHome();
+  const { error } = await sb.from('habitos').update({ feitos: h.feitos }).eq('id', id);
+  if (error) { h.feitos = antes; renderHabitos(); renderHabHome(); toast('Não foi possível marcar'); }
+}
+const CORES_HAB = [['#7c6cff','Roxo'],['#22c55e','Verde'],['#3b82f6','Azul'],['#f59e0b','Laranja'],['#ef4444','Vermelho'],['#ec4899','Rosa'],['#14b8a6','Turquesa']];
+function editarHabito(h){
+  formModal({ titulo: h ? 'Editar hábito' : 'Novo hábito', campos:[
+      { id:'nome', label:'Nome', value: h?.nome || '', required:true, max:80 },
+      { id:'meta_semana', label:'Meta por semana (dias)', type:'select', value: h?.meta_semana || 7, options:[1,2,3,4,5,6,7].map(n => [n, n === 7 ? 'Todo dia' : n + (n === 1 ? ' dia' : ' dias')]), half:true },
+      { id:'cor', label:'Cor', type:'select', value: h?.cor || '#7c6cff', options: CORES_HAB, half:true }
+    ],
+    salvar: async v => {
+      v.meta_semana = Number(v.meta_semana);
+      const { error } = h ? await sb.from('habitos').update(v).eq('id', h.id) : await sb.from('habitos').insert({ ...v, ordem: H.lista.length });
+      if (error) { toast('Não foi possível salvar'); return false; }
+      toast(h ? 'Hábito salvo' : 'Hábito criado'); carregarHabitos();
+    },
+    excluir: h ? async () => { const { error } = await sb.from('habitos').delete().eq('id', h.id); if (error) { toast('Não foi possível excluir'); return false; } toast('Hábito excluído'); carregarHabitos(); } : null });
+}
+$('#habNovo').onclick = () => editarHabito(null);
+$('#habLista').addEventListener('click', e => {
+  const d = e.target.closest('[data-dia]'); if (d) return marcarHabito(d.dataset.hab, d.dataset.dia);
+  const ed = e.target.closest('[data-hab-ed]'); if (ed) editarHabito(H.lista.find(x => x.id === ed.dataset.habEd));
+});
+let habCarregado = false;
+async function renderHabHome(){
+  const el = $('#hHab'); if (!el) return;
+  if (!habCarregado) { habCarregado = true; const { data } = await sb.from('habitos').select('*').order('ordem').order('criado_em'); H.lista = data || []; }
+  const hoje = hojeISO();
+  el.innerHTML = H.lista.length ? H.lista.slice(0, 6).map(h => { const on = (h.feitos || []).includes(hoje);
+    return `<div class="hab-mini" style="--hc:${h.cor || 'var(--accent)'}"><button class="hcheck" data-hab="${h.id}" data-dia="${hoje}" style="${on ? 'background:var(--hc);border-color:var(--hc);color:#fff' : ''}">&#10003;</button><span class="grow">${esc(h.nome)}</span><span class="mono hsub">${sequencia(h)}d</span></div>`; }).join('')
+    : '<div class="hempty">Crie hábitos na aba Hábitos para acompanhar aqui.</div>';
+}
+$('#hHab').addEventListener('click', e => { const d = e.target.closest('[data-dia]'); if (d) { e.stopPropagation(); marcarHabito(d.dataset.hab, d.dataset.dia); } });
+
+// ===== Paleta de comandos (Ctrl+K) e atalhos =====
+const ABAS = [['inicio','Início'],['quadro','Quadro'],['agenda','Agenda'],['financas','Finanças'],['estudos','Estudos'],['habitos','Hábitos'],['vagas','Vagas'],['notas','Anotações']];
+const CMD = { itens:[], sel:0, dados:null };
+async function abrirComandos(){
+  if ($('#cmdOv')) return;
+  document.body.insertAdjacentHTML('beforeend', `<div class="cmd-ov" id="cmdOv"><div class="cmd">
+    <input id="cmdIn" placeholder="Buscar em tudo ou digitar um comando" autocomplete="off">
+    <div class="cmd-l" id="cmdL"></div>
+    <div class="cmd-f"><span><kbd>&uarr;&darr;</kbd> navegar</span><span><kbd>Enter</kbd> abrir</span><span><kbd>Esc</kbd> fechar</span></div></div></div>`);
+  $('#cmdOv').addEventListener('mousedown', e => { if (e.target.id === 'cmdOv') fecharComandos(); });
+  $('#cmdIn').addEventListener('input', () => { CMD.sel = 0; renderComandos(); });
+  $('#cmdIn').addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); CMD.sel = Math.min(CMD.sel + 1, CMD.itens.length - 1); renderComandos(true); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); CMD.sel = Math.max(CMD.sel - 1, 0); renderComandos(true); }
+    else if (e.key === 'Enter') { e.preventDefault(); executarCmd(CMD.itens[CMD.sel]); }
+    else if (e.key === 'Escape') { e.stopPropagation(); fecharComandos(); }
+  });
+  $('#cmdL').addEventListener('click', e => { const i = e.target.closest('[data-ci]'); if (i) executarCmd(CMD.itens[+i.dataset.ci]); });
+  $('#cmdIn').focus(); renderComandos();
+  if (!CMD.dados) {
+    const [n, es, v] = await Promise.all([sb.from('notas').select('id,titulo,conteudo'), sb.from('estudos').select('id,titulo,materia'), sb.from('vagas').select('id,titulo,empresa,link,status').limit(300)]);
+    CMD.dados = { notas: n.data || [], estudos: es.data || [], vagas: v.data || [] };
+    setTimeout(() => CMD.dados = null, 60000);
+    if ($('#cmdOv')) renderComandos();
+  }
+}
+function fecharComandos(){ $('#cmdOv')?.remove(); }
+function renderComandos(soSel){
+  const q = ($('#cmdIn')?.value || '').trim().toLowerCase();
+  const tem = (...xs) => !q || xs.some(x => (x || '').toLowerCase().includes(q));
+  const it = [];
+  if (q) it.push({ g:'Criar', t:`Nova tarefa: "${$('#cmdIn').value.trim()}"`, f:() => quickTarefa($('#cmdIn').value.trim()) });
+  [['Nova tarefa', () => { trocarAba('quadro'); abrirTarefa(null); }], ['Nova entrada', () => { trocarAba('financas'); abrirLanc(null, 'entrada'); }],
+   ['Nova saída', () => { trocarAba('financas'); abrirLanc(null, 'saida'); }], ['Nova página de estudo', () => { trocarAba('estudos'); setTimeout(() => $('#estNova').click(), 300); }],
+   ['Nova anotação', () => { trocarAba('notas'); setTimeout(() => $('#notaNova').click(), 300); }], ['Novo hábito', () => { trocarAba('habitos'); editarHabito(null); }],
+   ['Abrir configurações', () => abrirConfig()]].forEach(([t, f]) => tem(t) && it.push({ g:'Ações', t, f }));
+  ABAS.forEach(([a, n], i) => tem('ir para ' + n, n) && it.push({ g:'Ir para', t:n, k:String(i + 1), f:() => trocarAba(a) }));
+  if (q) {
+    S.tarefas.filter(t => tem(t.titulo, t.descricao, (t.etiquetas || []).join(' '))).slice(0, 6).forEach(t => it.push({ g:'Tarefas', t:t.titulo, s:{ a_fazer:'A fazer', em_andamento:'Em andamento', pausado:'Pausado', concluido:'Concluído' }[t.status] || '', f:() => { trocarAba('quadro'); if (t.quadro_id && t.quadro_id !== S.quadroAtual) { S.quadroAtual = t.quadro_id; renderQuadro(); } abrirTarefa(t); } }));
+    const D = CMD.dados;
+    if (D) {
+      D.estudos.filter(p => tem(p.titulo, p.materia)).slice(0, 5).forEach(p => it.push({ g:'Estudos', t:p.titulo || 'Sem título', s:p.materia, f:() => { E.atual = p.id; E.editando = false; trocarAba('estudos'); } }));
+      D.notas.filter(n => tem(n.titulo, n.conteudo)).slice(0, 5).forEach(n => it.push({ g:'Anotações', t:n.titulo || (n.conteudo || '').slice(0, 60) || 'Sem título', f:() => { trocarAba('notas'); setTimeout(() => { const b = $('#notaBusca'); if (b) { b.value = n.titulo || ''; b.dispatchEvent(new Event('input')); } }, 300); } }));
+      D.vagas.filter(v => tem(v.titulo, v.empresa)).slice(0, 5).forEach(v => it.push({ g:'Vagas', t:v.titulo, s:v.empresa || '', f:() => window.open(v.link, '_blank', 'noopener') }));
+    }
+  }
+  CMD.itens = it;
+  let g = '';
+  $('#cmdL').innerHTML = it.length ? it.map((x, i) => { const cab = x.g !== g ? `<div class="cmd-g">${x.g}</div>` : ''; g = x.g;
+    return `${cab}<div class="cmd-i ${i === CMD.sel ? 'sel' : ''}" data-ci="${i}"><span class="grow">${esc(x.t)}</span>${x.s ? `<span class="hsub">${esc(x.s)}</span>` : ''}${x.k ? `<kbd>${x.k}</kbd>` : ''}</div>`; }).join('')
+    : '<div class="hempty" style="padding:14px">Nada encontrado.</div>';
+  if (soSel) $('#cmdL .sel')?.scrollIntoView({ block:'nearest' });
+}
+function executarCmd(x){ if (!x) return; fecharComandos(); x.f(); }
+async function quickTarefa(v){
+  const r = interpretarRapida(v); if (!r.titulo) return;
+  if (await salvarTarefa(null, { ...r, status:'a_fazer', quadro_id:S.quadroAtual, responsavel_id:S.eu.id })) toast('Tarefa criada' + (r.prazo ? ' para ' + fmtData(r.prazo) : ''));
+}
+document.addEventListener('keydown', e => {
+  if (!S.eu || $('#appView').classList.contains('hidden')) return;
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); $('#cmdOv') ? fecharComandos() : abrirComandos(); return; }
+  const alvo = e.target; if (alvo.closest('input,textarea,select,[contenteditable="true"]') || $('#ov') || $('#cmdOv') || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (/^[1-8]$/.test(e.key)) { trocarAba(ABAS[+e.key - 1][0]); }
+  else if (e.key === 'n' || e.key === 'N') { e.preventDefault(); trocarAba('quadro'); abrirTarefa(null); }
+  else if (e.key === '/') { e.preventDefault(); if (S.aba !== 'quadro') trocarAba('quadro'); $('#busca')?.focus(); }
+});
 
 // ===== Configurações: aparência e backup =====
 $('#configBtn').onclick = () => abrirConfig();
@@ -1186,7 +1467,7 @@ function abrirConfig(){
   $('#cRestaurar').onchange = e => { const f = e.target.files[0]; if (f) restaurarBackup(f); e.target.value = ''; };
 }
 
-const TABELAS_EXTRAS = ['quadros','clientes','produtos','investimentos','estudos','vagas'];
+const TABELAS_EXTRAS = ['quadros','clientes','produtos','investimentos','estudos','vagas','habitos','orcamentos'];
 async function backupExtras(){
   const r = await Promise.all(TABELAS_EXTRAS.map(t => sb.from(t).select('*')));
   return Object.fromEntries(TABELAS_EXTRAS.map((t, i) => [t, r[i].data || []]));
@@ -1248,7 +1529,9 @@ async function carregarFin(){
   $('#fMes').textContent = ml.charAt(0).toUpperCase() + ml.slice(1);
   const { data, error } = await sb.from('lancamentos').select('*').gte('data', ini).lte('data', fim).order('data', { ascending:false }).order('criado_em', { ascending:false });
   if (error) { $('#fLista').innerHTML = '<div class="ag-empty" style="padding:16px">Não foi possível carregar.</div>'; return; }
-  F.lista = data; renderFin();
+  F.lista = data;
+  const o = await sb.from('orcamentos').select('*'); F.orc = o.data || [];
+  renderFin();
   carregarFinExtras();
 }
 function renderFin(){
@@ -1265,12 +1548,33 @@ function renderFin(){
   const porCat = {};
   F.lista.filter(l => l.tipo === 'saida').forEach(l => porCat[l.categoria] = (porCat[l.categoria] || 0) + Number(l.valor));
   const ordem = Object.entries(porCat).sort((a, b) => b[1] - a[1]);
-  $('#fCats').innerHTML = ordem.length ? ordem.map(([c, v]) => `<div class="cat-row"><div class="l"><span>${esc(CATS.saida[c] || 'Outros')}</span><span class="mono">${brl(v)}</span></div><div class="bar"><i style="width:${Math.round(v / sai * 100)}%"></i></div></div>`).join('') : '<div class="ag-empty" style="padding-top:12px">Sem gastos neste mês.</div>';
+  const orc = Object.fromEntries((F.orc || []).map(o => [o.categoria, Number(o.limite)]));
+  Object.keys(orc).forEach(c => { if (!(c in porCat)) ordem.push([c, 0]); });
+  $('#fCats').innerHTML = ordem.length ? ordem.map(([c, v]) => {
+    const lim = orc[c];
+    if (!lim) return `<div class="cat-row"><div class="l"><span>${esc(CATS.saida[c] || 'Outros')}</span><span class="mono">${brl(v)}</span></div><div class="bar"><i style="width:${sai ? Math.round(v / sai * 100) : 0}%"></i></div></div>`;
+    const pct = Math.round(v / lim * 100), cor = pct >= 100 ? 'var(--danger)' : pct >= 80 ? 'var(--paused)' : 'var(--done)';
+    return `<div class="cat-row"><div class="l"><span>${esc(CATS.saida[c] || 'Outros')}</span><span class="mono">${brl(v)} <span style="color:var(--muted)">de ${brl(lim)}</span></span></div><div class="bar"><i style="width:${Math.min(pct, 100)}%;background:${cor}"></i></div><div class="orc-txt" style="color:${cor}">${pct >= 100 ? 'Passou ' + brl(v - lim) + ' do limite' : 'Resta ' + brl(lim - v) + ' (' + pct + '% usado)'}</div></div>`;
+  }).join('') : '<div class="ag-empty" style="padding-top:12px">Sem gastos neste mês. Use Orçamentos para definir limites por categoria.</div>';
 }
 $('#fPrev').onclick = () => { F.mes = new Date(F.mes.getFullYear(), F.mes.getMonth()-1, 1); carregarFin(); };
 $('#fNext').onclick = () => { F.mes = new Date(F.mes.getFullYear(), F.mes.getMonth()+1, 1); carregarFin(); };
 $('#fMes').onclick = () => { F.mes = new Date(new Date().getFullYear(), new Date().getMonth(), 1); carregarFin(); };
 $('#fNovaEnt').onclick = () => abrirLanc(null, 'entrada');
+$('#fOrc').onclick = () => {
+  const atual = Object.fromEntries((F.orc || []).map(o => [o.categoria, o]));
+  const cats = Object.entries(CATS.saida).filter(([k]) => !['aporte','revenda'].includes(k));
+  formModal({ titulo:'Orçamento mensal por categoria',
+    campos: cats.map(([k, n]) => ({ id:k, label:n, type:'money', value: atual[k] ? atual[k].limite : '', half:true })),
+    textoSalvar:'Salvar orçamentos',
+    salvar: async v => {
+      const up = [], del = [];
+      for (const [k] of cats) { if (v[k] > 0) up.push({ categoria:k, limite:v[k] }); else if (atual[k]) del.push(atual[k].id); }
+      if (up.length) { const { error } = await sb.from('orcamentos').upsert(up, { onConflict:'dono_id,categoria' }); if (error) { toast('Não foi possível salvar'); return false; } }
+      if (del.length) await sb.from('orcamentos').delete().in('id', del);
+      toast('Orçamentos salvos'); carregarFin();
+    } });
+};
 $('#fNovaSai').onclick = () => abrirLanc(null, 'saida');
 $('#fLista').addEventListener('click', e => { const r = e.target.closest('[data-lanc]'); if (r) abrirLanc(F.lista.find(l => l.id === r.dataset.lanc)); });
 
