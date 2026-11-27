@@ -20,15 +20,15 @@
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#111110; --surface:#1a1a19; --surface-2:#161615; --ink:#f4f4f2; --ink-2:#d4d4d0; --muted:#9a9a94;
-    --line:#2a2a28; --line-2:#3a3a37; --accent:#f97316; --accent-ink:#1a0d05; --accent-soft:#2b1a10;
+    --bg:#0a0a0d; --surface:#131317; --surface-2:#0e0e12; --ink:#ededf0; --ink-2:#c9c9d1; --muted:#83838f;
+    --line:#1f1f26; --line-2:#2c2c35; --accent:#7c6cff; --accent-ink:#ffffff; --accent-soft:#1d1a3a;
     --todo:#a1a1aa; --doing:#60a5fa; --paused:#f59e0b; --done:#4ade80; --danger:#f87171;
     --shadow:0 1px 2px rgba(0,0,0,.4); --shadow-lg:0 12px 32px -8px rgba(0,0,0,.6);
   }
 }
 :root[data-theme="dark"]{
-  --bg:#111110; --surface:#1a1a19; --surface-2:#161615; --ink:#f4f4f2; --ink-2:#d4d4d0; --muted:#9a9a94;
-  --line:#2a2a28; --line-2:#3a3a37; --accent:#f97316; --accent-ink:#1a0d05; --accent-soft:#2b1a10;
+  --bg:#0a0a0d; --surface:#131317; --surface-2:#0e0e12; --ink:#ededf0; --ink-2:#c9c9d1; --muted:#83838f;
+  --line:#1f1f26; --line-2:#2c2c35; --accent:#7c6cff; --accent-ink:#ffffff; --accent-soft:#1d1a3a;
   --todo:#a1a1aa; --doing:#60a5fa; --paused:#f59e0b; --done:#4ade80; --danger:#f87171;
   --shadow:0 1px 2px rgba(0,0,0,.4); --shadow-lg:0 12px 32px -8px rgba(0,0,0,.6);
 }
@@ -331,6 +331,7 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
 .modal-h{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}
 .modal-h h3{margin:0;font-size:16px}
 .modal-b{padding:18px;display:flex;flex-direction:column;gap:14px;overflow:auto}
+.modal-b>*{flex-shrink:0}
 .modal-f{display:flex;gap:8px;padding:14px 18px;border-top:1px solid var(--line)}
 .modal-f .sp{flex:1}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -358,6 +359,66 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
   .team-row{grid-template-columns:1fr auto;}
   .team-row .hide-sm{display:none}
   .row2{grid-template-columns:1fr}
+}
+
+/* ====== Visual: escuro moderno ====== */
+body{font-feature-settings:"ss01","cv11";letter-spacing:-.005em;
+  background:
+    radial-gradient(900px 420px at 12% -8%, color-mix(in srgb,var(--accent) 13%,transparent), transparent 70%),
+    radial-gradient(700px 380px at 100% 0%, color-mix(in srgb,var(--accent) 6%,transparent), transparent 70%),
+    var(--bg);
+  background-attachment:fixed}
+.head h1,.study-title{font-weight:650;letter-spacing:-.035em}
+.head h1{font-size:30px}
+.head .date{font-size:13.5px}
+.top{background:color-mix(in srgb,var(--bg) 72%,transparent);backdrop-filter:blur(14px) saturate(140%)}
+.logo{background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 55%,#000));box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 40%,transparent),0 4px 14px -4px color-mix(in srgb,var(--accent) 70%,transparent)}
+.logo i{background:rgba(255,255,255,.92)}
+.logo i:nth-child(2){background:rgba(255,255,255,.45)}
+.tab{display:inline-flex;align-items:center;gap:8px;color:var(--muted);transition:color .15s,background .15s}
+.tab .ti{width:16px;height:16px;flex:none;opacity:.85}
+.tab:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 5%,transparent)}
+.tab.on{color:var(--ink);background:color-mix(in srgb,var(--accent) 16%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 28%,transparent)}
+.tab.on .ti{color:var(--accent);opacity:1}
+.btn{transition:border-color .15s,background .15s,transform .1s,box-shadow .15s}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);border-color:transparent;color:var(--accent-ink);box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 6px 18px -8px color-mix(in srgb,var(--accent) 80%,transparent)}
+.btn.primary:hover{opacity:1;filter:brightness(1.08)}
+.input{background:color-mix(in srgb,var(--surface) 80%,transparent)}
+.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.stats{gap:10px}
+.stat{background:color-mix(in srgb,var(--surface) 75%,transparent);border:1px solid var(--line);border-radius:12px;padding:10px 16px;min-width:118px}
+.stat b{font-size:22px}
+.col{background:color-mix(in srgb,var(--surface) 45%,transparent);border-color:var(--line);border-radius:14px}
+.col-h{padding:14px 14px 10px;font-size:12.5px;letter-spacing:.01em}
+.col-h .n{margin-left:auto;background:color-mix(in srgb,var(--ink) 7%,transparent);color:var(--ink-2);padding:1px 8px;border-radius:99px;font-size:11px}
+.dot{box-shadow:0 0 0 3px color-mix(in srgb,currentColor 0%,transparent)}
+.card{background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 100%,transparent),color-mix(in srgb,var(--surface) 88%,var(--bg)));border-color:var(--line);border-radius:12px;box-shadow:0 1px 0 color-mix(in srgb,#fff 4%,transparent) inset,0 2px 8px -4px rgba(0,0,0,.35)}
+.card:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line));transform:translateY(-1px);box-shadow:0 1px 0 color-mix(in srgb,#fff 5%,transparent) inset,0 10px 24px -12px rgba(0,0,0,.55)}
+.card .t{font-size:14px;font-weight:550}
+.prio{border-radius:6px;background:transparent}
+.prio.alta{background:color-mix(in srgb,var(--danger) 12%,transparent)}
+.prio.media{background:color-mix(in srgb,var(--paused) 12%,transparent);border-color:color-mix(in srgb,var(--paused) 30%,transparent)}
+.prio.baixa{color:var(--muted)}
+.empty{display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:color-mix(in srgb,var(--ink) 2.5%,transparent);border-radius:10px;padding:22px 8px}
+.empty svg{opacity:.55}
+.chip{background:color-mix(in srgb,var(--surface) 70%,transparent);border-color:var(--line-2);transition:background .15s,border-color .15s}
+.chip:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line-2))}
+.chip.on{background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--ink);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+.panel,.team,.fin-card,.note,.day,.job,.study-side,.study-main,.invite{background:color-mix(in srgb,var(--surface) 82%,transparent);border-color:var(--line)}
+.fin-card{border-radius:14px}
+.seg{background:color-mix(in srgb,var(--surface) 60%,transparent);border-color:var(--line)}
+.seg button.on{background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--ink);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 35%,transparent)}
+.modal{background:color-mix(in srgb,var(--surface) 96%,var(--bg));border-color:var(--line-2);border-radius:16px;box-shadow:0 30px 80px -20px rgba(0,0,0,.7),0 0 0 1px color-mix(in srgb,#fff 3%,transparent) inset}
+.overlay{background:rgba(5,5,10,.55);backdrop-filter:blur(4px)}
+.toast{background:var(--surface);color:var(--ink);border:1px solid var(--line-2)}
+.day.today{border-color:color-mix(in srgb,var(--accent) 60%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 20%,transparent),0 8px 30px -12px color-mix(in srgb,var(--accent) 50%,transparent)}
+.ev{background:color-mix(in srgb,var(--surface) 70%,var(--bg));border-left-color:var(--accent)}
+.auth-side{background:radial-gradient(600px 400px at 20% 20%, color-mix(in srgb,var(--accent) 35%,transparent), transparent 70%),#0a0a0d;color:#ededf0}
+.mini-card.on{background:var(--accent);border-color:var(--accent)}
+@media (min-width:901px){
+  [data-menu="vertical"] .top{background:color-mix(in srgb,var(--surface-2) 85%,transparent)}
+  [data-menu="vertical"] .tab{padding:9px 10px;border-radius:9px}
 }
 </style>
 </head>
@@ -402,12 +463,12 @@ textarea.input{height:auto;min-height:90px;padding:10px 12px;resize:vertical}
   <header class="top"><div class="top-in">
     <div class="brand"><span class="logo"><i></i><i></i><i></i><i></i></span><span>Taskflow</span><span class="team-name" id="teamName"></span></div>
     <nav class="tabs">
-      <button class="tab on" data-tab="quadro">Quadro</button>
-      <button class="tab" data-tab="agenda">Agenda</button>
-      <button class="tab" data-tab="financas">Finanças</button>
-      <button class="tab" data-tab="estudos">Estudos</button>
-      <button class="tab" data-tab="vagas">Vagas</button>
-      <button class="tab" data-tab="notas">Anotações</button>
+      <button class="tab on" data-tab="quadro"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1.5"/><rect x="14" y="3" width="7" height="11" rx="1.5"/></svg><span>Quadro</span></button>
+      <button class="tab" data-tab="agenda"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>Agenda</span></button>
+      <button class="tab" data-tab="financas"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1 0-4h12v4"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg><span>Finanças</span></button>
+      <button class="tab" data-tab="estudos"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg><span>Estudos</span></button>
+      <button class="tab" data-tab="vagas"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg><span>Vagas</span></button>
+      <button class="tab" data-tab="notas"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-9z"/><path d="M14 3v7h7"/></svg><span>Anotações</span></button>
     </nav>
     <div class="top-right">
       <div class="me"><span id="meAv"></span><span class="name" id="meName"></span></div>
@@ -897,7 +958,7 @@ function renderQuadro(){
       : ts.sort((a,b) => (pesoP[a.prioridade]-pesoP[b.prioridade]) || (a.prazo||'9999').localeCompare(b.prazo||'9999'));
     return `<section class="col">
       <div class="col-h"><span class="dot" style="background:${c.cor}"></span>${c.nome}<span class="n">${ts.length}</span></div>
-      <div class="col-b" data-col="${c.id}">${ts.length ? ts.map(t => cardHTML(t, hoje)).join('') : '<div class="empty">Nada por aqui</div>'}</div>
+      <div class="col-b" data-col="${c.id}">${ts.length ? ts.map(t => cardHTML(t, hoje)).join('') : `<div class="empty"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="3" stroke-dasharray="3 3"/></svg>${c.id==='concluido'?'Nada concluído ainda':'Sem tarefas'}</div>`}</div>
     </section>`;
   }).join('');
 }
