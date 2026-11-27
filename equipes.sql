@@ -1,4 +1,7 @@
 -- Várias equipes independentes: cada equipe tem gerente, membros e código de convite
+-- Remove os dados de teste (tarefas primeiro, para não disparar a regra de edição)
+delete from public.tarefas where responsavel_id in (select id from auth.users where email like '%teste@exemplo.com')
+   or criado_por in (select id from auth.users where email like '%teste@exemplo.com');
 delete from auth.users where email like '%teste@exemplo.com';
 
 create table public.equipes (
@@ -57,7 +60,8 @@ create or replace function public.antes_de_atualizar_tarefa()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
   new.equipe_id := old.equipe_id;
-  if not public.eh_gerente() then
+  -- auth.uid() nulo = operação do sistema (painel, cascata), não de um usuário
+  if auth.uid() is not null and not public.eh_gerente() then
     if new.titulo is distinct from old.titulo
        or new.descricao is distinct from old.descricao
        or new.prioridade is distinct from old.prioridade
