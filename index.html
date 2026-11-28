@@ -1064,7 +1064,7 @@ function setModoAuth(m){
   modoAuth = m;
   const cad = m === 'signup';
   $('#authTitle').textContent = cad ? 'Criar conta' : 'Entrar';
-  $('#authSub').textContent = cad ? 'Leva menos de um minuto. Só você vê o que guarda aqui.' : 'Bem-vindo de volta.';
+  $('#authSub').textContent = cad ? 'Leva menos de um minuto.' : 'Bem-vindo de volta.';
   document.querySelectorAll('#authTabs [data-go]').forEach(b => b.classList.toggle('on', b.dataset.go === m));
   $('#authTabs').classList.toggle('dir', cad);
   $('#authLinks').classList.toggle('hidden', cad);
@@ -2616,7 +2616,7 @@ $('#maisOv').addEventListener('click', e => {
 // A cada versão publicada, adicione uma entrada NO TOPO desta lista (texto curto, para quem usa o app).
 const NOVIDADES = [
   { versao:'1.9', data:'28/11/2026', titulo:'Tela de entrada mais limpa', itens:[
-    'Saiu a frase sobre os dados guardados na tela de login.',
+    'Saiu a frase sobre os dados guardados no login e no Criar conta.',
   ]},
   { versao:'1.8', data:'28/11/2026', titulo:'Tela de entrada fixa', itens:[
     'A tela de login agora cabe inteira na tela do celular e não rola mais.',
