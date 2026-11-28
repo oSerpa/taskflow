@@ -699,6 +699,21 @@ html:has(#authView:not(.hidden)),body:has(#authView:not(.hidden)){background:#07
   .lg-card{gap:9px;padding:14px} .lg-in input{height:50px} .lg-in .lb{top:15px} .lg-in .ico{top:14px} .lg-eye{top:9px} .lg-btn{height:50px}
   .lg-foot{margin-top:6px} .lg-wrap{padding-top:calc(env(safe-area-inset-top) + 10px);padding-bottom:calc(env(safe-area-inset-bottom) + 10px)}
 }
+.lg-terms{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#b4b4c2;line-height:1.4;cursor:pointer;padding:2px 2px}
+.lg-terms.hidden{display:none}
+.lg-terms input{width:18px;height:18px;margin:0;flex:none;accent-color:#7c6cff}
+.lg-terms a{color:#a99bff;text-decoration:underline;cursor:pointer}
+.lg-terms.erro span{color:#ff8a8a}
+.lg-tov{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px}
+.lg-tov.hidden{display:none}
+.lg-tbox{background:#111116;border:1px solid #26262f;border-radius:20px;width:100%;max-width:520px;max-height:min(80dvh,640px);display:flex;flex-direction:column;color:#e9e9f1;box-sizing:border-box}
+.lg-tbox h3{margin:0;padding:18px 20px 10px;font-size:18px}
+.lg-ttxt{overflow-y:auto;padding:0 20px;font-size:14px;line-height:1.55;color:#b9b9c6}
+.lg-ttxt p{margin:0 0 12px}.lg-ttxt b{color:#e9e9f1}
+.lg-tact{display:flex;gap:10px;padding:14px 20px calc(16px + env(safe-area-inset-bottom))}
+.lg-tact .lg-btn{flex:1;margin:0}
+.lg-tghost{flex:1;height:52px;border-radius:14px;border:1px solid #2c2c36;background:transparent;color:#d6d6e0;font:inherit;font-weight:500;cursor:pointer}
+@media (max-width:700px){.lg-tov{align-items:flex-end;padding:0}.lg-tbox{border-radius:20px 20px 0 0;max-height:88dvh}}
 </style>
 </head>
 <body>
@@ -733,11 +748,28 @@ html:has(#authView:not(.hidden)),body:has(#authView:not(.hidden)){background:#07
         <label class="lg-in"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></span><input id="aEmail" type="email" required autocomplete="email" inputmode="email" placeholder=" "><span class="lb">E-mail</span></label>
         <label class="lg-in"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg></span><input id="aSenha" type="password" required minlength="6" autocomplete="current-password" placeholder=" "><span class="lb">Senha</span><button type="button" class="lg-eye" id="aVer" aria-label="Mostrar senha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></label>
         <div class="lg-row" id="authLinks"><label class="lg-check"><input type="checkbox" checked> Manter conectado</label><a id="authEsqueci">Esqueci a senha</a></div>
+        <label class="lg-terms hidden" id="termosField"><input type="checkbox" id="aTermos"><span>Li e aceito os <a id="verTermos">termos de serviço</a></span></label>
         <div id="authMsg" class="msg hidden"></div>
         <button class="lg-btn" id="authBtn">Entrar</button>
         <div class="auth-switch hidden" id="authSwitch"></div>
       </form>
     </main>
+  </div>
+  <div class="lg-tov hidden" id="termosOv" role="dialog" aria-modal="true" aria-labelledby="termosT">
+    <div class="lg-tbox">
+      <h3 id="termosT">Termos de serviço</h3>
+      <div class="lg-ttxt">
+        <p>Última atualização: 28/11/2026.</p>
+        <p><b>1. O que é o Taskflow.</b> Um aplicativo para organizar tarefas, agenda, finanças, estudos, hábitos, vagas e anotações. Ele é mantido por uma pessoa, para uso pessoal, e é oferecido do jeito que está.</p>
+        <p><b>2. Sua conta.</b> Você é responsável por manter sua senha em segurança e por tudo o que for feito com a sua conta. Use um e-mail que seja seu.</p>
+        <p><b>3. Seus dados.</b> O que você cadastra fica guardado no Supabase, serviço de banco de dados usado pelo app, e cada conta só acessa os próprios registros. Seus dados não são vendidos nem compartilhados para publicidade. Se você conectar o Google Agenda, o app só lê e cria eventos quando você pede.</p>
+        <p><b>4. Uso adequado.</b> Não use o app para guardar conteúdo ilegal, nem tente acessar dados de outras contas ou atrapalhar o funcionamento do serviço.</p>
+        <p><b>5. Sem garantias.</b> O app pode ficar fora do ar, mudar ou ter erros. Faça backups pelo menu Configurações. Não há responsabilidade por perdas causadas por falhas, indisponibilidade ou uso indevido da conta.</p>
+        <p><b>6. Encerrar a conta.</b> Você pode parar de usar quando quiser e pedir a exclusão da conta e dos dados ao responsável pelo app.</p>
+        <p><b>7. Mudanças.</b> Estes termos podem ser atualizados. Mudanças importantes aparecem na tela de novidades do app.</p>
+      </div>
+      <div class="lg-tact"><button type="button" class="lg-tghost" id="termosFechar">Fechar</button><button type="button" class="lg-btn" id="termosAceito">Li e aceito</button></div>
+    </div>
   </div>
 </section>
 
@@ -1069,6 +1101,7 @@ function setModoAuth(m){
   $('#authTabs').classList.toggle('dir', cad);
   $('#authLinks').classList.toggle('hidden', cad);
   $('#nomeField').classList.toggle('hidden', !cad);
+  $('#termosField').classList.toggle('hidden', !cad); $('#termosField').classList.remove('erro');
   setModoEquipe('criar', false); // uso individual: cada conta é independente
   $('#aNome').required = cad;
   $('#authBtn').textContent = cad ? 'Criar conta' : 'Entrar';
@@ -1079,6 +1112,11 @@ function setModoAuth(m){
 function authMsg(t, err){ const el = $('#authMsg'); el.textContent = t; el.classList.toggle('hidden', !t); el.classList.toggle('err', !!err); }
 $('#authSwitch').addEventListener('click', e => { const go = e.target.dataset.go; if (go) setModoAuth(go); });
 $('#authTabs').addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b && b.dataset.go !== modoAuth) setModoAuth(b.dataset.go); });
+$('#verTermos').onclick = e => { e.preventDefault(); e.stopPropagation(); $('#termosOv').classList.remove('hidden'); };
+$('#termosFechar').onclick = () => $('#termosOv').classList.add('hidden');
+$('#termosOv').onclick = e => { if (e.target.id === 'termosOv') $('#termosOv').classList.add('hidden'); };
+$('#termosAceito').onclick = () => { $('#aTermos').checked = true; $('#termosField').classList.remove('erro'); authMsg(''); $('#termosOv').classList.add('hidden'); };
+$('#aTermos').onchange = () => { if ($('#aTermos').checked) { $('#termosField').classList.remove('erro'); authMsg(''); } };
 $('#aVer').onclick = () => { const i = $('#aSenha'); i.type = i.type === 'password' ? 'text' : 'password'; $('#aVer').classList.toggle('on', i.type === 'text'); };
 $('#authEsqueci').onclick = async () => {
   const email = $('#aEmail').value.trim();
@@ -1092,10 +1130,11 @@ $('#authForm').addEventListener('submit', async e => {
   if (modoAuth === 'signup' && !$('#aNome').value.trim()) return authMsg('Digite seu nome.', true);
   if (!/^\S+@\S+\.\S+$/.test(email)) return authMsg('Digite um e-mail válido.', true);
   if (password.length < 6) return authMsg('A senha precisa ter pelo menos 6 caracteres.', true);
+  if (modoAuth === 'signup' && !$('#aTermos').checked) { $('#termosField').classList.add('erro'); return authMsg('Para criar a conta, leia e aceite os termos de serviço.', true); }
   $('#authBtn').disabled = true; $('#authBtn').classList.add('load');
   try {
     if (modoAuth === 'signup') {
-      const { data, error } = await sb.auth.signUp({ email, password, options:{ data: Object.assign({ nome: $('#aNome').value.trim() }, modoEquipe === 'criar' ? { equipe: $('#aEquipe').value.trim() } : { codigo: $('#aCodigo').value.trim().toUpperCase() }), emailRedirectTo: location.href.split('#')[0] } });
+      const { data, error } = await sb.auth.signUp({ email, password, options:{ data: Object.assign({ nome: $('#aNome').value.trim(), termos_aceitos_em: new Date().toISOString(), termos_versao: '2026-11-28' }, modoEquipe === 'criar' ? { equipe: $('#aEquipe').value.trim() } : { codigo: $('#aCodigo').value.trim().toUpperCase() }), emailRedirectTo: location.href.split('#')[0] } });
       if (error) throw error;
       if (!data.session) { setModoAuth('login'); authMsg('Conta criada. Confirme pelo link enviado ao seu e-mail e depois entre.'); }
     } else {
@@ -2615,6 +2654,10 @@ $('#maisOv').addEventListener('click', e => {
 // ===== O que há de novo =====
 // A cada versão publicada, adicione uma entrada NO TOPO desta lista (texto curto, para quem usa o app).
 const NOVIDADES = [
+  { versao:'2.0', data:'28/11/2026', titulo:'Termos de serviço', itens:[
+    'Ao criar conta, agora é preciso ler e aceitar os termos de serviço.',
+    'A data do aceite fica registrada na conta.',
+  ]},
   { versao:'1.9', data:'28/11/2026', titulo:'Tela de entrada mais limpa', itens:[
     'Saiu a frase sobre os dados guardados no login e no Criar conta.',
   ]},
