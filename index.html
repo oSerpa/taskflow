@@ -737,7 +737,6 @@ html:has(#authView:not(.hidden)),body:has(#authView:not(.hidden)){background:#07
         <button class="lg-btn" id="authBtn">Entrar</button>
         <div class="auth-switch hidden" id="authSwitch"></div>
       </form>
-      <p class="lg-foot">Seus dados ficam guardados na sua conta e só você vê.</p>
     </main>
   </div>
 </section>
@@ -2611,6 +2610,9 @@ $('#maisOv').addEventListener('click', e => {
 // ===== O que há de novo =====
 // A cada versão publicada, adicione uma entrada NO TOPO desta lista (texto curto, para quem usa o app).
 const NOVIDADES = [
+  { versao:'1.9', data:'28/11/2026', titulo:'Tela de entrada mais limpa', itens:[
+    'Saiu a frase sobre os dados guardados na tela de login.',
+  ]},
   { versao:'1.8', data:'28/11/2026', titulo:'Tela de entrada fixa', itens:[
     'A tela de login agora cabe inteira na tela do celular e não rola mais.',
     'O fundo escuro cobre a tela toda, sem faixa de outra cor embaixo.',
