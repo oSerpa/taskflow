@@ -597,6 +597,14 @@ body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-ri
 .ct svg{color:var(--accent);flex:none}
 .ct:hover{border-color:var(--accent)}
 @media (max-width:700px){ .ct{height:38px;font-size:13.5px} }
+.novid-top{padding:22px 22px 8px;background:radial-gradient(120% 140% at 0% 0%,color-mix(in srgb,var(--accent) 28%,transparent),transparent 60%);border-radius:inherit}
+.novid-top h3{margin:8px 0 0;font-size:22px;letter-spacing:-.02em}
+.novid-tag{display:inline-block;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:99px;background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--accent);font-family:"Geist Mono",monospace}
+.novid-sec+.novid-sec{margin-top:6px;padding-top:12px;border-top:1px solid var(--line)}
+.novid-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.novid-h span{font-size:12px;color:var(--muted)}
+.novid ul{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--ink-2);line-height:1.45}
+.novid li::marker{color:var(--accent)}
 </style>
 </head>
 <body>
@@ -1014,6 +1022,7 @@ async function iniciar(user){
     $('#authView').classList.add('hidden'); $('#appView').classList.remove('hidden');
     assinar();
     renderTudo();
+    setTimeout(mostrarNovidades, 700);
   } finally { iniciando = false; }
 }
 
@@ -1593,7 +1602,7 @@ function abrirConfig(){
     return `<span class="sw"><i style="background:${bg}"></i><i style="background:${sf}"><b style="background:${ac}"></b></i></span>`;
   };
   $('#modalRoot').innerHTML = `<div class="overlay" id="ov"><div class="modal" style="max-width:560px">
-    <div class="modal-h"><h3>Configurações</h3><button class="btn ghost" id="cFechar">Fechar</button></div>
+    <div class="modal-h"><h3>Configurações</h3><span class="sp" style="flex:1"></span><button class="btn ghost" onclick="mostrarNovidades(true)">Novidades</button><button class="btn ghost" id="cFechar">Fechar</button></div>
     <div class="modal-b">
       <div class="cfg-sec"><h4>Tema</h4>
         <div class="presets">${Object.entries(TEMAS).map(([k, t]) => `<button type="button" class="preset ${PREF.tema===k?'on':''}" data-tema="${k}">${amostra(t)}${t.nome}</button>`).join('')}</div>
@@ -2478,6 +2487,48 @@ $('#maisOv').addEventListener('click', e => {
   const k = b.dataset.ir2;
   if (k === 'config') abrirConfig(); else if (k === 'sair') sb.auth.signOut(); else if (k === 'buscar') abrirComandos(); else trocarAba(k);
 });
+
+// ===== O que há de novo =====
+// A cada versão publicada, adicione uma entrada NO TOPO desta lista (texto curto, para quem usa o app).
+const NOVIDADES = [
+  { versao:'1.6', data:'28/11/2026', titulo:'Contato para enviar currículo', itens:[
+    'As vagas agora mostram o e-mail e o telefone para currículo quando o anúncio informa.',
+    'O botão de e-mail já abre a mensagem com assunto e texto prontos. É só anexar o currículo.',
+    'Número de celular vira botão de WhatsApp com mensagem pronta.',
+    'Novo filtro "Com contato" na aba Vagas.',
+    'Esta tela: sempre que sair uma versão nova, ela explica o que mudou.' ] },
+  { versao:'1.5', data:'28/11/2026', titulo:'Celular de cara nova', itens:[
+    'Barra de navegação embaixo, como num aplicativo, com o menu Mais para as outras abas.',
+    'Botão + flutuante que cria tarefa, gasto, hábito, anotação ou página, conforme a aba.',
+    'Filtros de Vagas em uma linha que arrasta para o lado.',
+    'Janelas de criar e editar sobem de baixo e a Agenda virou lista de dias.',
+    'Dá para instalar o Taskflow no celular como app.' ] },
+  { versao:'1.4', data:'28/11/2026', titulo:'Vagas de todas as áreas', itens:[
+    'Vagas de qualquer setor do DF, separadas por setor, com filtro "Só estágio".',
+    'Você escolhe os horários da busca em Vagas > Horários e pode pedir uma busca extra.',
+    'Funil de candidaturas para arrastar a vaga entre Salvas, Enviado, Entrevista e Não passei.' ] },
+  { versao:'1.3', data:'27/11/2026', titulo:'Mais organização', itens:[
+    'Aba Início com o resumo do dia e tarefa rápida.',
+    'Aba Hábitos com sequência de dias.',
+    'Orçamento por categoria nas Finanças.',
+    'Colunas do quadro com nome, cor e posição que você escolhe.',
+    'Ctrl+K para buscar e criar qualquer coisa.' ] }
+];
+function mostrarNovidades(forcar){
+  const atual = NOVIDADES[0].versao;
+  let vista = null; try { vista = localStorage.getItem('versaoVista'); } catch(e){}
+  vista = vista || PREF.versao_vista || null;
+  if (!forcar && vista === atual) return;
+  if (!forcar && $('#ov')) { setTimeout(mostrarNovidades, 1500); return; }
+  const novas = forcar || !vista ? NOVIDADES.slice(0, forcar ? 4 : 1) : NOVIDADES.filter(n => Number(n.versao) > Number(vista));
+  $('#modalRoot').innerHTML = `<div class="overlay" id="ov"><div class="modal novid">
+    <div class="novid-top"><span class="novid-tag">Versão ${atual}</span><h3>O que há de novo</h3></div>
+    <div class="modal-b">${novas.map(n => `<section class="novid-sec"><div class="novid-h"><b>${esc(n.titulo)}</b><span>${n.data}</span></div><ul>${n.itens.map(i => `<li>${esc(i)}</li>`).join('')}</ul></section>`).join('')}</div>
+    <div class="modal-f"><span class="sp"></span><button class="btn primary" id="novidOk">Entendi</button></div></div></div>`;
+  const ok = () => { try { localStorage.setItem('versaoVista', atual); } catch(e){} if (PREF.versao_vista !== atual) mudarPref({ versao_vista: atual }); fecharModal(); };
+  $('#novidOk').onclick = ok;
+  $('#ov').addEventListener('mousedown', e => { if (e.target.id === 'ov') ok(); });
+}
 </script>
 </body>
 </html>
