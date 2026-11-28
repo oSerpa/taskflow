@@ -31,3 +31,6 @@ create table public.orcamentos (id uuid primary key default gen_random_uuid(), d
 
 -- Colunas personalizadas por quadro (null = padrão A fazer, Em andamento, Pausado, Concluído)
 alter table public.quadros add column colunas jsonb;
+
+-- Setor da vaga (vagas de todas as áreas, agrupadas por setor)
+alter table public.vagas add column setor text;
