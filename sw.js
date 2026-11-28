@@ -1,6 +1,6 @@
 // Service worker do Taskflow: guarda o app para abrir rápido e sem internet.
 // Dados (Supabase, Google) nunca são guardados aqui; sempre vêm da rede.
-const VERSAO = 'taskflow-v1';
+const VERSAO = 'taskflow-v2';
 const BASE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-180.png',
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js'];
 self.addEventListener('install', e => {

@@ -513,6 +513,83 @@ body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-ri
 .hv{display:flex;align-items:center;justify-content:center;height:36px;border:1px solid var(--line);border-radius:9px;font-family:"Geist Mono",monospace;font-size:13px;cursor:pointer;color:var(--ink-2);user-select:none}
 .hv input{display:none}
 .hv.on{background:color-mix(in srgb,var(--accent) 18%,transparent);border-color:var(--accent);color:var(--ink)}
+
+/* ===== Celular ===== */
+.bnav,.fab{display:none}
+.sheet-ov{position:fixed;inset:0;z-index:40;background:rgba(5,5,10,.5);backdrop-filter:blur(4px);display:flex;align-items:flex-end}
+.sheet{width:100%;background:var(--surface);border-top:1px solid var(--line-2);border-radius:20px 20px 0 0;padding:8px 14px calc(76px + env(safe-area-inset-bottom));animation:subir .18s ease-out}
+.sheet-grip{width:38px;height:4px;border-radius:9px;background:var(--line-2);margin:2px auto 14px}
+.sheet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.sheet-grid button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 4px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2);color:var(--ink);font:inherit;font-size:12px;cursor:pointer}
+.sheet-grid .ti{width:22px;height:22px;color:var(--accent)}
+@keyframes subir{from{transform:translateY(30px);opacity:.4}to{transform:none;opacity:1}}
+@media (max-width:700px){
+  .tabs,#sairBtn{display:none !important}
+  .top-in{padding:calc(8px) 16px 8px !important;flex-wrap:nowrap !important}
+  .brand{font-size:15px}
+  body{padding-bottom:calc(68px + env(safe-area-inset-bottom))}
+  .bnav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:45;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(16px) saturate(150%);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+  .bnav button{display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;color:var(--muted);font:inherit;font-size:10.5px;font-weight:500;padding:6px 0;border-radius:12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .bnav .ti{width:22px;height:22px}
+  .bnav button.on{color:var(--accent)}
+  .bnav button.on .ti{filter:drop-shadow(0 0 8px color-mix(in srgb,var(--accent) 60%,transparent))}
+  .fab{display:grid;place-items:center;position:fixed;right:16px;bottom:calc(80px + env(safe-area-inset-bottom));z-index:44;width:54px;height:54px;border-radius:18px;border:0;background:var(--accent);color:#fff;box-shadow:0 10px 30px -6px color-mix(in srgb,var(--accent) 70%,transparent);cursor:pointer}
+  .fab.hidden{display:none}
+  #novaBtn,#fNovaSai,#fNovaEnt,#habNovo,#notaNova{display:none}
+  .wrap{padding:14px 14px 24px !important}
+  .head{flex-wrap:wrap;gap:12px;margin-bottom:14px}
+  .head h1,h1{font-size:24px !important;letter-spacing:-.02em}
+  .head > .stats,.head > .ag-nav{width:100%}
+  .stat b{font-size:20px}
+  .stat span{font-size:11px}
+  .toolbar{gap:8px}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom))}
+  input.input,select.input,textarea.input,.cmd input{font-size:16px}
+  /* Modais viram painel que sobe de baixo */
+  .overlay{align-items:flex-end !important;padding:0 !important}
+  .modal{max-width:100% !important;border-radius:20px 20px 0 0 !important;max-height:92vh !important;padding-bottom:env(safe-area-inset-bottom);animation:subir .18s ease-out}
+  .modal-f{flex-wrap:wrap}
+  .cmd-ov{padding:10px 10px 0}
+  /* Agenda em lista */
+  .week{grid-template-columns:1fr !important;overflow:visible;scroll-snap-type:none}
+  .day{min-height:0}
+  /* Estudos */
+  .study-side{max-height:230px !important;overflow:auto}
+  /* Finanças */
+  .fin-card b{font-size:18px}
+  .lanc{gap:10px}
+  /* Início */
+  .hcard{min-height:0}
+  #hCmd{width:100%;justify-content:center}
+}
+@media (max-width:700px){
+  #viewVagas .toolbar{display:grid !important;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px}
+  #vagFiltro{grid-column:1/-1;display:flex !important;width:auto !important;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;margin:0 -14px;padding:0 14px;border:0;background:none;gap:6px}
+  #vagFiltro::-webkit-scrollbar,.setores::-webkit-scrollbar{display:none}
+  #vagFiltro button{flex:none;height:36px;padding:0 14px;border-radius:99px;border:1px solid var(--line);background:var(--surface-2)}
+  #vagFiltro button.on{background:color-mix(in srgb,var(--accent) 20%,transparent);border-color:var(--accent);color:var(--ink)}
+  #viewVagas .search{grid-column:1/-1;order:-1}
+  #vagFonte{width:100% !important;height:40px !important}
+  #vagHorarios{height:40px}
+  #vagNova{display:none}
+  .setores{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -14px 14px;padding:0 14px}
+  .setores .chip{flex:none;height:34px}
+  .est-tg{order:-1;flex:none;height:34px;padding:0 12px;margin:0;border:1px solid var(--line);border-radius:99px;background:var(--surface-2)}
+  .est-tg:has(input:checked){border-color:var(--accent);background:color-mix(in srgb,var(--accent) 20%,transparent);color:var(--ink)}
+  #viewVagas .head .stats{gap:8px}
+  #viewVagas .stat{padding:8px 10px}
+  .jobs.funil{grid-template-columns:none !important;grid-auto-flow:column;grid-auto-columns:80vw;margin:0 -14px;padding:0 14px}
+  .job{padding:14px}
+  .job select{height:34px;font-size:14px}
+}
+@media (max-width:700px){
+  .overlay{z-index:50 !important}
+  .sheet-ov:not(.hidden) ~ .fab{display:none}
+  .day{flex-direction:row;align-items:stretch}
+  .day-h{border-bottom:0;border-right:1px solid var(--line);flex-direction:column;align-items:center;justify-content:center;min-width:62px;gap:0}
+  .day-b{flex:1;padding:8px 10px !important;min-height:0 !important}
+}
+@media (max-width:900px){ .study-side .search{width:auto !important} }
 </style>
 </head>
 <body>
@@ -573,6 +650,9 @@ body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-ri
       <button class="btn ghost" id="sairBtn">Sair</button>
     </div>
   </div></header>
+  <nav class="bnav" id="bnav"><button data-bn="inicio" class="on"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></button><button data-bn="quadro" class=""><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1.5"/><rect x="14" y="3" width="7" height="11" rx="1.5"/></svg><span>Quadro</span></button><button data-bn="financas" class=""><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1 0-4h12v4"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg><span>Finanças</span></button><button data-bn="vagas" class=""><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg><span>Vagas</span></button><button data-bn="mais"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span>Mais</span></button></nav>
+  <div class="sheet-ov hidden" id="maisOv"><div class="sheet"><div class="sheet-grip"></div><div class="sheet-grid"><button data-ir2="agenda"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>Agenda</span></button><button data-ir2="estudos"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg><span>Estudos</span></button><button data-ir2="habitos"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3 4 5 4 9a4 4 0 0 1-8 0c0-2 1-3 1-3s.5 2 2 2c0-3 1-5 1-8z"/><path d="M6 15a6 6 0 0 0 12 0"/></svg><span>Hábitos</span></button><button data-ir2="notas"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-9z"/><path d="M14 3v7h7"/></svg><span>Anotações</span></button><button data-ir2="config"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Configurações</span></button><button data-ir2="buscar"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Buscar</span></button><button data-ir2="sair"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg><span>Sair</span></button></div></div></div>
+  <button class="fab hidden" id="fab" aria-label="Adicionar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
 
   <main class="wrap" id="viewInicio">
     <div class="head"><div><h1 id="hSaud">Olá</h1><div class="date" id="hData"></div></div>
@@ -1241,6 +1321,9 @@ function trocarAba(a){
   if (a === 'inicio') renderInicio();
   if (a === 'habitos') carregarHabitos();
   try { localStorage.setItem('aba', a); } catch(e){}
+  document.querySelectorAll('#bnav [data-bn]').forEach(b => b.classList.toggle('on', b.dataset.bn === a || (b.dataset.bn === 'mais' && ['agenda','estudos','habitos','notas'].includes(a))));
+  $('#fab').classList.toggle('hidden', !FAB[a]);
+  window.scrollTo(0, 0);
   $('#viewEquipe').classList.toggle('hidden', a !== 'equipe');
   $('#viewAgenda').classList.toggle('hidden', a !== 'agenda');
   $('#viewNotas').classList.toggle('hidden', a !== 'notas');
@@ -2346,6 +2429,21 @@ sb.auth.getSession().then(({ data }) => { if (!data.session) mostrarLogin(); });
 // ===== App instalável (PWA) =====
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 (function(){ const a = new URLSearchParams(location.search).get('aba'); if (a) { const ir = () => S.eu ? trocarAba(a) : setTimeout(ir, 300); ir(); history.replaceState(null, '', location.pathname); } })();
+
+// ===== Navegação de celular (barra inferior, menu Mais e botão +) =====
+const FAB = { inicio: () => abrirTarefa(null), quadro: () => abrirTarefa(null), financas: () => abrirLanc(null, 'saida'),
+  estudos: () => novaPagina(), habitos: () => editarHabito(null), notas: () => abrirNota(), vagas: () => $('#vagNova').click() };
+$('#fab').onclick = () => FAB[S.aba]?.();
+$('#fab').classList.toggle('hidden', !FAB[S.aba]);
+const fecharMais = () => $('#maisOv').classList.add('hidden');
+$('#bnav').addEventListener('click', e => { const b = e.target.closest('[data-bn]'); if (!b) return;
+  if (b.dataset.bn === 'mais') $('#maisOv').classList.toggle('hidden'); else { fecharMais(); trocarAba(b.dataset.bn); } });
+$('#maisOv').addEventListener('click', e => {
+  if (e.target.id === 'maisOv') return fecharMais();
+  const b = e.target.closest('[data-ir2]'); if (!b) return; fecharMais();
+  const k = b.dataset.ir2;
+  if (k === 'config') abrirConfig(); else if (k === 'sair') sb.auth.signOut(); else if (k === 'buscar') abrirComandos(); else trocarAba(k);
+});
 </script>
 </body>
 </html>
