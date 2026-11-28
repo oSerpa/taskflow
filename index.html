@@ -2586,7 +2586,12 @@ sb.auth.getSession().then(({ data }) => { if (!data.session) mostrarLogin(); });
 
 // ===== App instalável (PWA) =====
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
-  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(r => r.update()).catch(() => {});
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(r => {
+    r.update();
+    // Procura versão nova sempre que o app volta para a tela e a cada 15 minutos
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') r.update().catch(() => {}); });
+    setInterval(() => r.update().catch(() => {}), 15 * 60 * 1000);
+  }).catch(() => {});
   let recarregou = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => { if (!recarregou && navigator.serviceWorker.controller) { recarregou = true; location.reload(); } });
 }
