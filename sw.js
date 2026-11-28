@@ -1,6 +1,6 @@
 // Service worker do Taskflow: guarda o app para abrir rápido e sem internet.
 // Dados (Supabase, Google) nunca são guardados aqui; sempre vêm da rede.
-const VERSAO = 'taskflow-v2';
+const VERSAO = 'taskflow-v3';
 const BASE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-180.png',
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js'];
 self.addEventListener('install', e => {
@@ -15,7 +15,7 @@ self.addEventListener('fetch', e => {
   if (/supabase\.co$|googleapis\.com$|accounts\.google\.com$/.test(u.hostname) && !u.pathname.includes('/css2')) return;
   // Página: rede primeiro (pega a versão nova), cache se estiver sem internet
   if (r.mode === 'navigate') {
-    e.respondWith(fetch(r).then(res => { const c = res.clone(); caches.open(VERSAO).then(x => x.put('./index.html', c)); return res; })
+    e.respondWith(fetch(r.url, { cache: 'no-store', credentials: 'same-origin' }).then(res => { const c = res.clone(); caches.open(VERSAO).then(x => x.put('./index.html', c)); return res; })
       .catch(() => caches.match('./index.html')));
     return;
   }

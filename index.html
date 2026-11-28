@@ -590,6 +590,7 @@ body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-ri
   .day-b{flex:1;padding:8px 10px !important;min-height:0 !important}
 }
 @media (max-width:900px){ .study-side .search{width:auto !important} }
+.search,.search input,.input{box-sizing:border-box;max-width:100%}
 </style>
 </head>
 <body>
@@ -2427,7 +2428,11 @@ function abrirEvento(ev, padrao = {}){
 sb.auth.getSession().then(({ data }) => { if (!data.session) mostrarLogin(); });
 
 // ===== App instalável (PWA) =====
-if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(r => r.update()).catch(() => {});
+  let recarregou = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (!recarregou && navigator.serviceWorker.controller) { recarregou = true; location.reload(); } });
+}
 (function(){ const a = new URLSearchParams(location.search).get('aba'); if (a) { const ir = () => S.eu ? trocarAba(a) : setTimeout(ir, 300); ir(); history.replaceState(null, '', location.pathname); } })();
 
 // ===== Navegação de celular (barra inferior, menu Mais e botão +) =====
