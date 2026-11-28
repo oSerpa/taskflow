@@ -34,3 +34,7 @@ alter table public.quadros add column colunas jsonb;
 
 -- Setor da vaga (vagas de todas as áreas, agrupadas por setor)
 alter table public.vagas add column setor text;
+
+-- Registro de cada rodada da busca de vagas (o site mostra a última)
+create table public.vagas_execucoes (id uuid primary key default gen_random_uuid(), dono_id uuid not null references public.perfis(id) on delete cascade, executada_em timestamptz not null default now(), novas integer not null default 0, resumo text);
+-- RLS: dono só lê

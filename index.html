@@ -509,6 +509,10 @@ body{font-feature-settings:"ss01","cv11";letter-spacing:-.005em;
 body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
 .toast,#toast{margin-bottom:env(safe-area-inset-bottom)}
 @media (display-mode: standalone){ html,body{overscroll-behavior-y:none} }
+.hv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px}
+.hv{display:flex;align-items:center;justify-content:center;height:36px;border:1px solid var(--line);border-radius:9px;font-family:"Geist Mono",monospace;font-size:13px;cursor:pointer;color:var(--ink-2);user-select:none}
+.hv input{display:none}
+.hv.on{background:color-mix(in srgb,var(--accent) 18%,transparent);border-color:var(--accent);color:var(--ink)}
 </style>
 </head>
 <body>
@@ -744,6 +748,7 @@ body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-ri
       </div>
       <select class="input" id="vagFonte" style="width:auto;height:34px"><option value="">Todos os sites</option></select>
       <div class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input class="input" id="vagBusca" placeholder="Buscar vaga ou empresa"></div>
+      <button class="btn" id="vagHorarios" title="Horários da busca automática"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Horários</button>
       <button class="btn" id="vagNova">+ Adicionar vaga</button>
     </div>
     <div class="setores" id="vagSetores"></div>
@@ -2007,6 +2012,7 @@ async function carregarVagas(){
   const { data, error } = await sb.from('vagas').select('*').order('encontrada_em', { ascending:false }).limit(1000);
   if (error) { $('#vagLista').innerHTML = '<div class="notes-empty">Não foi possível carregar as vagas.</div>'; return; }
   V.lista = data;
+  sb.from('vagas_execucoes').select('executada_em,novas').order('executada_em', { ascending:false }).limit(1).then(({ data }) => { V.ultima = data?.[0] || null; atualizarSubVagas(); });
   const fontes = [...new Set(data.map(v => v.fonte).filter(Boolean))].sort();
   $('#vagFonte').innerHTML = '<option value="">Todos os sites</option>' + fontes.map(f => `<option ${f===V.fonte?'selected':''}>${esc(f)}</option>`).join('');
   renderVagas();
@@ -2016,8 +2022,7 @@ function renderVagas(){
   $('#vNovas').textContent = V.lista.filter(v => v.status === 'nova').length;
   $('#vEnv').textContent = V.lista.filter(v => ['enviado','entrevista','recusado'].includes(v.status)).length;
   $('#vEnt').textContent = V.lista.filter(v => v.status === 'entrevista').length;
-  const ult = V.lista[0]?.encontrada_em;
-  $('#vagSub').textContent = ult ? `Última atualização: ${new Date(ult).toLocaleString('pt-BR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })}` : 'A busca diária ainda não rodou. As vagas aparecem aqui toda manhã.';
+  atualizarSubVagas();
   const grupos = { abertas:['nova','salva'], enviado:['enviado'], entrevista:['entrevista'], encerradas:['recusado','descartada'] };
   let l = V.filtro === 'todas' || V.filtro === 'funil' ? V.lista : V.lista.filter(v => grupos[V.filtro].includes(v.status));
   if (V.fonte) l = l.filter(v => v.fonte === V.fonte);
@@ -2056,6 +2061,39 @@ function renderVagas(){
 }
 $('#vagFiltro').addEventListener('click', e => { const b = e.target.closest('[data-vf]'); if (!b) return; V.filtro = b.dataset.vf; document.querySelectorAll('#vagFiltro button').forEach(x => x.classList.toggle('on', x === b)); renderVagas(); });
 $('#vagFonte').onchange = e => { V.fonte = e.target.value; renderVagas(); };
+const horasVagas = () => Array.isArray(PREF.vagas_horas) ? PREF.vagas_horas : [6, 17];
+function atualizarSubVagas(){
+  const fmt = d => new Date(d).toLocaleString('pt-BR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+  const ult = V.ultima?.executada_em || V.lista[0]?.encontrada_em;
+  const hs = horasVagas().map(h => h + 'h').join(', ');
+  $('#vagSub').textContent = (ult ? `Última busca: ${fmt(ult)}${V.ultima ? ` (${V.ultima.novas} nova${V.ultima.novas === 1 ? '' : 's'})` : ''}` : 'A busca ainda não rodou')
+    + (hs ? ` · busca automática às ${hs}` : ' · busca automática desligada') + (PREF.vagas_agora && (!V.ultima || PREF.vagas_agora > V.ultima.executada_em) ? ' · busca extra pedida' : '');
+}
+$('#vagHorarios').onclick = () => {
+  const sel = new Set(horasVagas());
+  const horas = []; for (let h = 5; h <= 23; h++) horas.push(h);
+  $('#modalRoot').innerHTML = `<div class="overlay" id="ov"><form class="modal" id="hvForm">
+    <div class="modal-h"><h3>Horários da busca de vagas</h3></div>
+    <div class="modal-b">
+      <div class="hsub">Marque em quais horários a busca automática roda (horário de Brasília). Ela começa perto dos 47 minutos da hora escolhida e leva alguns minutos.</div>
+      <div class="hv-grid">${horas.map(h => `<label class="hv ${sel.has(h) ? 'on' : ''}"><input type="checkbox" value="${h}" ${sel.has(h) ? 'checked' : ''}>${String(h).padStart(2, '0')}h</label>`).join('')}</div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px"><input type="checkbox" id="hvAgora"> Fazer uma busca extra na próxima hora</label>
+    </div>
+    <div class="modal-f"><span class="sp"></span><button type="button" class="btn" id="hvCancel">Cancelar</button><button class="btn primary">Salvar</button></div>
+  </form></div>`;
+  $('#ov').addEventListener('mousedown', e => { if (e.target.id === 'ov') fecharModal(); });
+  $('#hvCancel').onclick = fecharModal;
+  $('#hvForm').addEventListener('change', e => { const l = e.target.closest('.hv'); if (l) l.classList.toggle('on', e.target.checked); });
+  $('#hvForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const hs = [...document.querySelectorAll('#hvForm .hv input:checked')].map(i => Number(i.value)).sort((a, b) => a - b);
+    if (!hs.length && !$('#hvAgora').checked) return toast('Marque pelo menos um horário');
+    const campos = { vagas_horas: hs.length ? hs : [] };
+    if ($('#hvAgora').checked) campos.vagas_agora = new Date().toISOString();
+    mudarPref(campos); fecharModal(); atualizarSubVagas();
+    toast(hs.length ? 'Horários salvos: ' + hs.map(h => h + 'h').join(', ') : 'Busca automática desligada');
+  });
+};
 $('#vagSetores').addEventListener('click', e => { const b = e.target.closest('[data-setor]'); if (b) { V.setor = b.dataset.setor; renderVagas(); } });
 $('#vagSetores').addEventListener('change', e => { if (e.target.id === 'vagEstagio') { V.estagio = e.target.checked; renderVagas(); } });
 $('#vagBusca').addEventListener('input', e => { V.busca = e.target.value.trim().toLowerCase(); renderVagas(); });
