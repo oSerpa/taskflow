@@ -682,6 +682,23 @@ body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-ri
   .lg-head{margin-bottom:26px}
 }
 @media (prefers-reduced-motion:reduce){ .lg-orb{animation:none} }
+/* Login fixo na tela, sem rolar */
+html:has(#authView:not(.hidden)),body:has(#authView:not(.hidden)){background:#07070a !important;padding:0 !important;overflow:hidden;height:100%}
+.lg{position:fixed;inset:0;min-height:0;height:100dvh;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch;z-index:100}
+.lg-wrap{min-height:100%;box-sizing:border-box}
+.lg .lg-bg{position:fixed;inset:0;overflow:hidden}
+@media (max-width:900px){
+  .lg-wrap{padding:calc(env(safe-area-inset-top) + 16px) 20px calc(env(safe-area-inset-bottom) + 16px)}
+  .lg-head{margin-bottom:20px}
+  .lg-icon{width:54px;height:54px;padding:12px;border-radius:16px}
+  .lg-head h1{margin:12px 0 2px;font-size:26px}
+}
+@media (max-width:900px) and (max-height:700px){
+  .lg-icon{width:44px;height:44px;padding:10px;border-radius:13px}
+  .lg-head{margin-bottom:12px} .lg-head h1{font-size:22px;margin-top:8px} .lg-head p{font-size:13px}
+  .lg-card{gap:9px;padding:14px} .lg-in input{height:50px} .lg-in .lb{top:15px} .lg-in .ico{top:14px} .lg-eye{top:9px} .lg-btn{height:50px}
+  .lg-foot{margin-top:6px} .lg-wrap{padding-top:calc(env(safe-area-inset-top) + 10px);padding-bottom:calc(env(safe-area-inset-bottom) + 10px)}
+}
 </style>
 </head>
 <body>
@@ -1102,6 +1119,7 @@ sb.auth.onAuthStateChange((ev, sess) => {
 });
 
 function mostrarLogin(){
+  document.querySelector('meta[name=theme-color]')?.setAttribute('content', '#07070a');
   if (S.canal) { sb.removeChannel(S.canal); S.canal = null; }
   S.eu = null; S.tarefas = []; S.perfis = [];
   $('#appView').classList.add('hidden'); $('#authView').classList.remove('hidden');
@@ -2593,6 +2611,10 @@ $('#maisOv').addEventListener('click', e => {
 // ===== O que há de novo =====
 // A cada versão publicada, adicione uma entrada NO TOPO desta lista (texto curto, para quem usa o app).
 const NOVIDADES = [
+  { versao:'1.8', data:'28/11/2026', titulo:'Tela de entrada fixa', itens:[
+    'A tela de login agora cabe inteira na tela do celular e não rola mais.',
+    'O fundo escuro cobre a tela toda, sem faixa de outra cor embaixo.',
+  ]},
   { versao:'1.7', data:'28/11/2026', titulo:'Tela de entrada nova', itens:[
     'A tela de login foi refeita, com visual de aplicativo.',
     'Botão para mostrar a senha enquanto digita.',
