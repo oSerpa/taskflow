@@ -605,41 +605,123 @@ body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-ri
 .novid-h span{font-size:12px;color:var(--muted)}
 .novid ul{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--ink-2);line-height:1.45}
 .novid li::marker{color:var(--accent)}
+
+/* ===== Login ===== */
+.lg{position:relative;min-height:100vh;min-height:100dvh;background:#07070a;color:#ededf2;overflow:hidden;font-family:inherit}
+.lg.hidden{display:none}
+.lg-bg{position:absolute;inset:0;pointer-events:none}
+.lg-orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55}
+.lg-orb.a{width:520px;height:520px;left:-160px;top:-180px;background:radial-gradient(circle,#6d5dfc 0%,transparent 65%);animation:lgfloat 14s ease-in-out infinite alternate}
+.lg-orb.b{width:460px;height:460px;right:-180px;bottom:-200px;background:radial-gradient(circle,#2f6bff 0%,transparent 65%);opacity:.35;animation:lgfloat 18s ease-in-out infinite alternate-reverse}
+.lg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 80%)}
+@keyframes lgfloat{to{transform:translate(60px,40px) scale(1.08)}}
+.lg-wrap{position:relative;min-height:inherit;display:grid;grid-template-columns:1.05fr 1fr;align-items:center;max-width:1180px;margin:0 auto;padding:40px 32px;gap:48px}
+.lg-main{display:flex;flex-direction:column;align-items:center;width:100%;max-width:400px;justify-self:center}
+.lg-head{text-align:center;margin-bottom:22px}
+.lg-icon{width:60px;height:60px;border-radius:18px;display:inline-grid;grid-template-columns:1fr 1fr;gap:4px;padding:13px;background:linear-gradient(160deg,#1b1b24,#0e0e14);border:1px solid rgba(255,255,255,.09);box-shadow:0 18px 40px -12px rgba(109,93,252,.55),inset 0 1px 0 rgba(255,255,255,.08)}
+.lg-icon i{border-radius:4px;background:#ececf2}
+.lg-icon i:nth-child(2){background:#7c6cff;box-shadow:0 0 14px #7c6cff}
+.lg-head h1{margin:14px 0 4px;font-size:28px;font-weight:650;letter-spacing:-.03em}
+.lg-head p{margin:0;color:#9a9aa8;font-size:14.5px}
+.lg-card{width:100%;display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(18px) saturate(140%);box-shadow:0 30px 80px -30px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06)}
+.lg-tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;padding:4px;border-radius:13px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.06);margin-bottom:4px}
+.lg-tabs button{position:relative;z-index:1;height:38px;border:0;background:none;color:#8d8d9b;font:inherit;font-size:14px;font-weight:550;cursor:pointer;transition:color .2s}
+.lg-tabs button.on{color:#fff}
+.lg-tabs-ind{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:10px;background:linear-gradient(180deg,#2a2a36,#1f1f29);border:1px solid rgba(255,255,255,.08);box-shadow:0 4px 14px rgba(0,0,0,.35);transition:transform .28s cubic-bezier(.3,.7,.2,1)}
+.lg-tabs.dir .lg-tabs-ind{transform:translateX(100%)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.lg-sub{margin:0 2px 2px;color:#9a9aa8;font-size:13.5px}
+.lg-in{position:relative;display:block}
+.lg-in.hidden{display:none}
+.lg-in input{width:100%;height:56px;box-sizing:border-box;border-radius:14px;border:1px solid rgba(255,255,255,.09);background:rgba(10,10,16,.6);color:#f2f2f6;font:inherit;font-size:16px;padding:20px 46px 6px 46px;outline:none;transition:border-color .15s,box-shadow .15s,background .15s}
+.lg-in input:focus{border-color:#7c6cff;box-shadow:0 0 0 4px rgba(124,108,255,.18);background:rgba(14,14,22,.85)}
+.lg-in .lb{position:absolute;left:46px;top:18px;color:#7d7d8c;font-size:15px;pointer-events:none;transition:all .16s}
+.lg-in input:focus + .lb,.lg-in input:not(:placeholder-shown) + .lb{top:9px;font-size:11.5px;color:#a69bff}
+.lg-in .ico{position:absolute;left:15px;top:17px;width:20px;height:20px;color:#6f6f7e;pointer-events:none}
+.lg-in:focus-within .ico{color:#a69bff}
+.lg-in .ico svg,.lg-eye svg{width:100%;height:100%}
+.lg-eye{position:absolute;right:10px;top:12px;width:32px;height:32px;padding:6px;border:0;background:none;color:#6f6f7e;cursor:pointer;border-radius:8px}
+.lg-eye.on{color:#a69bff}
+.lg-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#9a9aa8;padding:0 2px}
+.lg-row.hidden{display:none}
+.lg-row a{color:#b3a9ff;cursor:pointer;font-weight:500}
+.lg-check{display:flex;align-items:center;gap:7px;cursor:pointer}
+.lg-check input{accent-color:#7c6cff;width:16px;height:16px}
+.lg .msg{font-size:13px;padding:10px 12px;border-radius:11px;background:rgba(52,211,153,.1);color:#6ee7b7;border:1px solid rgba(52,211,153,.2)}
+.lg .msg.err{background:rgba(248,113,113,.1);color:#fca5a5;border-color:rgba(248,113,113,.22)}
+.lg-btn{position:relative;height:54px;border:0;border-radius:15px;margin-top:4px;background:linear-gradient(180deg,#8576ff,#6b5cf5);color:#fff;font:inherit;font-size:15.5px;font-weight:600;letter-spacing:.01em;cursor:pointer;box-shadow:0 14px 30px -10px rgba(124,108,255,.75),inset 0 1px 0 rgba(255,255,255,.25);transition:transform .12s,filter .15s}
+.lg-btn:hover{filter:brightness(1.07)}
+.lg-btn:active{transform:scale(.985)}
+.lg-btn:disabled{opacity:.8}
+.lg-btn.load{color:transparent}
+.lg-btn.load::after{content:"";position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;animation:lgspin .7s linear infinite}
+@keyframes lgspin{to{transform:rotate(360deg)}}
+.lg-foot{margin:18px 0 0;font-size:12.5px;color:#6f6f7e;text-align:center}
+.lg-show{display:flex;flex-direction:column;gap:34px}
+.lg-show h2{margin:0;max-width:16ch;font-size:38px;line-height:1.1;letter-spacing:-.035em;font-weight:650;color:#f4f4f8}
+.lg-mock{width:min(440px,100%);padding:18px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);box-shadow:0 40px 90px -30px rgba(0,0,0,.9);transform:perspective(1200px) rotateY(9deg) rotateX(4deg);display:flex;flex-direction:column;gap:12px}
+.lg-m-top b{display:block;font-size:18px}
+.lg-m-top span{font-size:12px;color:#8d8d9b}
+.lg-m-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lg-m-card{padding:12px;border-radius:14px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:4px}
+.lg-m-card small{font-size:11px;color:#8d8d9b}
+.lg-m-card strong{font-size:20px;font-family:"Geist Mono",monospace}
+.lg-m-card strong.pos{color:#34d399}
+.lg-m-card em{height:5px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:4px}
+.lg-m-card em i{display:block;height:100%;background:#7c6cff;border-radius:inherit}
+.lg-m-list{display:flex;flex-direction:column;gap:2px;padding:6px 12px;border-radius:14px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.06)}
+.lg-m-list span{display:flex;align-items:center;gap:10px;font-size:13px;padding:7px 0;color:#d7d7e0}
+.lg-m-list span+span{border-top:1px solid rgba(255,255,255,.05)}
+.lg-m-list i{width:15px;height:15px;border-radius:50%;border:1.5px solid #4a4a58}
+.lg-m-list i.ok{background:#34d399;border-color:#34d399}
+.lg-m-chip{align-self:flex-start;font-size:12px;padding:6px 12px;border-radius:99px;background:rgba(124,108,255,.16);color:#bdb4ff;border:1px solid rgba(124,108,255,.3)}
+@media (max-width:900px){
+  .lg-wrap{grid-template-columns:1fr;padding:calc(env(safe-area-inset-top) + 28px) 20px calc(env(safe-area-inset-bottom) + 24px);align-content:center;gap:0}
+  .lg-show{display:none}
+  .lg-main{max-width:420px}
+  .lg-head{margin-bottom:26px}
+}
+@media (prefers-reduced-motion:reduce){ .lg-orb{animation:none} }
 </style>
 </head>
 <body>
 
 <!-- Login -->
-<section id="authView" class="auth hidden">
-  <div class="auth-side">
-    <div class="brand"><span class="logo" style="background:var(--bg)"><i style="background:var(--ink)"></i><i></i><i style="background:var(--ink)"></i><i style="background:var(--ink)"></i></span>Taskflow</div>
-    <div>
-      <h1>Sua vida organizada num lugar só.</h1>
-      <p>Tarefas, agenda, finanças, estudos, vagas e anotações. Tudo privado, só seu.</p>
-    </div>
-    <div class="mini-board">
-      <div class="mini-col"><div class="mini-card"></div><div class="mini-card"></div><div class="mini-card"></div></div>
-      <div class="mini-col"><div class="mini-card on"></div><div class="mini-card"></div></div>
-      <div class="mini-col"><div class="mini-card"></div></div>
-    </div>
-  </div>
-  <div class="auth-main">
-    <form id="authForm" class="auth-box">
-      <h2 id="authTitle">Entrar</h2>
-      <p class="sub" id="authSub">Use o e-mail cadastrado na equipe.</p>
-      <div class="field hidden" id="nomeField"><label for="aNome">Seu nome</label><input class="input" id="aNome" autocomplete="name"></div>
-      <div class="seg hidden" id="eqModo" role="tablist">
-        <button type="button" class="on" data-m="criar">Criar equipe</button>
-        <button type="button" data-m="entrar">Tenho um código</button>
+<section id="authView" class="lg hidden">
+  <div class="lg-bg" aria-hidden="true"><i class="lg-orb a"></i><i class="lg-orb b"></i><i class="lg-grid"></i></div>
+  <div class="lg-wrap">
+    <aside class="lg-show" aria-hidden="true">
+      <div class="lg-mock">
+        <div class="lg-m-top"><b>Bom dia</b><span>Sexta, 28 de novembro</span></div>
+        <div class="lg-m-row"><div class="lg-m-card"><small>Tarefas hoje</small><strong>4</strong><em><i style="width:62%"></i></em></div><div class="lg-m-card"><small>Saldo do mês</small><strong class="pos">R$ 3.027</strong><em><i style="width:78%;background:#34d399"></i></em></div></div>
+        <div class="lg-m-list"><span><i></i>Revisar proposta do cliente</span><span><i class="ok"></i>Treinar</span><span><i></i>Estudar SQL</span></div>
+        <div class="lg-m-chip">12 vagas novas hoje</div>
       </div>
-      <div class="field hidden" id="eqNomeField"><label for="aEquipe">Nome da equipe</label><input class="input" id="aEquipe" maxlength="80" placeholder="Ex.: Loja Centro"></div>
-      <div class="field hidden" id="eqCodField"><label for="aCodigo">Código de convite</label><input class="input mono" id="aCodigo" maxlength="8" placeholder="Peça ao gerente" style="text-transform:uppercase"></div>
-      <div class="field"><label for="aEmail">E-mail</label><input class="input" id="aEmail" type="email" required autocomplete="email"></div>
-      <div class="field"><label for="aSenha">Senha</label><input class="input" id="aSenha" type="password" required minlength="6" autocomplete="current-password"></div>
-      <div id="authMsg" class="msg hidden"></div>
-      <button class="btn primary" style="height:40px;justify-content:center" id="authBtn">Entrar</button>
-      <div class="auth-switch" id="authSwitch">Ainda não tem conta? <a data-go="signup">Criar conta</a></div>
-    </form>
+      <h2>Tarefas, dinheiro, estudos e vagas num app só seu.</h2>
+    </aside>
+    <main class="lg-main">
+      <div class="lg-head">
+        <span class="lg-icon"><i></i><i></i><i></i><i></i></span>
+        <h1>Taskflow</h1>
+        <p>Sua rotina inteira num lugar só.</p>
+      </div>
+      <form id="authForm" class="lg-card" novalidate>
+        <div class="lg-tabs" id="authTabs"><button type="button" class="on" data-go="login">Entrar</button><button type="button" data-go="signup">Criar conta</button><i class="lg-tabs-ind"></i></div>
+        <h2 id="authTitle" class="sr">Entrar</h2>
+        <p class="lg-sub" id="authSub">Bem-vindo de volta.</p>
+        <label class="lg-in hidden" id="nomeField"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><input id="aNome" autocomplete="name" placeholder=" "><span class="lb">Seu nome</span></label>
+        <div class="seg hidden" id="eqModo"><button type="button" class="on" data-m="criar"></button><button type="button" data-m="entrar"></button></div>
+        <div class="hidden" id="eqNomeField"><input id="aEquipe"></div>
+        <div class="hidden" id="eqCodField"><input id="aCodigo"></div>
+        <label class="lg-in"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></span><input id="aEmail" type="email" required autocomplete="email" inputmode="email" placeholder=" "><span class="lb">E-mail</span></label>
+        <label class="lg-in"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg></span><input id="aSenha" type="password" required minlength="6" autocomplete="current-password" placeholder=" "><span class="lb">Senha</span><button type="button" class="lg-eye" id="aVer" aria-label="Mostrar senha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></label>
+        <div class="lg-row" id="authLinks"><label class="lg-check"><input type="checkbox" checked> Manter conectado</label><a id="authEsqueci">Esqueci a senha</a></div>
+        <div id="authMsg" class="msg hidden"></div>
+        <button class="lg-btn" id="authBtn">Entrar</button>
+        <div class="auth-switch hidden" id="authSwitch"></div>
+      </form>
+      <p class="lg-foot">Seus dados ficam guardados na sua conta e só você vê.</p>
+    </main>
   </div>
 </section>
 
@@ -966,7 +1048,10 @@ function setModoAuth(m){
   modoAuth = m;
   const cad = m === 'signup';
   $('#authTitle').textContent = cad ? 'Criar conta' : 'Entrar';
-  $('#authSub').textContent = cad ? 'Sua conta é só sua. Ninguém mais vê o que você guarda aqui.' : 'Use o e-mail da sua conta.';
+  $('#authSub').textContent = cad ? 'Leva menos de um minuto. Só você vê o que guarda aqui.' : 'Bem-vindo de volta.';
+  document.querySelectorAll('#authTabs [data-go]').forEach(b => b.classList.toggle('on', b.dataset.go === m));
+  $('#authTabs').classList.toggle('dir', cad);
+  $('#authLinks').classList.toggle('hidden', cad);
   $('#nomeField').classList.toggle('hidden', !cad);
   setModoEquipe('criar', false); // uso individual: cada conta é independente
   $('#aNome').required = cad;
@@ -977,10 +1062,21 @@ function setModoAuth(m){
 }
 function authMsg(t, err){ const el = $('#authMsg'); el.textContent = t; el.classList.toggle('hidden', !t); el.classList.toggle('err', !!err); }
 $('#authSwitch').addEventListener('click', e => { const go = e.target.dataset.go; if (go) setModoAuth(go); });
+$('#authTabs').addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b && b.dataset.go !== modoAuth) setModoAuth(b.dataset.go); });
+$('#aVer').onclick = () => { const i = $('#aSenha'); i.type = i.type === 'password' ? 'text' : 'password'; $('#aVer').classList.toggle('on', i.type === 'text'); };
+$('#authEsqueci').onclick = async () => {
+  const email = $('#aEmail').value.trim();
+  if (!/^\S+@\S+\.\S+$/.test(email)) { authMsg('Digite seu e-mail acima e toque em "Esqueci a senha" de novo.', true); $('#aEmail').focus(); return; }
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.href.split('#')[0] });
+  authMsg(error ? 'Não foi possível enviar agora. Tente de novo em alguns minutos.' : 'Enviamos um link para ' + email + '. Abra e escolha uma senha nova.', !!error);
+};
 $('#authForm').addEventListener('submit', async e => {
   e.preventDefault();
   const email = $('#aEmail').value.trim(), password = $('#aSenha').value;
-  $('#authBtn').disabled = true;
+  if (modoAuth === 'signup' && !$('#aNome').value.trim()) return authMsg('Digite seu nome.', true);
+  if (!/^\S+@\S+\.\S+$/.test(email)) return authMsg('Digite um e-mail válido.', true);
+  if (password.length < 6) return authMsg('A senha precisa ter pelo menos 6 caracteres.', true);
+  $('#authBtn').disabled = true; $('#authBtn').classList.add('load');
   try {
     if (modoAuth === 'signup') {
       const { data, error } = await sb.auth.signUp({ email, password, options:{ data: Object.assign({ nome: $('#aNome').value.trim() }, modoEquipe === 'criar' ? { equipe: $('#aEquipe').value.trim() } : { codigo: $('#aCodigo').value.trim().toUpperCase() }), emailRedirectTo: location.href.split('#')[0] } });
@@ -993,11 +1089,17 @@ $('#authForm').addEventListener('submit', async e => {
   } catch(err) {
     const m = String(err.message||err);
     authMsg(/Invalid login/i.test(m) ? 'E-mail ou senha incorretos.' : /confirm/i.test(m) ? 'Confirme seu e-mail antes de entrar.' : /registered/i.test(m) ? 'Esse e-mail já tem conta.' : (/Database error/i.test(m) && modoAuth === 'signup' && modoEquipe === 'entrar') ? 'Código de convite inválido.' : m, true);
-  } finally { $('#authBtn').disabled = false; }
+  } finally { $('#authBtn').disabled = false; $('#authBtn').classList.remove('load'); }
 });
 $('#sairBtn').onclick = () => sb.auth.signOut();
 
-sb.auth.onAuthStateChange((_ev, sess) => { setTimeout(() => sess ? iniciar(sess.user) : mostrarLogin(), 0); });
+sb.auth.onAuthStateChange((ev, sess) => {
+  setTimeout(() => sess ? iniciar(sess.user) : mostrarLogin(), 0);
+  if (ev === 'PASSWORD_RECOVERY') setTimeout(() => formModal({ titulo:'Escolha uma senha nova', textoSalvar:'Salvar senha',
+    campos:[{ id:'senha', label:'Senha nova (mínimo 6 caracteres)', type:'password', required:true }],
+    salvar: async v => { if (v.senha.length < 6) { toast('A senha precisa ter pelo menos 6 caracteres'); return false; }
+      const { error } = await sb.auth.updateUser({ password: v.senha }); if (error) { toast('Não foi possível trocar a senha'); return false; } toast('Senha trocada'); } }), 1200);
+});
 
 function mostrarLogin(){
   if (S.canal) { sb.removeChannel(S.canal); S.canal = null; }
@@ -2491,6 +2593,10 @@ $('#maisOv').addEventListener('click', e => {
 // ===== O que há de novo =====
 // A cada versão publicada, adicione uma entrada NO TOPO desta lista (texto curto, para quem usa o app).
 const NOVIDADES = [
+  { versao:'1.7', data:'28/11/2026', titulo:'Tela de entrada nova', itens:[
+    'A tela de login foi refeita, com visual de aplicativo.',
+    'Botão para mostrar a senha enquanto digita.',
+    'Opção "Esqueci a senha": chega um link no seu e-mail para criar uma senha nova.' ] },
   { versao:'1.6', data:'28/11/2026', titulo:'Contato para enviar currículo', itens:[
     'As vagas agora mostram o e-mail e o telefone para currículo quando o anúncio informa.',
     'O botão de e-mail já abre a mensagem com assunto e texto prontos. É só anexar o currículo.',
